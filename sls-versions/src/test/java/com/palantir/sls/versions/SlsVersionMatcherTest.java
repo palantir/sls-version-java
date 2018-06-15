@@ -109,6 +109,14 @@ public class SlsVersionMatcherTest {
         assertThat(matcher("1.2.x").compare(version("1.2.3-rc1"))).isZero();
     }
 
+    @Test
+    public void testMatcherComparator() {
+        SlsVersionMatcher matcher1 = SlsVersionMatcher.valueOf("2.6.x");
+        SlsVersionMatcher matcher2 = SlsVersionMatcher.valueOf("2.x.x");
+        assertThat(SlsVersionMatcher.MATCHER_COMPARATOR.compare(matcher1, matcher2)).isLessThan(0);
+        assertThat(SlsVersionMatcher.MATCHER_COMPARATOR.compare(matcher2, matcher1)).isGreaterThan(0);
+    }
+
     private static SlsVersionMatcher matcher(String value) {
         return SlsVersionMatcher.valueOf(value);
     }

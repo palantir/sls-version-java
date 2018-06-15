@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.palantir.immutables.style.ImmutablesStyle;
 import com.palantir.logsafe.SafeArg;
 import com.palantir.logsafe.UnsafeArg;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.regex.Matcher;
@@ -42,6 +43,14 @@ public abstract class SlsVersionMatcher {
 
     private static final Logger log = LoggerFactory.getLogger(SlsVersionMatcher.class);
     private static final Pattern PATTERN = Pattern.compile("^(([0-9]+|x))\\.(([0-9]+|x))\\.(([0-9]+|x))$");
+
+    private static final Comparator<OptionalInt> EMPTY_IS_GREATER =
+            Comparator.comparingInt(num -> num.isPresent() ? num.getAsInt() : Integer.MAX_VALUE);
+
+    public static final Comparator<SlsVersionMatcher> MATCHER_COMPARATOR = Comparator
+            .comparing(SlsVersionMatcher::getMajorVersionNumber, EMPTY_IS_GREATER)
+            .thenComparing(SlsVersionMatcher::getMinorVersionNumber, EMPTY_IS_GREATER)
+            .thenComparing(SlsVersionMatcher::getPatchVersionNumber, EMPTY_IS_GREATER);
 
     @Value.Auxiliary
     public abstract String getValue();
