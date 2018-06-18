@@ -109,6 +109,23 @@ public class SlsVersionMatcherTest {
         assertThat(matcher("1.2.x").compare(version("1.2.3-rc1"))).isZero();
     }
 
+    @Test
+    public void testMatcherComparator_xTrumpsNumber() {
+        assertMatcherOrder(SlsVersionMatcher.valueOf("2.6.x"), SlsVersionMatcher.valueOf("2.x.x"));
+        assertMatcherOrder(SlsVersionMatcher.valueOf("2.6.5"), SlsVersionMatcher.valueOf("2.6.x"));
+    }
+
+    @Test
+    public void testMatcherComparator_comparesNumbers() {
+        assertMatcherOrder(SlsVersionMatcher.valueOf("2.6.x"), SlsVersionMatcher.valueOf("2.7.x"));
+        assertMatcherOrder(SlsVersionMatcher.valueOf("2.6.5"), SlsVersionMatcher.valueOf("2.6.6"));
+    }
+
+    private static void assertMatcherOrder(SlsVersionMatcher smaller, SlsVersionMatcher larger) {
+        assertThat(SlsVersionMatcher.MATCHER_COMPARATOR.compare(smaller, larger)).isLessThan(0);
+        assertThat(SlsVersionMatcher.MATCHER_COMPARATOR.compare(larger, smaller)).isGreaterThan(0);
+    }
+
     private static SlsVersionMatcher matcher(String value) {
         return SlsVersionMatcher.valueOf(value);
     }
