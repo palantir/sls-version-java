@@ -1,5 +1,5 @@
 # SLS Versions
-[![Build Status](https://circleci.com/gh/palantir/sls-version-java.svg?style=shield)](https://circleci.com/gh/palantir/sls-version-java)
+[![CircleCI](https://circleci.com/gh/palantir/sls-version-java.svg?style=svg)](https://circleci.com/gh/palantir/sls-version-java)
 [![Download](https://api.bintray.com/packages/palantir/releases/sls-version-java/images/download.svg)](https://bintray.com/palantir/releases/sls-version-java/_latestVersion)
 
 A collection of useful Java classes for dealing with the SLS versions according to the [SLS Product Version Specification](#sls-product-version-specification).
