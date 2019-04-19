@@ -1,10 +1,10 @@
-com.fasterxml.jackson.core:jackson-databind = 2.9.6
-org.immutables:* = 2.6.1
+com.fasterxml.jackson.core:jackson-databind = 2.9.8
+org.immutables:* = 2.7.5
 org.slf4j:slf4j-api = 1.7.25
 com.palantir.safe-logging:preconditions = 1.4.0
-com.palantir.safe-logging:safe-logging = 1.4.0
+com.palantir.safe-logging:safe-logging = 1.8.2
 
 # Test dependencies
 junit:junit = 4.12
-org.assertj:assertj-core = 3.10.0
-org.mockito:mockito-core = 2.18.3
+org.assertj:assertj-core = 3.12.2
+org.mockito:mockito-core = 2.27.0
