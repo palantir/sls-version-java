@@ -102,6 +102,8 @@ public final class CompactVersion implements Comparable<CompactVersion> {
             case RELEASE_CANDIDATE:
             case RELEASE_CANDIDATE_SNAPSHOT:
                 return 0;
+            case NON_ORDERABLE:
+                throw new SafeIllegalArgumentException("Unable to store NON_ORDERABLE types in CompactVersion");
         }
         throw new SafeIllegalArgumentException("Unknown SlsVerisonType", SafeArg.of("slsVersionType", type));
     }
