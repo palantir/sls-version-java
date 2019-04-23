@@ -17,7 +17,9 @@
 package com.palantir.sls.versions;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.palantir.logsafe.exceptions.SafeIllegalArgumentException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -82,6 +84,25 @@ public final class CompactVersionTests {
             return lsbLeft < lsbRight ? -1 : 1;
         }
         return msbLeft < msbRight ? -1 : 1;
+    }
+
+    @Test
+    public void testValuesGreaterThanMaximumReceiveErrors() {
+        List<OrderableSlsVersion> aboveMaxVersions = Arrays.asList(
+                "0.0.0-rc1048576",
+                "0.0.0-1048576-gbbb",
+                "0.0.1048576",
+                "0.1048576.0",
+                "1048576.0.0"
+                )
+                .stream()
+                .map(OrderableSlsVersion::valueOf)
+                .collect(Collectors.toList());
+
+        for (OrderableSlsVersion version : aboveMaxVersions) {
+            assertThatThrownBy(() -> CompactVersion.from(version))
+                    .isInstanceOf(SafeIllegalArgumentException.class);
+        }
     }
 
 }

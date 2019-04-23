@@ -24,17 +24,17 @@ import java.util.OptionalInt;
 
 /**
  * Stores a compact representation of {@link OrderableSlsVersion} that is lexicographically ordered when rendered as
- * a sequence of bytes. CompactVersion allocates 20 bits to store each of the five numeric components of an
- * {@link OrderableSlsVersion}. To enable representing bytes as two SafeLong values, this implementation packs at most
- * 53 bits into a single {@code long}.
+ * a sequence of bytes. CompactVersion allocates 20 bits (for a maximum value of each component of 1,048,576 to store
+ * each of the five numeric components of an {@link OrderableSlsVersion}. To enable representing bytes as two SafeLong
+ * values, this implementation packs at most 53 bits into a single {@code long}.
  *
  * <p>Bits are allocated as follows, from lowest bits to highest:
  * <code>
  * LSB SafeLong:
  * 20 bits: distance from release
- *  2 bits: priority1 (1 = RELEASE_CANDIDATE_SNAPSHOT, 0 = else)
+ *  2 bits: priority1 (1 = RELEASE_CANDIDATE_SNAPSHOT, 0 = else; 2 and 3 are unused values)
  * 20 bits: RC number
- *  2 bits: priority2 (2 = RELEASE_SNAPSHOT, 1 = RELEASE, 0 = RELEASE_CANDIDATE)
+ *  2 bits: priority2 (2 = RELEASE_SNAPSHOT, 1 = RELEASE, 0 = RELEASE_CANDIDATE; 3 is an unused value)
  *  8 bits: lowest 8 bits of patch
  *
  * MSB SafeLong:
@@ -105,7 +105,7 @@ public final class CompactVersion implements Comparable<CompactVersion> {
             case NON_ORDERABLE:
                 throw new SafeIllegalArgumentException("Unable to store NON_ORDERABLE types in CompactVersion");
         }
-        throw new SafeIllegalArgumentException("Unknown SlsVerisonType", SafeArg.of("slsVersionType", type));
+        throw new SafeIllegalArgumentException("Unknown SlsVersionType", SafeArg.of("slsVersionType", type));
     }
 
     private static long encode20b(int value, @CompileTimeConstant String component) {
