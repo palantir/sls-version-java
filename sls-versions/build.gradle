@@ -1,10 +1,10 @@
 dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind'
-    compile "com.palantir.safe-logging:safe-logging"
     compile 'com.palantir.safe-logging:preconditions'
+    compile 'com.palantir.safe-logging:safe-logging'
     compile 'org.slf4j:slf4j-api'
 
-    processor "org.immutables:value"
+    processor 'org.immutables:value'
 
     testCompile 'junit:junit'
     testCompile 'org.assertj:assertj-core'
