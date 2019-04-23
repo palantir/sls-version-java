@@ -105,4 +105,13 @@ public final class CompactVersionTests {
         }
     }
 
+    @Test
+    public void testMaximumValuesDoNotUseMoreThan53Bits() {
+        OrderableSlsVersion max = OrderableSlsVersion.valueOf("1048575.1048575.1048575-rc1048575-1048575-gbbb");
+        CompactVersion compact = CompactVersion.from(max);
+
+        assertThat(compact.getMsb()).isLessThan((1L << 53) - 1);
+        assertThat(compact.getLsb()).isLessThan((1L << 53) - 1);
+    }
+
 }
