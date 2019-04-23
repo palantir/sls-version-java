@@ -45,4 +45,12 @@ public enum SlsVersionType {
         return this.priority;
     }
 
+    public boolean isSnapshot() {
+        return this == RELEASE_SNAPSHOT || this == RELEASE_CANDIDATE_SNAPSHOT;
+    }
+
+    public boolean isReleaseCandidate() {
+        return this == RELEASE_CANDIDATE || this == RELEASE_CANDIDATE_SNAPSHOT;
+    }
+
 }
