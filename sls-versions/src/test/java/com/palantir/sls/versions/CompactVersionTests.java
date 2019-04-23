@@ -93,8 +93,7 @@ public final class CompactVersionTests {
                 "0.0.0-1048576-gbbb",
                 "0.0.1048576",
                 "0.1048576.0",
-                "1048576.0.0"
-                )
+                "1048576.0.0")
                 .stream()
                 .map(OrderableSlsVersion::valueOf)
                 .collect(Collectors.toList());
