@@ -47,7 +47,7 @@ public final class CompactVersion implements Comparable<CompactVersion> {
     private static final int MASK_20_BITS = 0xFFFFF;
     private static final int MASK_12_BITS = 0xFFF;
     private static final int MASK_8_BITS = 0xFF;
-    private static final int MASK_4_BITS = 0x3;
+    private static final int MASK_2_BITS = 0x3;
 
     private final long msb;
     private final long lsb;
@@ -127,8 +127,8 @@ public final class CompactVersion implements Comparable<CompactVersion> {
         int minorVersionNumber = (int) (msb >> 12) & MASK_20_BITS;
         int patchVersionNumber = (int) ((msb & MASK_12_BITS) << 8) + (int) ((lsb >> 44) & MASK_8_BITS);
 
-        int priority1 = (int) (lsb >> 20) & MASK_4_BITS;
-        int priority2 = (int) (lsb >> 42) & MASK_4_BITS;
+        int priority1 = (int) (lsb >> 20) & MASK_2_BITS;
+        int priority2 = (int) (lsb >> 42) & MASK_2_BITS;
         SlsVersionType type = typeFromPriority(priority1, priority2);
 
         int rcNumber = (int) (lsb >> 22) & MASK_20_BITS;
