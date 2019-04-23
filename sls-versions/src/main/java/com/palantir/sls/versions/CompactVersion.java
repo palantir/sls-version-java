@@ -38,7 +38,7 @@ import java.util.OptionalInt;
  *  8 bits: lowest 8 bits of patch
  *
  * MSB SafeLong:
- * 12 bits: highest 8 bits of patch
+ * 12 bits: highest 12 bits of patch
  * 20 bits: minor
  * 20 bits: major
  * </code>
@@ -78,9 +78,9 @@ public final class CompactVersion implements Comparable<CompactVersion> {
         }
 
         long lsb = encode20b(distanceFromVersion, "distanceFromVersion")
-                + (priority1(version.getType()) << 20)
+                + (encodePriority1(version.getType()) << 20)
                 + (encode20b(rcNumber, "rcNumber") << 22)
-                + (priority2(version.getType()) << 42)
+                + (encodePriority2(version.getType()) << 42)
                 + ((patch & 0xFF) << 44);
         long msb = ((patch & 0xFFF00) >> 8)
                 + (encode20b(version.getMinorVersionNumber(), "minor") << 12)
@@ -89,11 +89,11 @@ public final class CompactVersion implements Comparable<CompactVersion> {
         return new CompactVersion(msb, lsb);
     }
 
-    private static long priority1(SlsVersionType type) {
+    private static long encodePriority1(SlsVersionType type) {
         return type.equals(SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT) ? 1 : 0;
     }
 
-    private static long priority2(SlsVersionType type) {
+    private static long encodePriority2(SlsVersionType type) {
         switch (type) {
             case RELEASE_SNAPSHOT:
                 return 2;
@@ -115,6 +115,13 @@ public final class CompactVersion implements Comparable<CompactVersion> {
         return value & MASK_20_BITS;
     }
 
+    /**
+     * Returns an {@link OrderableSlsVersion} equivalent to this object.
+     *
+     * <p><b>Note</b>: Snapshot versions <i>must</i> include a git hash in the string representation, but because
+     * {@link OrderableSlsVersion} does not require equality and because this class' compact representation does not
+     * store the string, the git hash will always be set to {@code gaaaaaa}.
+     */
     public OrderableSlsVersion toSlsVersion() {
         int majorVersionNumber = (int) (msb >> 32) & MASK_20_BITS;
         int minorVersionNumber = (int) (msb >> 12) & MASK_20_BITS;
