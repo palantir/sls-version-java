@@ -24,9 +24,9 @@ import java.util.OptionalInt;
 
 /**
  * Stores a compact representation of {@link OrderableSlsVersion} that is lexicographically ordered when rendered as
- * a sequence of bytes. CompactVersion allocates 20 bits (for a maximum value of each component of 1,048,576 to store
- * each of the five numeric components of an {@link OrderableSlsVersion}. To enable representing bytes as two SafeLong
- * values, this implementation packs at most 53 bits into a single {@code long}.
+ * a sequence of bytes. CompactVersion allocates 20 bits (for a maximum value of 1,048,575) to store each of the five
+ * numeric components of an {@link OrderableSlsVersion}. To enable representing bytes as two SafeLong values, this
+ * implementation packs at most 53 bits into a single {@code long}.
  *
  * <p>Bits are allocated as follows, from lowest bits to highest:
  * <code>
