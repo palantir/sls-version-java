@@ -42,6 +42,10 @@ import java.util.OptionalInt;
  * 20 bits: minor
  * 20 bits: major
  * </code>
+ *
+ * <p><b>Note</b>: the correctness of the implementation of {@link #compareTo(CompactVersion)} depends on the
+ * constituent longs holding only positive values. This is partially accomplished by using less than the full number of
+ * bits available, and thus by avoiding twos-complement representation issues when the highest bit in the long is set.
  */
 public final class CompactVersion implements Comparable<CompactVersion> {
     private static final int MASK_20_BITS = 0xFFFFF;
