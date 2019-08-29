@@ -1,3 +1,7 @@
+<p align="right">
+<a href="https://autorelease.general.dmz.palantir.tech/palantir/sls-version-java"><img src="https://img.shields.io/badge/Perform%20an-Autorelease-success.svg" alt="Autorelease"></a>
+</p>
+
 # SLS Versions
 [![Build Status](https://circleci.com/gh/palantir/sls-version-java.svg?style=shield)](https://circleci.com/gh/palantir/sls-version-java)
 [![Download](https://api.bintray.com/packages/palantir/releases/sls-version-java/images/download.svg)](https://bintray.com/palantir/releases/sls-version-java/_latestVersion)
