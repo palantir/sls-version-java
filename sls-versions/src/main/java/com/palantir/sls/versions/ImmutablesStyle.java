@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.palantir.immutables.style;
+package com.palantir.sls.versions;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
