@@ -21,7 +21,6 @@ import static com.palantir.logsafe.Preconditions.checkNotNull;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.palantir.immutables.style.ImmutablesStyle;
 import com.palantir.logsafe.UnsafeArg;
 import java.util.Optional;
 import java.util.OptionalInt;
