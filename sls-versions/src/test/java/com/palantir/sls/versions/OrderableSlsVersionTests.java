@@ -116,7 +116,7 @@ public class OrderableSlsVersionTests {
     public void testVersionIsEqualToItself() {
         for (String v : ORDERABLE_VERSIONS_IN_ORDER) {
             assertThat(OrderableSlsVersion.valueOf(v)).isEqualTo(OrderableSlsVersion.valueOf(v));
-            assertThat(compare(OrderableSlsVersion.valueOf(v), OrderableSlsVersion.valueOf(v))).isEqualTo(0);
+            assertThat(compare(OrderableSlsVersion.valueOf(v), OrderableSlsVersion.valueOf(v))).isZero();
         }
     }
 
@@ -203,7 +203,7 @@ public class OrderableSlsVersionTests {
     }
 
     private void assertVersionsEqual(String left, String right) {
-        assertThat(compare(OrderableSlsVersion.valueOf(left), OrderableSlsVersion.valueOf(right))).isEqualTo(0);
+        assertThat(compare(OrderableSlsVersion.valueOf(left), OrderableSlsVersion.valueOf(right))).isZero();
     }
 
     private OrderableSlsVersion version(
