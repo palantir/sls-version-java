@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.palantir.logsafe.exceptions.SafeIllegalArgumentException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -73,7 +74,7 @@ public class OrderableSlsVersionTests {
     public void testCannotCreateInvalidVersions() {
         for (String v : ILLEGAL_VERSIONS) {
             assertThatThrownBy(() -> OrderableSlsVersion.valueOf(v))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(SafeIllegalArgumentException.class);
         }
     }
 
@@ -188,6 +189,21 @@ public class OrderableSlsVersionTests {
         assertVersionsInOrder("1.0.0-rc1-5-ga", "1.0.0-rc5");
         assertVersionsInOrder("1.0.0-rc2-3-ga", "1.0.1-rc1");
         assertVersionsInOrder("1.0.0-rc2", "1.0.1-rc1-3-ga");
+    }
+
+    @Test
+    public void testCheckWithOrderableVersion() {
+        assertThat(OrderableSlsVersion.check("1.0.0")).isTrue();
+    }
+
+    @Test
+    public void testCheckWithNonOrderableVersion() {
+        assertThat(OrderableSlsVersion.check("1.0.0-foo")).isFalse();
+    }
+
+    @Test
+    public void testCheckWithGarbage() {
+        assertThat(OrderableSlsVersion.check("foo")).isFalse();
     }
 
     @Test

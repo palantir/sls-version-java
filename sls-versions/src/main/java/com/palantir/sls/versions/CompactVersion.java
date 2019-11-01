@@ -151,8 +151,8 @@ public final class CompactVersion implements Comparable<CompactVersion> {
                 firstSeq = OptionalInt.of(rcNumber);
                 secondSeq = OptionalInt.of(distanceFromVersion);
                 break;
-            default:
-                // nothing
+            case RELEASE:
+            case NON_ORDERABLE:
                 break;
         }
         return new OrderableSlsVersion.Builder()

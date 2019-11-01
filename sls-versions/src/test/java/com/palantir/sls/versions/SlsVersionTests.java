@@ -43,4 +43,20 @@ public class SlsVersionTests {
         String serialized = mapper.writeValueAsString(version);
         assertThat(mapper.readValue(serialized, SlsVersion.class)).isEqualTo(version);
     }
+
+    @Test
+    public void testCheckWithOrderableVersion() {
+        assertThat(SlsVersion.check("1.0.0")).isTrue();
+    }
+
+    @Test
+    public void testCheckWithNonOrderableVersion() {
+        assertThat(SlsVersion.check("1.0.0-foo")).isTrue();
+    }
+
+    @Test
+    public void testCheckWithGarbage() {
+        assertThat(SlsVersion.check("foo")).isFalse();
+    }
+
 }

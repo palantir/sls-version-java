@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.palantir.logsafe.exceptions.SafeIllegalArgumentException;
 import java.io.IOException;
 import org.junit.Test;
 
@@ -49,7 +50,7 @@ public class NonOrderableVersionTests {
     public void testCannotCreateInvalidVersions() {
         for (String v : ILLEGAL_VERSIONS) {
             assertThatThrownBy(() -> NonOrderableSlsVersion.valueOf(v))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(SafeIllegalArgumentException.class);
         }
     }
 
@@ -65,7 +66,7 @@ public class NonOrderableVersionTests {
     @Test
     public void testIncorrectPatchVersionParsing() {
         assertThatThrownBy(() -> NonOrderableSlsVersion.valueOf("1.2.foo"))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(SafeIllegalArgumentException.class);
     }
 
     @Test
@@ -83,5 +84,20 @@ public class NonOrderableVersionTests {
 
         NonOrderableSlsVersion deserialized = mapper.readValue(serialized, NonOrderableSlsVersion.class);
         assertThat(deserialized).isEqualTo(version);
+    }
+
+    @Test
+    public void testCheckWithOrderableVersion() {
+        assertThat(NonOrderableSlsVersion.check("1.0.0")).isFalse();
+    }
+
+    @Test
+    public void testCheckWithNonOrderableVersion() {
+        assertThat(NonOrderableSlsVersion.check("1.0.0-foo")).isTrue();
+    }
+
+    @Test
+    public void testCheckWithGarbage() {
+        assertThat(NonOrderableSlsVersion.check("foo")).isFalse();
     }
 }
