@@ -17,6 +17,8 @@
 package com.palantir.sls.versions;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.palantir.logsafe.UnsafeArg;
+import com.palantir.logsafe.exceptions.SafeIllegalArgumentException;
 import java.util.Optional;
 import java.util.OptionalInt;
 import org.immutables.value.Value;
@@ -33,7 +35,8 @@ public abstract class SlsVersion {
         if (optionalNonOrderableVersion.isPresent()) {
             return optionalNonOrderableVersion.get();
         }
-        throw new IllegalArgumentException("Value is neither an orderable nor a non-orderable version: " + value);
+        throw new SafeIllegalArgumentException("Value is neither an orderable nor a non-orderable version",
+                UnsafeArg.of("value", value));
     }
 
     /**
@@ -43,7 +46,7 @@ public abstract class SlsVersion {
         try {
             valueOf(coordinate);
             return true;
-        } catch (IllegalArgumentException e) {
+        } catch (SafeIllegalArgumentException e) {
             return false;
         }
     }

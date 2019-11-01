@@ -90,6 +90,13 @@ public abstract class OrderableSlsVersion extends SlsVersion {
         return null;
     }
 
+    /**
+     * Returns true iff the given coordinaten has a version which can be parsed into a valid orderable SLS version.
+     */
+    public static boolean check(String coordinate) {
+        return safeValueOf(coordinate).isPresent();
+    }
+
     @JsonValue
     @Override
     public final String toString() {

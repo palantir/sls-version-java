@@ -112,7 +112,7 @@ public final class CompactVersion implements Comparable<CompactVersion> {
         throw new SafeIllegalArgumentException("Unknown SlsVersionType", SafeArg.of("slsVersionType", type));
     }
 
-    private static long encode20b(int value, @CompileTimeConstant String component) {
+    private static long encode20b(int value, @CompileTimeConstant final String component) {
         Preconditions.checkArgument(value >= 0 && value < 1_048_576,
                 "version component must be positive and not exceed 20 bits of value",
                 SafeArg.of(component, value));
@@ -151,8 +151,8 @@ public final class CompactVersion implements Comparable<CompactVersion> {
                 firstSeq = OptionalInt.of(rcNumber);
                 secondSeq = OptionalInt.of(distanceFromVersion);
                 break;
-            default:
-                // nothing
+            case RELEASE:
+            case NON_ORDERABLE:
                 break;
         }
         return new OrderableSlsVersion.Builder()
