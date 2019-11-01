@@ -85,4 +85,19 @@ public class NonOrderableVersionTests {
         NonOrderableSlsVersion deserialized = mapper.readValue(serialized, NonOrderableSlsVersion.class);
         assertThat(deserialized).isEqualTo(version);
     }
+
+    @Test
+    public void testCheckWithOrderableVersion() {
+        assertThat(NonOrderableSlsVersion.check("1.0.0")).isFalse();
+    }
+
+    @Test
+    public void testCheckWithNonOrderableVersion() {
+        assertThat(NonOrderableSlsVersion.check("1.0.0-foo")).isTrue();
+    }
+
+    @Test
+    public void testCheckWithGarbage() {
+        assertThat(NonOrderableSlsVersion.check("foo")).isFalse();
+    }
 }

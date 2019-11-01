@@ -201,11 +201,11 @@ public class OrderableSlsVersionTests {
         assertThat(OrderableSlsVersion.check("1.0.0-foo")).isFalse();
     }
 
-
     @Test
     public void testCheckWithGarbage() {
         assertThat(OrderableSlsVersion.check("foo")).isFalse();
     }
+
     @Test
     public void testEqualVersions() {
         assertVersionsEqual("1.0.0", "1.0.0");

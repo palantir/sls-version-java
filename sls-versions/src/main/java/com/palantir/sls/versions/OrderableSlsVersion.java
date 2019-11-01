@@ -91,7 +91,7 @@ public abstract class OrderableSlsVersion extends SlsVersion {
     }
 
     /**
-     * Returns true iff the given coordinaten has a version which can be parsed into a valid orderable SLS version.
+     * Returns true iff the given coordinate has a version which can be parsed into a valid orderable SLS version.
      */
     public static boolean check(String coordinate) {
         return safeValueOf(coordinate).isPresent();

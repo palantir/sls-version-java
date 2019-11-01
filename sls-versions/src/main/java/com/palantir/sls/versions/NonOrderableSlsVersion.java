@@ -55,6 +55,14 @@ public abstract class NonOrderableSlsVersion extends SlsVersion {
                 .build());
     }
 
+    /**
+     * Returns true iff the given coordinate has a version which can be parsed into a valid SLS version, but not an
+     * orderable one.
+     */
+    public static boolean check(String coordinate) {
+        return safeValueOf(coordinate).isPresent() && !OrderableSlsVersion.check(coordinate);
+    }
+
     @JsonValue
     @Override
     public final String toString() {
