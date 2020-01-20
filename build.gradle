@@ -11,13 +11,13 @@ buildscript {
         classpath 'com.netflix.nebula:nebula-publishing-plugin:14.1.1'
         classpath 'com.palantir.baseline:gradle-baseline-java:2.49.1'
         classpath 'com.palantir.gradle.consistentversions:gradle-consistent-versions:1.15.0'
-        classpath 'gradle.plugin.org.inferred:gradle-processors:3.2.0'
+        classpath 'gradle.plugin.org.inferred:gradle-processors:3.3.0'
     }
 }
 
 plugins {
     id 'com.palantir.git-version' version '0.12.2'
-    id 'org.inferred.processors' version '3.2.0'
+    id 'org.inferred.processors' version '3.3.0'
 }
 
 apply plugin: 'com.palantir.baseline'
