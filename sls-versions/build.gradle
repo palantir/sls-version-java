@@ -1,5 +1,5 @@
 dependencies {
-    compile 'com.fasterxml.jackson.core:jackson-databind'
+    compile 'com.fasterxml.jackson.core:jackson-annotations'
     compile 'com.palantir.safe-logging:preconditions'
     compile 'com.palantir.safe-logging:safe-logging'
     compile 'org.slf4j:slf4j-api'
@@ -7,6 +7,7 @@ dependencies {
     annotationProcessor 'org.immutables:value'
     compileOnly 'org.immutables:value::annotations'
 
+    testCompile 'com.fasterxml.jackson.core:jackson-databind'
     testCompile 'junit:junit'
     testCompile 'org.assertj:assertj-core'
     testCompile 'org.mockito:mockito-core'
