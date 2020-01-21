@@ -33,35 +33,29 @@ import org.junit.Test;
 public class OrderableSlsVersionTests {
 
     private static final String[] ORDERABLE_VERSIONS_IN_ORDER = new String[] {
-            "0.0.0",
-            "00.00.01",
-            "0.1.0",
-            "0.1.1",
-            "1.2.0",
-            "1.2.3-rc1",
-            "1.2.3-rc1-4-ga",
-            "1.2.3-rc2",
-            "1.2.3-rc2-1-ga",
-            "1.2.3-rc2-3-gb",
-            "1.2.3",
-            "1.2.3-9-gb",
-            "1.2.3-10-ga",
-            "1.2.4",
-            "1.3.5",
-            "1.4.0",
-            "9.9.9",
-            "10.0.0",
-            "10.0.0-1-gaaaaaa",
-            "10.0.0-2-ga"
+        "0.0.0",
+        "00.00.01",
+        "0.1.0",
+        "0.1.1",
+        "1.2.0",
+        "1.2.3-rc1",
+        "1.2.3-rc1-4-ga",
+        "1.2.3-rc2",
+        "1.2.3-rc2-1-ga",
+        "1.2.3-rc2-3-gb",
+        "1.2.3",
+        "1.2.3-9-gb",
+        "1.2.3-10-ga",
+        "1.2.4",
+        "1.3.5",
+        "1.4.0",
+        "9.9.9",
+        "10.0.0",
+        "10.0.0-1-gaaaaaa",
+        "10.0.0-2-ga"
     };
 
-    private static final String[] ILLEGAL_VERSIONS = new String[] {
-            "",
-            "1.0",
-            "1.z.9",
-            "1.0.0.1",
-            "1.0.0-FOO"
-    };
+    private static final String[] ILLEGAL_VERSIONS = new String[] {"", "1.0", "1.z.9", "1.0.0.1", "1.0.0-FOO"};
 
     @Test
     public void testCanCreateValidVersions() {
@@ -73,8 +67,7 @@ public class OrderableSlsVersionTests {
     @Test
     public void testCannotCreateInvalidVersions() {
         for (String v : ILLEGAL_VERSIONS) {
-            assertThatThrownBy(() -> OrderableSlsVersion.valueOf(v))
-                    .isInstanceOf(SafeIllegalArgumentException.class);
+            assertThatThrownBy(() -> OrderableSlsVersion.valueOf(v)).isInstanceOf(SafeIllegalArgumentException.class);
         }
     }
 
@@ -117,7 +110,8 @@ public class OrderableSlsVersionTests {
     public void testVersionIsEqualToItself() {
         for (String v : ORDERABLE_VERSIONS_IN_ORDER) {
             assertThat(OrderableSlsVersion.valueOf(v)).isEqualTo(OrderableSlsVersion.valueOf(v));
-            assertThat(compare(OrderableSlsVersion.valueOf(v), OrderableSlsVersion.valueOf(v))).isZero();
+            assertThat(compare(OrderableSlsVersion.valueOf(v), OrderableSlsVersion.valueOf(v)))
+                    .isZero();
         }
     }
 
@@ -126,8 +120,10 @@ public class OrderableSlsVersionTests {
         for (int i = 0; i < ORDERABLE_VERSIONS_IN_ORDER.length - 1; ++i) {
             String left = ORDERABLE_VERSIONS_IN_ORDER[i];
             String right = ORDERABLE_VERSIONS_IN_ORDER[i + 1];
-            assertThat(compare(OrderableSlsVersion.valueOf(left), OrderableSlsVersion.valueOf(right))).isEqualTo(-1);
-            assertThat(compare(OrderableSlsVersion.valueOf(right), OrderableSlsVersion.valueOf(left))).isEqualTo(1);
+            assertThat(compare(OrderableSlsVersion.valueOf(left), OrderableSlsVersion.valueOf(right)))
+                    .isEqualTo(-1);
+            assertThat(compare(OrderableSlsVersion.valueOf(right), OrderableSlsVersion.valueOf(left)))
+                    .isEqualTo(1);
         }
     }
 
@@ -215,11 +211,13 @@ public class OrderableSlsVersionTests {
     }
 
     private void assertVersionsInOrder(String smaller, String larger) {
-        assertThat(compare(OrderableSlsVersion.valueOf(smaller), OrderableSlsVersion.valueOf(larger))).isEqualTo(-1);
+        assertThat(compare(OrderableSlsVersion.valueOf(smaller), OrderableSlsVersion.valueOf(larger)))
+                .isEqualTo(-1);
     }
 
     private void assertVersionsEqual(String left, String right) {
-        assertThat(compare(OrderableSlsVersion.valueOf(left), OrderableSlsVersion.valueOf(right))).isZero();
+        assertThat(compare(OrderableSlsVersion.valueOf(left), OrderableSlsVersion.valueOf(right)))
+                .isZero();
     }
 
     private OrderableSlsVersion version(

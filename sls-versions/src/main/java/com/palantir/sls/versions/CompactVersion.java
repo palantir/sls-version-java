@@ -23,13 +23,12 @@ import com.palantir.logsafe.exceptions.SafeIllegalArgumentException;
 import java.util.OptionalInt;
 
 /**
- * Stores a compact representation of {@link OrderableSlsVersion} that is lexicographically ordered when rendered as
- * a sequence of bytes. CompactVersion allocates 20 bits (for a maximum value of 1,048,575) to store each of the five
+ * Stores a compact representation of {@link OrderableSlsVersion} that is lexicographically ordered when rendered as a
+ * sequence of bytes. CompactVersion allocates 20 bits (for a maximum value of 1,048,575) to store each of the five
  * numeric components of an {@link OrderableSlsVersion}. To enable representing bytes as two SafeLong values, this
  * implementation packs at most 53 bits into a single {@code long}.
  *
- * <p>Bits are allocated as follows, from lowest bits to highest:
- * <code>
+ * <p>Bits are allocated as follows, from lowest bits to highest: <code>
  * LSB SafeLong:
  * 20 bits: distance from release
  *  2 bits: priority1 (1 = RELEASE_CANDIDATE_SNAPSHOT, 0 = else; 2 and 3 are unused values)
@@ -113,7 +112,8 @@ public final class CompactVersion implements Comparable<CompactVersion> {
     }
 
     private static long encode20b(int value, @CompileTimeConstant String component) {
-        Preconditions.checkArgument(value >= 0 && value < 1_048_576,
+        Preconditions.checkArgument(
+                value >= 0 && value < 1_048_576,
                 "version component must be positive and not exceed 20 bits of value",
                 SafeArg.of(component, value));
         return value & MASK_20_BITS;
@@ -162,8 +162,13 @@ public final class CompactVersion implements Comparable<CompactVersion> {
                 .type(type)
                 .firstSequenceVersionNumber(firstSeq)
                 .secondSequenceVersionNumber(secondSeq)
-                .value(generateVersionString(majorVersionNumber, minorVersionNumber, patchVersionNumber, type,
-                        rcNumber, distanceFromVersion))
+                .value(generateVersionString(
+                        majorVersionNumber,
+                        minorVersionNumber,
+                        patchVersionNumber,
+                        type,
+                        rcNumber,
+                        distanceFromVersion))
                 .build();
     }
 
@@ -179,8 +184,8 @@ public final class CompactVersion implements Comparable<CompactVersion> {
         }
     }
 
-    private static String generateVersionString(int major, int minor, int patch, SlsVersionType type,
-            int rcNumber, int distanceFromVersion) {
+    private static String generateVersionString(
+            int major, int minor, int patch, SlsVersionType type, int rcNumber, int distanceFromVersion) {
         StringBuilder sb = new StringBuilder();
         sb.append(major).append(".").append(minor).append(".").append(patch);
         if (type.isReleaseCandidate()) {

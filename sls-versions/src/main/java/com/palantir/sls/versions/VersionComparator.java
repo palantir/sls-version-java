@@ -37,8 +37,7 @@ public enum VersionComparator implements Comparator<OrderableSlsVersion> {
             return mainVersionComparison;
         }
 
-        if ((left.getType() == SlsVersionType.RELEASE)
-                || (right.getType() == SlsVersionType.RELEASE)) {
+        if ((left.getType() == SlsVersionType.RELEASE) || (right.getType() == SlsVersionType.RELEASE)) {
             // Releases always compare correctly just by type now we know base version matches.
             return Integer.compare(left.getType().getPriority(), right.getType().getPriority());
         }
@@ -97,10 +96,12 @@ public enum VersionComparator implements Comparator<OrderableSlsVersion> {
         OptionalInt leftInt = left.firstSequenceVersionNumber();
         OptionalInt rightInt = right.firstSequenceVersionNumber();
 
-        checkArgument(leftInt.isPresent(),
+        checkArgument(
+                leftInt.isPresent(),
                 "Expected to find a first sequence number for version",
                 SafeArg.of("version", left.getValue()));
-        checkArgument(rightInt.isPresent(),
+        checkArgument(
+                rightInt.isPresent(),
                 "Expected to find a first sequence number for version",
                 SafeArg.of("version", right.getValue()));
 

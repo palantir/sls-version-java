@@ -26,18 +26,10 @@ import org.junit.Test;
 
 public class NonOrderableVersionTests {
 
-    private static final String[] VALID_NONORDERABLE_VERSIONS = new String[] {
-            "1.0.0.dirty",
-            "0.0.1-custom-description-42",
-            "2.0.0-1-gaaaaaa.dirty"
-    };
+    private static final String[] VALID_NONORDERABLE_VERSIONS =
+            new String[] {"1.0.0.dirty", "0.0.1-custom-description-42", "2.0.0-1-gaaaaaa.dirty"};
 
-    private static final String[] ILLEGAL_VERSIONS = new String[] {
-            "5.0",
-            "1.1.2.3-foo",
-            "1.1.2.3",
-            "1.0.0-FOO"
-    };
+    private static final String[] ILLEGAL_VERSIONS = new String[] {"5.0", "1.1.2.3-foo", "1.1.2.3", "1.0.0-FOO"};
 
     @Test
     public void testCanCreateValidVersions() {

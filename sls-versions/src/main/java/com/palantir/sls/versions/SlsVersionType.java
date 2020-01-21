@@ -52,5 +52,4 @@ public enum SlsVersionType {
     public boolean isReleaseCandidate() {
         return this == RELEASE_CANDIDATE || this == RELEASE_CANDIDATE_SNAPSHOT;
     }
-
 }

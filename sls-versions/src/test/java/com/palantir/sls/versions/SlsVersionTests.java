@@ -58,5 +58,4 @@ public class SlsVersionTests {
     public void testCheckWithGarbage() {
         assertThat(SlsVersion.check("foo")).isFalse();
     }
-
 }
