@@ -28,31 +28,28 @@ import java.util.regex.Matcher;
 import org.immutables.value.Value;
 
 /**
- * An orderable version string as defined by the
- * [SLS spec](https://github.com/palantir/sls-version-java/README.md#sls-product-version-specification).
+ * An orderable version string as defined by the [SLS
+ * spec](https://github.com/palantir/sls-version-java/README.md#sls-product-version-specification).
  */
 @Value.Immutable
 @ImmutablesStyle
 public abstract class OrderableSlsVersion extends SlsVersion {
 
     private static final SlsVersionType[] ORDERED_VERSION_TYPES = {
-            SlsVersionType.RELEASE,
-            SlsVersionType.RELEASE_CANDIDATE,
-            SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT,
-            SlsVersionType.RELEASE_SNAPSHOT
+        SlsVersionType.RELEASE,
+        SlsVersionType.RELEASE_CANDIDATE,
+        SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT,
+        SlsVersionType.RELEASE_SNAPSHOT
     };
 
     @JsonCreator
     public static OrderableSlsVersion valueOf(String value) {
         Optional<OrderableSlsVersion> optional = safeValueOf(value);
-        checkArgument(optional.isPresent(), "Not an orderable version: {value}",
-                UnsafeArg.of("value", value));
+        checkArgument(optional.isPresent(), "Not an orderable version: {value}", UnsafeArg.of("value", value));
         return optional.get();
     }
 
-    /**
-     * The same as {@link #valueOf(String)}, but will return {@link Optional#empty} if the format is invalid.
-     */
+    /** The same as {@link #valueOf(String)}, but will return {@link Optional#empty} if the format is invalid. */
     public static Optional<OrderableSlsVersion> safeValueOf(String value) {
         checkNotNull(value, "value cannot be null");
         SlsVersionType type = getTypeOrNull(value);
@@ -61,13 +58,11 @@ public abstract class OrderableSlsVersion extends SlsVersion {
         }
 
         Matcher matcher = type.getPattern().matcher(value);
-        matcher.matches();  // without calling matches, the groups are not available.
-        OptionalInt firstSequence = matcher.groupCount() > 3
-                ? OptionalInt.of(Integer.parseInt(matcher.group(4)))
-                : OptionalInt.empty();
-        OptionalInt secondSequence = matcher.groupCount() > 4
-                ? OptionalInt.of(Integer.parseInt(matcher.group(5)))
-                : OptionalInt.empty();
+        matcher.matches(); // without calling matches, the groups are not available.
+        OptionalInt firstSequence =
+                matcher.groupCount() > 3 ? OptionalInt.of(Integer.parseInt(matcher.group(4))) : OptionalInt.empty();
+        OptionalInt secondSequence =
+                matcher.groupCount() > 4 ? OptionalInt.of(Integer.parseInt(matcher.group(5))) : OptionalInt.empty();
 
         return Optional.of(new OrderableSlsVersion.Builder()
                 .value(value)
@@ -90,9 +85,7 @@ public abstract class OrderableSlsVersion extends SlsVersion {
         return null;
     }
 
-    /**
-     * Returns true iff the given coordinate has a version which can be parsed into a valid orderable SLS version.
-     */
+    /** Returns true iff the given coordinate has a version which can be parsed into a valid orderable SLS version. */
     public static boolean check(String coordinate) {
         return safeValueOf(coordinate).isPresent();
     }

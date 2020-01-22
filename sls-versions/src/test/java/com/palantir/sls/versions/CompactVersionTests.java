@@ -28,23 +28,23 @@ import org.junit.Test;
 public final class CompactVersionTests {
 
     private static final List<OrderableSlsVersion> versions = Arrays.asList(
-            "0.0.0-rc0",
-            "0.0.0-rc0-1-gbbb",
-            "0.0.0",
-            "0.0.0-1-gbbb",
-            "0.0.1",
-            "0.1.0",
-            "0.1.1",
-            "1.0.0-rc0",
-            "1.0.0-rc0-2-gbbb",
-            "1.0.0-rc1",
-            "1.0.0-rc1-1-gbbb",
-            "1.0.0",
-            "1.0.0-1-gbbb",
-            "1.0.0-2-gbbb",
-            "1.0.1",
-            "1.1.1",
-            "1048575.1048575.1048575-rc1048575-1048575-gbbb")
+                    "0.0.0-rc0",
+                    "0.0.0-rc0-1-gbbb",
+                    "0.0.0",
+                    "0.0.0-1-gbbb",
+                    "0.0.1",
+                    "0.1.0",
+                    "0.1.1",
+                    "1.0.0-rc0",
+                    "1.0.0-rc0-2-gbbb",
+                    "1.0.0-rc1",
+                    "1.0.0-rc1-1-gbbb",
+                    "1.0.0",
+                    "1.0.0-1-gbbb",
+                    "1.0.0-2-gbbb",
+                    "1.0.1",
+                    "1.1.1",
+                    "1048575.1048575.1048575-rc1048575-1048575-gbbb")
             .stream()
             .map(OrderableSlsVersion::valueOf)
             .collect(Collectors.toList());
@@ -70,9 +70,12 @@ public final class CompactVersionTests {
         for (int i = 0; i < versions.size() - 1; i++) {
             CompactVersion left = CompactVersion.from(versions.get(i));
             CompactVersion right = CompactVersion.from(versions.get(i + 1));
-            assertThat(compare(left.getMsb(), left.getLsb(), right.getMsb(), right.getLsb())).isNegative();
-            assertThat(compare(right.getMsb(), right.getLsb(), left.getMsb(), left.getLsb())).isPositive();
-            assertThat(compare(left.getMsb(), left.getLsb(), left.getMsb(), left.getLsb())).isZero();
+            assertThat(compare(left.getMsb(), left.getLsb(), right.getMsb(), right.getLsb()))
+                    .isNegative();
+            assertThat(compare(right.getMsb(), right.getLsb(), left.getMsb(), left.getLsb()))
+                    .isPositive();
+            assertThat(compare(left.getMsb(), left.getLsb(), left.getMsb(), left.getLsb()))
+                    .isZero();
         }
     }
 
@@ -88,19 +91,14 @@ public final class CompactVersionTests {
 
     @Test
     public void testValuesGreaterThanMaximumReceiveErrors() {
-        List<OrderableSlsVersion> aboveMaxVersions = Arrays.asList(
-                "0.0.0-rc1048576",
-                "0.0.0-1048576-gbbb",
-                "0.0.1048576",
-                "0.1048576.0",
-                "1048576.0.0")
-                .stream()
-                .map(OrderableSlsVersion::valueOf)
-                .collect(Collectors.toList());
+        List<OrderableSlsVersion> aboveMaxVersions =
+                Arrays.asList("0.0.0-rc1048576", "0.0.0-1048576-gbbb", "0.0.1048576", "0.1048576.0", "1048576.0.0")
+                        .stream()
+                        .map(OrderableSlsVersion::valueOf)
+                        .collect(Collectors.toList());
 
         for (OrderableSlsVersion version : aboveMaxVersions) {
-            assertThatThrownBy(() -> CompactVersion.from(version))
-                    .isInstanceOf(SafeIllegalArgumentException.class);
+            assertThatThrownBy(() -> CompactVersion.from(version)).isInstanceOf(SafeIllegalArgumentException.class);
         }
     }
 
@@ -112,5 +110,4 @@ public final class CompactVersionTests {
         assertThat(compact.getMsb()).isLessThan((1L << 53) - 1);
         assertThat(compact.getLsb()).isLessThan((1L << 53) - 1);
     }
-
 }

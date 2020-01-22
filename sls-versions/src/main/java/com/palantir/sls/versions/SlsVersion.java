@@ -35,13 +35,11 @@ public abstract class SlsVersion {
         if (optionalNonOrderableVersion.isPresent()) {
             return optionalNonOrderableVersion.get();
         }
-        throw new SafeIllegalArgumentException("Value is neither an orderable nor a non-orderable version",
-                UnsafeArg.of("value", value));
+        throw new SafeIllegalArgumentException(
+                "Value is neither an orderable nor a non-orderable version", UnsafeArg.of("value", value));
     }
 
-    /**
-     * Returns true iff the given coordinate has a version which can be parsed into a valid SLS string.
-     */
+    /** Returns true iff the given coordinate has a version which can be parsed into a valid SLS string. */
     public static boolean check(String coordinate) {
         try {
             valueOf(coordinate);
@@ -54,10 +52,16 @@ public abstract class SlsVersion {
     /** The full version string. */
     @Value.Auxiliary
     public abstract String getValue();
+
     public abstract int getMajorVersionNumber();
+
     public abstract int getMinorVersionNumber();
+
     public abstract int getPatchVersionNumber();
+
     public abstract OptionalInt firstSequenceVersionNumber();
+
     public abstract OptionalInt secondSequenceVersionNumber();
+
     public abstract SlsVersionType getType();
 }

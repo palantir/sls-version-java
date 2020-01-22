@@ -122,8 +122,10 @@ public class SlsVersionMatcherTest {
     }
 
     private static void assertMatcherOrder(SlsVersionMatcher smaller, SlsVersionMatcher larger) {
-        assertThat(SlsVersionMatcher.MATCHER_COMPARATOR.compare(smaller, larger)).isLessThan(0);
-        assertThat(SlsVersionMatcher.MATCHER_COMPARATOR.compare(larger, smaller)).isGreaterThan(0);
+        assertThat(SlsVersionMatcher.MATCHER_COMPARATOR.compare(smaller, larger))
+                .isLessThan(0);
+        assertThat(SlsVersionMatcher.MATCHER_COMPARATOR.compare(larger, smaller))
+                .isGreaterThan(0);
     }
 
     private static SlsVersionMatcher matcher(String value) {

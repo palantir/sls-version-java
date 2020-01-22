@@ -33,8 +33,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An SLS version matcher as defined by the
- * [SLS spec](https://github.com/palantir/sls-version-java/README.md#sls-product-version-specification).
+ * An SLS version matcher as defined by the [SLS
+ * spec](https://github.com/palantir/sls-version-java/README.md#sls-product-version-specification).
  */
 @Value.Immutable
 @ImmutablesStyle
@@ -46,28 +46,28 @@ public abstract class SlsVersionMatcher {
     private static final Comparator<OptionalInt> EMPTY_IS_GREATER =
             Comparator.comparingInt(num -> num.isPresent() ? num.getAsInt() : Integer.MAX_VALUE);
 
-    public static final Comparator<SlsVersionMatcher> MATCHER_COMPARATOR = Comparator
-            .comparing(SlsVersionMatcher::getMajorVersionNumber, EMPTY_IS_GREATER)
+    public static final Comparator<SlsVersionMatcher> MATCHER_COMPARATOR = Comparator.comparing(
+                    SlsVersionMatcher::getMajorVersionNumber, EMPTY_IS_GREATER)
             .thenComparing(SlsVersionMatcher::getMinorVersionNumber, EMPTY_IS_GREATER)
             .thenComparing(SlsVersionMatcher::getPatchVersionNumber, EMPTY_IS_GREATER);
 
     @Value.Auxiliary
     public abstract String getValue();
+
     public abstract OptionalInt getMajorVersionNumber();
+
     public abstract OptionalInt getMinorVersionNumber();
+
     public abstract OptionalInt getPatchVersionNumber();
 
     @JsonCreator
     public static SlsVersionMatcher valueOf(String value) {
         Optional<SlsVersionMatcher> optional = safeValueOf(value);
-        checkArgument(optional.isPresent(), "Not a valid SLS version matcher: {value}",
-                UnsafeArg.of("value", value));
+        checkArgument(optional.isPresent(), "Not a valid SLS version matcher: {value}", UnsafeArg.of("value", value));
         return optional.get();
     }
 
-    /**
-     * The same as {@link #valueOf(String)}, but returns {@link Optional#empty} if the format is invalid.
-     */
+    /** The same as {@link #valueOf(String)}, but returns {@link Optional#empty} if the format is invalid. */
     public static Optional<SlsVersionMatcher> safeValueOf(String value) {
         checkNotNull(value, "value cannot be null");
 
@@ -84,16 +84,19 @@ public abstract class SlsVersionMatcher {
 
             if (maybeMatcher.getPatchVersionNumber().isPresent()
                     && (!maybeMatcher.getMinorVersionNumber().isPresent()
-                    || !maybeMatcher.getMajorVersionNumber().isPresent())) {
+                            || !maybeMatcher.getMajorVersionNumber().isPresent())) {
                 // String contains a pattern where major or minor version is underspecified.
                 // Example: x.x.2, 1.x.3, x.2.3
-                log.info("Not a valid matcher, a patch version is specified, yet a major or minor is not specified",
+                log.info(
+                        "Not a valid matcher, a patch version is specified, yet a major or minor is not specified",
                         SafeArg.of("matcher", maybeMatcher));
                 return Optional.empty();
             }
-            if (maybeMatcher.getMinorVersionNumber().isPresent() && !maybeMatcher.getMajorVersionNumber().isPresent()) {
+            if (maybeMatcher.getMinorVersionNumber().isPresent()
+                    && !maybeMatcher.getMajorVersionNumber().isPresent()) {
                 // String contains a pattern where major version is underspecified. Example: x.2.x
-                log.info("Not a valid matcher, a minor version is specified, yet a major is not specified",
+                log.info(
+                        "Not a valid matcher, a minor version is specified, yet a major is not specified",
                         SafeArg.of("matcher", maybeMatcher));
                 return Optional.empty();
             }
@@ -122,10 +125,10 @@ public abstract class SlsVersionMatcher {
      * match release snapshot, release, release-candidate, and release-candidate snapshot versions. For example, matcher
      * {@code 1.x.x} matches versions {@code 1.0.0} and {@code 1.2.3-rc4}, but it does not match versions {@code 2.0.0}
      * or {@code 0.1.0-rc4}.
-     * <p>
-     * Returns a negative number if any existing component is less than the given version and a positive number if any
-     * existing component is greater than the given version. For example matcher {@code 1.2.x} is less than {@code
-     * 1.3.2} and {@code 1.2.x} is greater than {@code 1.1.1}.
+     *
+     * <p>Returns a negative number if any existing component is less than the given version and a positive number if
+     * any existing component is greater than the given version. For example matcher {@code 1.2.x} is less than
+     * {@code 1.3.2} and {@code 1.2.x} is greater than {@code 1.1.1}.
      */
     public int compare(OrderableSlsVersion version) {
         if (concreteSlsVersion().isPresent()) {

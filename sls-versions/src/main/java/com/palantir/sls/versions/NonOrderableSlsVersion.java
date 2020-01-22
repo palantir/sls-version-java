@@ -32,14 +32,11 @@ public abstract class NonOrderableSlsVersion extends SlsVersion {
     @JsonCreator
     public static NonOrderableSlsVersion valueOf(String value) {
         Optional<NonOrderableSlsVersion> optional = safeValueOf(value);
-        checkArgument(optional.isPresent(), "Not a non-orderable version: {value}",
-                UnsafeArg.of("value", value));
+        checkArgument(optional.isPresent(), "Not a non-orderable version: {value}", UnsafeArg.of("value", value));
         return optional.get();
     }
 
-    /**
-     * The same as {@link #valueOf(String)}, but will return {@link Optional#empty()} if the format is invalid.
-     */
+    /** The same as {@link #valueOf(String)}, but will return {@link Optional#empty()} if the format is invalid. */
     public static Optional<NonOrderableSlsVersion> safeValueOf(String version) {
         Matcher matcher = SlsVersionType.NON_ORDERABLE.getPattern().matcher(version);
         if (!matcher.matches()) {
