@@ -19,11 +19,12 @@ package com.palantir.sls.versions;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.palantir.logsafe.UnsafeArg;
 import com.palantir.logsafe.exceptions.SafeIllegalArgumentException;
+import java.io.Serializable;
 import java.util.Optional;
 import java.util.OptionalInt;
 import org.immutables.value.Value;
 
-public abstract class SlsVersion {
+public abstract class SlsVersion implements Serializable {
 
     @JsonCreator
     public static SlsVersion valueOf(String value) {
