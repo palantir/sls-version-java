@@ -130,7 +130,7 @@ public class OrderableSlsVersionTests {
     @Test
     public void compareToFunctionWordsForOrderableVersions() {
         List<OrderableSlsVersion> orderedVersions = Arrays.stream(ORDERABLE_VERSIONS_IN_ORDER)
-                .map(v -> OrderableSlsVersion.valueOf(v))
+                .map(OrderableSlsVersion::valueOf)
                 .collect(Collectors.toList());
         List<OrderableSlsVersion> shuffledVersions = new ArrayList<>(orderedVersions);
         Collections.shuffle(shuffledVersions);
