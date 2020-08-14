@@ -37,14 +37,18 @@ public abstract class NonOrderableSlsVersion extends SlsVersion {
     }
 
     /** The same as {@link #valueOf(String)}, but will return {@link Optional#empty()} if the format is invalid. */
-    public static Optional<NonOrderableSlsVersion> safeValueOf(String version) {
-        Matcher matcher = SlsVersionType.NON_ORDERABLE.getPattern().matcher(version);
+    public static Optional<NonOrderableSlsVersion> safeValueOf(String value) {
+        if (value == null) {
+            return Optional.empty();
+        }
+
+        Matcher matcher = SlsVersionType.NON_ORDERABLE.getPattern().matcher(value);
         if (!matcher.matches()) {
             return Optional.empty();
         }
 
         return Optional.of(new NonOrderableSlsVersion.Builder()
-                .value(version)
+                .value(value)
                 .majorVersionNumber(Integer.parseInt(matcher.group(1)))
                 .minorVersionNumber(Integer.parseInt(matcher.group(2)))
                 .patchVersionNumber(Integer.parseInt(matcher.group(3)))

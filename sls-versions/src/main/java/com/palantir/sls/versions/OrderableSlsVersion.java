@@ -17,7 +17,6 @@
 package com.palantir.sls.versions;
 
 import static com.palantir.logsafe.Preconditions.checkArgument;
-import static com.palantir.logsafe.Preconditions.checkNotNull;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -51,7 +50,10 @@ public abstract class OrderableSlsVersion extends SlsVersion {
 
     /** The same as {@link #valueOf(String)}, but will return {@link Optional#empty} if the format is invalid. */
     public static Optional<OrderableSlsVersion> safeValueOf(String value) {
-        checkNotNull(value, "value cannot be null");
+        if (value == null) {
+            return Optional.empty();
+        }
+
         SlsVersionType type = getTypeOrNull(value);
         if (type == null) {
             return Optional.empty();
