@@ -6,5 +6,5 @@ com.palantir.safe-logging:safe-logging = 1.13.1
 
 # Test dependencies
 junit:junit = 4.13.1
-org.assertj:assertj-core = 3.17.2
+org.assertj:assertj-core = 3.18.0
 org.mockito:mockito-core = 3.5.15
