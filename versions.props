@@ -2,7 +2,7 @@ com.fasterxml.jackson.core:* = 2.11.1
 org.immutables:* = 2.8.8
 org.slf4j:slf4j-api = 1.7.30
 com.palantir.safe-logging:preconditions = 1.4.0
-com.palantir.safe-logging:safe-logging = 1.13.1
+com.palantir.safe-logging:safe-logging = 1.14.0
 
 # Test dependencies
 junit:junit = 4.13.1
