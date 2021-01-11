@@ -1,0 +1,5 @@
+type: improvement
+improvement:
+  description: Update javadoc sls-spec link.
+  links:
+  - https://github.com/palantir/sls-version-java/pull/390
