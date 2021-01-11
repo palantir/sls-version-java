@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * An SLS version matcher as defined by the [SLS
- * spec](https://github.com/palantir/sls-version-java/README.md#sls-product-version-specification).
+ * spec](https://github.com/palantir/sls-version-java#sls-product-version-specification).
  */
 @Value.Immutable
 @ImmutablesStyle

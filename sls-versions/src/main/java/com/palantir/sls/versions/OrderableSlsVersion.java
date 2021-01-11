@@ -28,7 +28,7 @@ import org.immutables.value.Value;
 
 /**
  * An orderable version string as defined by the [SLS
- * spec](https://github.com/palantir/sls-version-java/README.md#sls-product-version-specification).
+ * spec](https://github.com/palantir/sls-version-java#sls-product-version-specification).
  */
 @Value.Immutable
 @ImmutablesStyle
