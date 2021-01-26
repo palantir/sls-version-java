@@ -32,7 +32,7 @@ import org.immutables.value.Value;
  */
 @Value.Immutable
 @ImmutablesStyle
-public abstract class OrderableSlsVersion extends SlsVersion {
+public abstract class OrderableSlsVersion extends SlsVersion implements Comparable<OrderableSlsVersion> {
 
     private static final SlsVersionType[] ORDERED_VERSION_TYPES = {
         SlsVersionType.RELEASE,
@@ -96,6 +96,11 @@ public abstract class OrderableSlsVersion extends SlsVersion {
     @Override
     public final String toString() {
         return getValue();
+    }
+
+    @Override
+    public final int compareTo(OrderableSlsVersion other) {
+        return VersionComparator.INSTANCE.compare(this, other);
     }
 
     public static class Builder extends ImmutableOrderableSlsVersion.Builder {}
