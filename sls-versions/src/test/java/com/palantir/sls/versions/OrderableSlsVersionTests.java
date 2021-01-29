@@ -110,8 +110,7 @@ public class OrderableSlsVersionTests {
     public void testVersionIsEqualToItself() {
         for (String v : ORDERABLE_VERSIONS_IN_ORDER) {
             assertThat(OrderableSlsVersion.valueOf(v)).isEqualTo(OrderableSlsVersion.valueOf(v));
-            assertThat(compare(OrderableSlsVersion.valueOf(v), OrderableSlsVersion.valueOf(v)))
-                    .isZero();
+            assertThat(OrderableSlsVersion.valueOf(v)).isEqualByComparingTo(OrderableSlsVersion.valueOf(v));
         }
     }
 
@@ -120,10 +119,8 @@ public class OrderableSlsVersionTests {
         for (int i = 0; i < ORDERABLE_VERSIONS_IN_ORDER.length - 1; ++i) {
             String left = ORDERABLE_VERSIONS_IN_ORDER[i];
             String right = ORDERABLE_VERSIONS_IN_ORDER[i + 1];
-            assertThat(compare(OrderableSlsVersion.valueOf(left), OrderableSlsVersion.valueOf(right)))
-                    .isEqualTo(-1);
-            assertThat(compare(OrderableSlsVersion.valueOf(right), OrderableSlsVersion.valueOf(left)))
-                    .isEqualTo(1);
+            assertThat(OrderableSlsVersion.valueOf(left)).isLessThan(OrderableSlsVersion.valueOf(right));
+            assertThat(OrderableSlsVersion.valueOf(right)).isGreaterThan(OrderableSlsVersion.valueOf(left));
         }
     }
 
@@ -211,12 +208,16 @@ public class OrderableSlsVersionTests {
     }
 
     private void assertVersionsInOrder(String smaller, String larger) {
-        assertThat(compare(OrderableSlsVersion.valueOf(smaller), OrderableSlsVersion.valueOf(larger)))
+        assertThat(OrderableSlsVersion.valueOf(smaller)).isLessThan(OrderableSlsVersion.valueOf(larger));
+        assertThat(VersionComparator.INSTANCE.compare(
+                        OrderableSlsVersion.valueOf(smaller), OrderableSlsVersion.valueOf(larger)))
                 .isEqualTo(-1);
     }
 
     private void assertVersionsEqual(String left, String right) {
-        assertThat(compare(OrderableSlsVersion.valueOf(left), OrderableSlsVersion.valueOf(right)))
+        assertThat(OrderableSlsVersion.valueOf(left)).isEqualByComparingTo(OrderableSlsVersion.valueOf(right));
+        assertThat(VersionComparator.INSTANCE.compare(
+                        OrderableSlsVersion.valueOf(left), OrderableSlsVersion.valueOf(right)))
                 .isZero();
     }
 
@@ -238,9 +239,5 @@ public class OrderableSlsVersionTests {
                 .secondSequenceVersionNumber(
                         secondSequence == null ? OptionalInt.empty() : OptionalInt.of(secondSequence))
                 .build();
-    }
-
-    private int compare(OrderableSlsVersion left, OrderableSlsVersion right) {
-        return VersionComparator.INSTANCE.compare(left, right);
     }
 }
