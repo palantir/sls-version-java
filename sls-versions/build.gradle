@@ -13,12 +13,12 @@ dependencies {
     testCompile 'com.fasterxml.jackson.core:jackson-databind'
     testCompile 'junit:junit'
     testCompile 'org.assertj:assertj-core'
-    testCompile 'org.mockito:mockito-core'
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.vintage:junit-vintage-engine', {
         because 'allows JUnit 3 and JUnit 4 tests to run'
     }
-    testImplementation 'net.jqwik:jqwik'
+    testImplementation 'net.jqwik:jqwik-api'
+    testRuntimeOnly 'net.jqwik:jqwik'
 }
 
 tasks.withType(Test) {
