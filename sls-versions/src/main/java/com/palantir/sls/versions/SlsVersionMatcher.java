@@ -165,9 +165,23 @@ public abstract class SlsVersionMatcher {
     }
 
     private static OptionalInt parseInt(String maybeInt) {
+        if (maybeInt.length() == 1) {
+            return parseIntFromChar(maybeInt.charAt(0));
+        }
+
         try {
             return OptionalInt.of(Integer.parseInt(maybeInt));
         } catch (NumberFormatException e) {
+            return OptionalInt.empty();
+        }
+    }
+
+    private static OptionalInt parseIntFromChar(char onlyChar) {
+        if (onlyChar == 'x') {
+            return OptionalInt.empty();
+        } else if (Character.isDigit(onlyChar)) {
+            return OptionalInt.of(Character.getNumericValue(onlyChar));
+        } else {
             return OptionalInt.empty();
         }
     }
