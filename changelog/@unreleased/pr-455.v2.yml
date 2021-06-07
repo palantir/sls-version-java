@@ -1,0 +1,8 @@
+type: improvement
+improvement:
+  description: '`SlsVersionMatcher#safeValueOf` now allocates 94% less memory per
+    invocation, by avoiding throwing and catching a `NumberFormatException`. Specifically,
+    it would allocate ~2192 bytes for every single invocation in my benchmark, and
+    now it allocates 152 bytes per op. It''s also ~10x faster.'
+  links:
+  - https://github.com/palantir/sls-version-java/pull/455
