@@ -26,7 +26,6 @@ import com.palantir.logsafe.UnsafeArg;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.OptionalInt;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.immutables.value.Value;
 import org.slf4j.Logger;
@@ -74,16 +73,7 @@ public abstract class SlsVersionMatcher {
     /** The same as {@link #valueOf(String)}, but returns {@link Optional#empty} if the format is invalid. */
     public static Optional<SlsVersionMatcher> safeValueOf(String value) {
         checkNotNull(value, "value cannot be null");
-
-        Matcher matcher = PATTERN.matcher(value);
-        if (!matcher.matches()) {
-            return Optional.empty();
-        } else {
-            OptionalInt major = parseInt(matcher.group(1));
-            OptionalInt minor = parseInt(matcher.group(3));
-            OptionalInt patch = parseInt(matcher.group(5));
-            return maybeCreate(value, major, minor, patch);
-        }
+        return RegexMatcherParser.safeValueOf(value);
     }
 
     static Optional<SlsVersionMatcher> maybeCreate(
@@ -169,18 +159,6 @@ public abstract class SlsVersionMatcher {
     @Value.Lazy
     protected Optional<OrderableSlsVersion> concreteSlsVersion() {
         return OrderableSlsVersion.safeValueOf(getValue());
-    }
-
-    private static OptionalInt parseInt(String maybeInt) {
-        if (maybeInt.codePointAt(0) == 'x') {
-            return OptionalInt.empty();
-        }
-
-        try {
-            return OptionalInt.of(Integer.parseInt(maybeInt));
-        } catch (NumberFormatException e) {
-            return OptionalInt.empty();
-        }
     }
 
     @JsonValue

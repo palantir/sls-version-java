@@ -82,7 +82,7 @@ final class HandRolledMatcherParser {
     }
 
     //  "x" is signified by the magic negative number -1, which is distinct from Integer.MIN_VALUE which is a failure
-    public static int[] numberOrX(String s, int i) {
+    private static int[] numberOrX(String s, int i) {
         int[] result = literalX(s, i);
         if (result[1] != Integer.MIN_VALUE) {
             result[1] = -1;

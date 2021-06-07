@@ -40,7 +40,7 @@ public class HandRolledMatcherParserTest {
         String string = major + '.' + minor + '.' + patch;
         assertThat(HandRolledMatcherParser.safeValueOf(string))
                 .describedAs(string)
-                .isEqualTo(SlsVersionMatcher.safeValueOf(string));
+                .isEqualTo(RegexMatcherParser.safeValueOf(string));
     }
 
     @Provide
@@ -61,6 +61,6 @@ public class HandRolledMatcherParserTest {
     public void nonsense_parsing(@ForAll @Nonsense String nonsense) {
         assertThat(HandRolledMatcherParser.safeValueOf(nonsense))
                 .describedAs(nonsense)
-                .isEqualTo(SlsVersionMatcher.safeValueOf(nonsense));
+                .isEqualTo(RegexMatcherParser.safeValueOf(nonsense));
     }
 }
