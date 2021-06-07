@@ -30,6 +30,15 @@ import net.jqwik.api.Provide;
 import net.jqwik.api.constraints.Chars;
 import net.jqwik.api.constraints.NumericChars;
 
+/**
+ * This test uses the <a href="https://jqwik.net/">jqwik library</a>
+ * to generate a whole bunch of random test cases, and validate that the {@link HandRolledMatcherParser} behaves
+ * identically to the reference {@link RegexMatcherParser}.
+ *
+ * It's effectively a java version of Haskell's QuickCheck library, and has cool features like 'shrinking', whereby
+ * it will try to present the smallest possible repro of any failure rather than the obscure long version it may have
+ * discovered first.
+ */
 public final class HandRolledMatcherParserTest {
 
     @Property(seed = "3226259347315412165", tries = 2000)
