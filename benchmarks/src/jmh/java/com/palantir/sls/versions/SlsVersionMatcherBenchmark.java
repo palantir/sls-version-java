@@ -65,6 +65,18 @@ public class SlsVersionMatcherBenchmark {
         blackhole.consume(answer);
     }
 
+    @Benchmark
+    public static void fast_matcher_with_one_x_x(Blackhole blackhole) {
+        Optional<SlsVersionMatcher> answer = HandRolledMatcherParser.safeValueOf("1.x.x");
+        blackhole.consume(answer);
+    }
+
+    @Benchmark
+    public static void fast_matcher_with_all_numbers(Blackhole blackhole) {
+        Optional<SlsVersionMatcher> answer = HandRolledMatcherParser.safeValueOf("2.3.4");
+        blackhole.consume(answer);
+    }
+
     public static void main(String[] _args) throws Exception {
         Options opt = new OptionsBuilder()
                 .include(SlsVersionMatcherBenchmark.class.getSimpleName())

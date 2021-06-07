@@ -82,28 +82,33 @@ public abstract class SlsVersionMatcher {
             OptionalInt major = parseInt(matcher.group(1));
             OptionalInt minor = parseInt(matcher.group(3));
             OptionalInt patch = parseInt(matcher.group(5));
-            SlsVersionMatcher maybeMatcher = ImmutableSlsVersionMatcher.of(value, major, minor, patch);
-
-            if (maybeMatcher.getPatchVersionNumber().isPresent()
-                    && (!maybeMatcher.getMinorVersionNumber().isPresent()
-                            || !maybeMatcher.getMajorVersionNumber().isPresent())) {
-                // String contains a pattern where major or minor version is underspecified.
-                // Example: x.x.2, 1.x.3, x.2.3
-                log.info(
-                        "Not a valid matcher, a patch version is specified, yet a major or minor is not specified",
-                        SafeArg.of("matcher", maybeMatcher));
-                return Optional.empty();
-            }
-            if (maybeMatcher.getMinorVersionNumber().isPresent()
-                    && !maybeMatcher.getMajorVersionNumber().isPresent()) {
-                // String contains a pattern where major version is underspecified. Example: x.2.x
-                log.info(
-                        "Not a valid matcher, a minor version is specified, yet a major is not specified",
-                        SafeArg.of("matcher", maybeMatcher));
-                return Optional.empty();
-            }
-            return Optional.of(maybeMatcher);
+            return maybeCreate(value, major, minor, patch);
         }
+    }
+
+    static Optional<SlsVersionMatcher> maybeCreate(
+            String value, OptionalInt major, OptionalInt minor, OptionalInt patch) {
+        SlsVersionMatcher maybeMatcher = ImmutableSlsVersionMatcher.of(value, major, minor, patch);
+
+        if (maybeMatcher.getPatchVersionNumber().isPresent()
+                && (!maybeMatcher.getMinorVersionNumber().isPresent()
+                        || !maybeMatcher.getMajorVersionNumber().isPresent())) {
+            // String contains a pattern where major or minor version is underspecified.
+            // Example: x.x.2, 1.x.3, x.2.3
+            log.info(
+                    "Not a valid matcher, a patch version is specified, yet a major or minor is not specified",
+                    SafeArg.of("matcher", maybeMatcher));
+            return Optional.empty();
+        }
+        if (maybeMatcher.getMinorVersionNumber().isPresent()
+                && !maybeMatcher.getMajorVersionNumber().isPresent()) {
+            // String contains a pattern where major version is underspecified. Example: x.2.x
+            log.info(
+                    "Not a valid matcher, a minor version is specified, yet a major is not specified",
+                    SafeArg.of("matcher", maybeMatcher));
+            return Optional.empty();
+        }
+        return Optional.of(maybeMatcher);
     }
 
     /**
