@@ -8,3 +8,5 @@ com.palantir.safe-logging:safe-logging = 1.14.0
 junit:junit = 4.13.2
 org.assertj:assertj-core = 3.19.0
 org.mockito:mockito-core = 3.11.0
+org.openjdk.jmh:* = 1.27
+org.apache.logging.log4j:log4j-slf4j-impl = 2.14.0
