@@ -26,7 +26,6 @@ import com.palantir.logsafe.UnsafeArg;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.OptionalInt;
-import java.util.regex.Pattern;
 import org.immutables.value.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +39,6 @@ import org.slf4j.LoggerFactory;
 public abstract class SlsVersionMatcher {
 
     private static final Logger log = LoggerFactory.getLogger(SlsVersionMatcher.class);
-    private static final Pattern PATTERN = Pattern.compile("^(([0-9]+|x))\\.(([0-9]+|x))\\.(([0-9]+|x))$");
 
     private static final Comparator<OptionalInt> EMPTY_IS_GREATER =
             Comparator.comparingInt(num -> num.isPresent() ? num.getAsInt() : Integer.MAX_VALUE);

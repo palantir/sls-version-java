@@ -30,7 +30,7 @@ import net.jqwik.api.Provide;
 import net.jqwik.api.constraints.Chars;
 import net.jqwik.api.constraints.NumericChars;
 
-public class HandRolledMatcherParserTest {
+public final class HandRolledMatcherParserTest {
 
     @Property(seed = "3226259347315412165", tries = 2000)
     public void valid_parsing(
@@ -45,10 +45,10 @@ public class HandRolledMatcherParserTest {
 
     @Provide
     public Arbitrary<String> validComponent() {
-        Arbitrary<String> x = Arbitraries.just("x");
+        Arbitrary<String> justX = Arbitraries.just("x");
         Arbitrary<String> integerArbitrary =
                 Arbitraries.integers().greaterOrEqual(0).map(a -> Integer.toString(a));
-        return Arbitraries.oneOf(x, integerArbitrary);
+        return Arbitraries.oneOf(justX, integerArbitrary);
     }
 
     @Target({ElementType.ANNOTATION_TYPE, ElementType.PARAMETER})
