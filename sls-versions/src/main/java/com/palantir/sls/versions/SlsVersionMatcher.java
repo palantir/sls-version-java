@@ -52,12 +52,16 @@ public abstract class SlsVersionMatcher {
             .thenComparing(SlsVersionMatcher::getPatchVersionNumber, EMPTY_IS_GREATER);
 
     @Value.Auxiliary
+    @Value.Parameter
     public abstract String getValue();
 
+    @Value.Parameter
     public abstract OptionalInt getMajorVersionNumber();
 
+    @Value.Parameter
     public abstract OptionalInt getMinorVersionNumber();
 
+    @Value.Parameter
     public abstract OptionalInt getPatchVersionNumber();
 
     @JsonCreator
@@ -75,12 +79,10 @@ public abstract class SlsVersionMatcher {
         if (!matcher.matches()) {
             return Optional.empty();
         } else {
-            SlsVersionMatcher maybeMatcher = new SlsVersionMatcher.Builder()
-                    .value(value)
-                    .majorVersionNumber(parseInt(matcher.group(1)))
-                    .minorVersionNumber(parseInt(matcher.group(3)))
-                    .patchVersionNumber(parseInt(matcher.group(5)))
-                    .build();
+            OptionalInt major = parseInt(matcher.group(1));
+            OptionalInt minor = parseInt(matcher.group(3));
+            OptionalInt patch = parseInt(matcher.group(5));
+            SlsVersionMatcher maybeMatcher = ImmutableSlsVersionMatcher.of(value, major, minor, patch);
 
             if (maybeMatcher.getPatchVersionNumber().isPresent()
                     && (!maybeMatcher.getMinorVersionNumber().isPresent()
