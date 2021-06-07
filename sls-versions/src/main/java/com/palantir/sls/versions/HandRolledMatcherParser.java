@@ -33,7 +33,7 @@ final class HandRolledMatcherParser {
         OptionalInt minor = OptionalInt.empty();
         OptionalInt patch = OptionalInt.empty();
 
-        int[] result = new int[] {0, Integer.MIN_VALUE};
+        int[] result = new int[] {0};
 
         // major
         result = numberOrX(s, result[0]);
@@ -113,13 +113,21 @@ final class HandRolledMatcherParser {
         } else if (next == startIndex + 1) {
             return new int[] {next, Character.getNumericValue(s.codePointAt(startIndex))};
         } else {
-            return new int[] {next, Integer.parseInt(s.substring(startIndex, next))};
+            try {
+                return new int[] {next, Integer.parseUnsignedInt(s.substring(startIndex, next))};
+            } catch (NumberFormatException e) {
+                if (e.getMessage().endsWith("exceeds range of unsigned int.")) {
+                    return new int[] {startIndex, Integer.MIN_VALUE};
+                } else {
+                    throw e;
+                }
+            }
         }
     }
 
     // 0 signifies success
     private static int[] literalX(String s, int startIndex) {
-        if (s.codePointAt(startIndex) == 'x') {
+        if (startIndex < s.length() && s.codePointAt(startIndex) == 'x') {
             return new int[] {startIndex + 1, 0};
         } else {
             return new int[] {startIndex, Integer.MIN_VALUE};
@@ -127,7 +135,7 @@ final class HandRolledMatcherParser {
     }
 
     private static int[] literalDot(String s, int startIndex) {
-        if (s.codePointAt(startIndex) == '.') {
+        if (startIndex < s.length() && s.codePointAt(startIndex) == '.') {
             return new int[] {startIndex + 1, 0};
         } else {
             return new int[] {startIndex, Integer.MIN_VALUE};
