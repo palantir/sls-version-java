@@ -55,13 +55,13 @@ public class SlsVersionMatcherBenchmark {
 
     @Benchmark
     public static void matcher_with_one_x_x(Blackhole blackhole) {
-        Optional<SlsVersionMatcher> answer = SlsVersionMatcher.safeValueOf("1.x.x");
+        Optional<SlsVersionMatcher> answer = RegexMatcherParser.safeValueOf("1.x.x");
         blackhole.consume(answer);
     }
 
     @Benchmark
     public static void matcher_with_all_numbers(Blackhole blackhole) {
-        Optional<SlsVersionMatcher> answer = SlsVersionMatcher.safeValueOf("2.3.4");
+        Optional<SlsVersionMatcher> answer = RegexMatcherParser.safeValueOf("2.3.4");
         blackhole.consume(answer);
     }
 

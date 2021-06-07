@@ -73,7 +73,7 @@ public abstract class SlsVersionMatcher {
     /** The same as {@link #valueOf(String)}, but returns {@link Optional#empty} if the format is invalid. */
     public static Optional<SlsVersionMatcher> safeValueOf(String value) {
         checkNotNull(value, "value cannot be null");
-        return RegexMatcherParser.safeValueOf(value);
+        return HandRolledMatcherParser.safeValueOf(value);
     }
 
     static Optional<SlsVersionMatcher> maybeCreate(
