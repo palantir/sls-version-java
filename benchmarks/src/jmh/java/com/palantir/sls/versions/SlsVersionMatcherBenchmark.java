@@ -28,7 +28,6 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
-import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.profile.GCProfiler;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.Options;
@@ -45,27 +44,23 @@ import org.openjdk.jmh.runner.options.TimeValue;
 public class SlsVersionMatcherBenchmark {
 
     @Benchmark
-    public static void matcher_with_one_x_x(Blackhole blackhole) {
-        Optional<SlsVersionMatcher> answer = RegexMatcherParser.safeValueOf("1.x.x");
-        blackhole.consume(answer);
+    public static Optional<SlsVersionMatcher> matcher_with_one_x_x() {
+        return RegexMatcherParser.safeValueOf("1.x.x");
     }
 
     @Benchmark
-    public static void matcher_with_all_numbers(Blackhole blackhole) {
-        Optional<SlsVersionMatcher> answer = RegexMatcherParser.safeValueOf("2.3.4");
-        blackhole.consume(answer);
+    public static Optional<SlsVersionMatcher> matcher_with_all_numbers() {
+        return RegexMatcherParser.safeValueOf("2.3.4");
     }
 
     @Benchmark
-    public static void fast_matcher_with_one_x_x(Blackhole blackhole) {
-        Optional<SlsVersionMatcher> answer = HandRolledMatcherParser.safeValueOf("1.x.x");
-        blackhole.consume(answer);
+    public static Optional<SlsVersionMatcher> fast_matcher_with_one_x_x() {
+        return HandRolledMatcherParser.safeValueOf("1.x.x");
     }
 
     @Benchmark
-    public static void fast_matcher_with_all_numbers(Blackhole blackhole) {
-        Optional<SlsVersionMatcher> answer = HandRolledMatcherParser.safeValueOf("2.3.4");
-        blackhole.consume(answer);
+    public static Optional<SlsVersionMatcher> fast_matcher_with_all_numbers() {
+        return HandRolledMatcherParser.safeValueOf("2.3.4");
     }
 
     public static void main(String[] _args) throws Exception {
