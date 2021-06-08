@@ -32,45 +32,45 @@ final class SlsVersionMatcherParser {
         OptionalInt patch = OptionalInt.empty();
 
         // major
-        ParseResult result = numberOrX(string, 0);
-        if (result.failed()) {
+        long result = numberOrX(string, 0);
+        if (failed(result)) {
             return Optional.empty(); // reject
         }
-        if (result.result != MAGIC_X_NUMBER) {
-            major = OptionalInt.of(result.result);
+        if (getResult(result) != MAGIC_X_NUMBER) {
+            major = OptionalInt.of(getResult(result));
         }
 
         // dot
-        result = literalDot(string, result.index);
-        if (result.failed()) {
+        result = literalDot(string, getIndex(result));
+        if (failed(result)) {
             return Optional.empty();
         }
 
         // minor
-        result = numberOrX(string, result.index);
-        if (result.failed()) {
+        result = numberOrX(string, getIndex(result));
+        if (failed(result)) {
             return Optional.empty(); // reject
         }
-        if (result.result != MAGIC_X_NUMBER) {
-            minor = OptionalInt.of(result.result);
+        if (getResult(result) != MAGIC_X_NUMBER) {
+            minor = OptionalInt.of(getResult(result));
         }
 
         // dot
-        result = literalDot(string, result.index);
-        if (result.failed()) {
+        result = literalDot(string, getIndex(result));
+        if (failed(result)) {
             return Optional.empty();
         }
 
         // patch
-        result = numberOrX(string, result.index);
-        if (result.failed()) {
+        result = numberOrX(string, getIndex(result));
+        if (failed(result)) {
             return Optional.empty(); // reject
         }
-        if (result.result != MAGIC_X_NUMBER) {
-            patch = OptionalInt.of(result.result);
+        if (getResult(result) != MAGIC_X_NUMBER) {
+            patch = OptionalInt.of(getResult(result));
         }
 
-        if (result.index < string.length()) {
+        if (getIndex(result) < string.length()) {
             return Optional.empty(); // reject due to trailing stuff
         }
 
@@ -78,21 +78,21 @@ final class SlsVersionMatcherParser {
     }
 
     // "x" is signified by the magic negative number -1, which is distinct from Integer.MIN_VALUE which is a failure
-    private static ParseResult numberOrX(String string, int startIndex) {
-        ParseResult xResult = literalX(string, startIndex);
-        if (xResult.isOk()) {
-            return ParseResult.ok(xResult.index, MAGIC_X_NUMBER);
+    private static long numberOrX(String string, int startIndex) {
+        long xResult = literalX(string, startIndex);
+        if (isOk(xResult)) {
+            return ok(getIndex(xResult), MAGIC_X_NUMBER);
         }
 
-        ParseResult numberResult = number(string, startIndex);
-        if (numberResult.isOk()) {
+        long numberResult = number(string, startIndex);
+        if (isOk(numberResult)) {
             return numberResult;
         }
 
-        return ParseResult.fail(startIndex);
+        return fail(startIndex);
     }
 
-    private static ParseResult number(String string, int startIndex) {
+    private static long number(String string, int startIndex) {
         int next = startIndex;
         int len = string.length();
         while (next < len) {
@@ -104,15 +104,15 @@ final class SlsVersionMatcherParser {
             }
         }
         if (next == startIndex) {
-            return ParseResult.fail(startIndex);
+            return fail(startIndex);
         } else if (next == startIndex + 1) {
-            return ParseResult.ok(next, Character.digit(string.codePointAt(startIndex), 10));
+            return ok(next, Character.digit(string.codePointAt(startIndex), 10));
         } else {
             try {
-                return ParseResult.ok(next, Integer.parseUnsignedInt(string.substring(startIndex, next)));
+                return ok(next, Integer.parseUnsignedInt(string.substring(startIndex, next)));
             } catch (NumberFormatException e) {
                 if (e.getMessage().endsWith("exceeds range of unsigned int.")) {
-                    return ParseResult.fail(startIndex);
+                    return fail(startIndex);
                 } else {
                     throw e;
                 }
@@ -121,46 +121,46 @@ final class SlsVersionMatcherParser {
     }
 
     // 0 signifies success
-    private static ParseResult literalX(String string, int startIndex) {
+    private static long literalX(String string, int startIndex) {
         if (startIndex < string.length() && string.codePointAt(startIndex) == 'x') {
-            return ParseResult.ok(startIndex + 1, 0);
+            return ok(startIndex + 1, 0);
         } else {
-            return ParseResult.fail(startIndex);
+            return fail(startIndex);
         }
     }
 
-    private static ParseResult literalDot(String string, int startIndex) {
+    private static long literalDot(String string, int startIndex) {
         if (startIndex < string.length() && string.codePointAt(startIndex) == '.') {
-            return ParseResult.ok(startIndex + 1, 0);
+            return ok(startIndex + 1, 0);
         } else {
-            return ParseResult.fail(startIndex);
+            return fail(startIndex);
         }
     }
 
-    static final class ParseResult {
-        private final int index;
-        private final int result;
+    private static final long INT_MASK = (1L << 32) - 1;
 
-        private ParseResult(int index, int result) {
-            this.index = index;
-            this.result = result;
-        }
+    static long ok(int index, int result) {
+        return ((long) index) << 32 | (result & INT_MASK);
+    }
 
-        static ParseResult ok(int index, int result) {
-            return new ParseResult(index, result);
-        }
+    static long fail(int index) {
+        return ((long) index) << 32 | (Integer.MIN_VALUE & INT_MASK);
+    }
 
-        static ParseResult fail(int index) {
-            return new ParseResult(index, Integer.MIN_VALUE);
-        }
+    static boolean isOk(long state) {
+        return getResult(state) != Integer.MIN_VALUE;
+    }
 
-        boolean isOk() {
-            return result != Integer.MIN_VALUE;
-        }
+    static boolean failed(long state) {
+        return !isOk(state);
+    }
 
-        boolean failed() {
-            return result == Integer.MIN_VALUE;
-        }
+    static int getResult(long state) {
+        return (int) (state & INT_MASK);
+    }
+
+    static int getIndex(long state) {
+        return (int) (state >>> 32);
     }
 
     private SlsVersionMatcherParser() {}
