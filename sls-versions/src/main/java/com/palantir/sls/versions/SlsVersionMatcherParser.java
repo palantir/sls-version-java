@@ -80,12 +80,12 @@ final class SlsVersionMatcherParser {
     // "x" is signified by the magic negative number -1, which is distinct from Integer.MIN_VALUE which is a failure
     private static ParseResult numberOrX(String string, int startIndex) {
         ParseResult xResult = literalX(string, startIndex);
-        if (xResult.ok()) {
+        if (xResult.isOk()) {
             return ParseResult.ok(xResult.index, MAGIC_X_NUMBER);
         }
 
         ParseResult numberResult = number(string, startIndex);
-        if (numberResult.ok()) {
+        if (numberResult.isOk()) {
             return numberResult;
         }
 
@@ -137,7 +137,7 @@ final class SlsVersionMatcherParser {
         }
     }
 
-    static class ParseResult {
+    static final class ParseResult {
         private final int index;
         private final int result;
 
@@ -154,7 +154,7 @@ final class SlsVersionMatcherParser {
             return new ParseResult(index, Integer.MIN_VALUE);
         }
 
-        boolean ok() {
+        boolean isOk() {
             return result != Integer.MIN_VALUE;
         }
 
