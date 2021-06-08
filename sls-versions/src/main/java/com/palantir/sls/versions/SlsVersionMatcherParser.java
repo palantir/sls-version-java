@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 
 /**
- * A hand-rolled implementation of {@link RegexSlsVersionMatcherParser}.
+ * A hand-rolled implementation of {@code RegexSlsVersionMatcherParser}.
  *
  * Uses two-element int[] arrays as the 'result' type to represent a successful/failed parse, where result[0] always
  * contains the index into the string we're looking at, and result[1] contains the value returned by the parser
@@ -35,10 +35,8 @@ final class SlsVersionMatcherParser {
         OptionalInt minor = OptionalInt.empty();
         OptionalInt patch = OptionalInt.empty();
 
-        int[] result = new int[] {0};
-
         // major
-        result = numberOrX(string, result[0]);
+        int[] result = numberOrX(string, 0);
         if (result[1] == Integer.MIN_VALUE) {
             return Optional.empty(); // reject
         }

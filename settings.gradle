@@ -1,4 +1,3 @@
 rootProject.name = 'sls-version-java'
 
 include 'sls-versions'
-include 'benchmarks'

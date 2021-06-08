@@ -1,5 +1,6 @@
 apply plugin: 'com.palantir.external-publish-jar'
 apply plugin: 'com.palantir.revapi'
+apply plugin: 'me.champeau.gradle.jmh'
 
 dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations'
@@ -19,10 +20,27 @@ dependencies {
     }
     testImplementation 'net.jqwik:jqwik-api'
     testRuntimeOnly 'net.jqwik:jqwik'
+
+    annotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess'
+    compileOnly 'org.openjdk.jmh:jmh-generator-annprocess'
+    jmh 'org.openjdk.jmh:jmh-core'
+    jmh project(':sls-versions')
+    jmh 'org.apache.logging.log4j:log4j-slf4j-impl'
 }
 
 tasks.withType(Test) {
     useJUnitPlatform {
         includeEngines 'junit-platform', 'jqwik'
     }
+}
+
+jmh {
+    // Use profilers to collect additional data. Supported profilers:
+    // [cl, comp, gc, stack, perf, perfnorm, perfasm, xperf, xperfasm, hs_cl, hs_comp, hs_gc, hs_rt, hs_thr]
+    profilers = ['gc']
+}
+
+tasks.jmhCompileGeneratedClasses {
+    options.annotationProcessorPath = configurations.errorprone
+    options.errorprone.enabled = false
 }
