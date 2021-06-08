@@ -1,6 +1,6 @@
 apply plugin: 'com.palantir.external-publish-jar'
 apply plugin: 'com.palantir.revapi'
-apply plugin: 'me.champeau.gradle.jmh'
+apply plugin: 'me.champeau.jmh'
 
 dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations'
