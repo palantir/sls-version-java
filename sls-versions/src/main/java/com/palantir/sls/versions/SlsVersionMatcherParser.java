@@ -21,6 +21,16 @@ import java.util.OptionalInt;
 
 /**
  * A hand-rolled implementation of {@code RegexSlsVersionMatcherParser}.
+ *
+ * We're using parser combinator-style ideas here, where each parser function {@link #numberOrX}, {@link #number},
+ * {@link #literalX} accepts an index into our source string and returns a two values:
+ *
+ * - an updated index into the string representing how many characters were parsed
+ * - a value that was actually parsed out of the string (if the parser was able to parse the string), otherwise a
+ * clear signal that the parser failed (we use {@link Integer#MIN_VALUE} for this.
+ *
+ * We bit-pack these two integer values into a single long using {@link #ok} and {@link #fail} functions because
+ * primitive longs live on the stack and don't impact GC.
  */
 final class SlsVersionMatcherParser {
 
@@ -139,6 +149,10 @@ final class SlsVersionMatcherParser {
 
     private static final long INT_MASK = (1L << 32) - 1;
 
+    /**
+     * We are bit-packing two integers into a single long.  The 'index' occupies half of the bits and the 'result'
+     * occupies the other half.
+     */
     static long ok(int index, int result) {
         return ((long) index) << 32 | (result & INT_MASK);
     }
