@@ -28,6 +28,26 @@ import java.util.OptionalInt;
  */
 final class SlsVersionMatcherParser {
 
+    static class ParseResult {
+        private final boolean ok;
+        private final int index;
+        private final int result;
+
+        private ParseResult(boolean ok, int index, int result) {
+            this.ok = ok;
+            this.index = index;
+            this.result = result;
+        }
+
+        static ParseResult ok(int index, int result) {
+            return new ParseResult(true, index, result);
+        }
+
+        static ParseResult fail(int index) {
+            return new ParseResult(false, index, Integer.MIN_VALUE);
+        }
+    }
+
     private static final int MAGIC_X_NUMBER = -1;
 
     public static Optional<SlsVersionMatcher> safeValueOf(String string) {
@@ -36,45 +56,45 @@ final class SlsVersionMatcherParser {
         OptionalInt patch = OptionalInt.empty();
 
         // major
-        int[] majorResult = numberOrX(string, 0);
-        if (majorResult[1] == Integer.MIN_VALUE) {
+        ParseResult result = numberOrX(string, 0);
+        if (!result.ok) {
             return Optional.empty(); // reject
         }
-        if (majorResult[1] != MAGIC_X_NUMBER) {
-            major = OptionalInt.of(majorResult[1]);
+        if (result.result != MAGIC_X_NUMBER) {
+            major = OptionalInt.of(result.result);
         }
 
         // dot
-        int[] dot = literalDot(string, majorResult[0]);
-        if (dot[1] == Integer.MIN_VALUE) {
+        result = literalDot(string, result.index);
+        if (!result.ok) {
             return Optional.empty();
         }
 
         // minor
-        int[] minorResult = numberOrX(string, dot[0]);
-        if (minorResult[1] == Integer.MIN_VALUE) {
+        result = numberOrX(string, result.index);
+        if (!result.ok) {
             return Optional.empty(); // reject
         }
-        if (minorResult[1] != MAGIC_X_NUMBER) {
-            minor = OptionalInt.of(minorResult[1]);
+        if (result.result != MAGIC_X_NUMBER) {
+            minor = OptionalInt.of(result.result);
         }
 
         // dot
-        int[] secondDot = literalDot(string, minorResult[0]);
-        if (secondDot[1] == Integer.MIN_VALUE) {
+        result = literalDot(string, result.index);
+        if (!result.ok) {
             return Optional.empty();
         }
 
         // patch
-        int[] patchResult = numberOrX(string, secondDot[0]);
-        if (patchResult[1] == Integer.MIN_VALUE) {
+        result = numberOrX(string, result.index);
+        if (!result.ok) {
             return Optional.empty(); // reject
         }
-        if (patchResult[1] != MAGIC_X_NUMBER) {
-            patch = OptionalInt.of(patchResult[1]);
+        if (result.result != MAGIC_X_NUMBER) {
+            patch = OptionalInt.of(result.result);
         }
 
-        if (patchResult[0] < string.length()) {
+        if (result.index < string.length()) {
             return Optional.empty(); // reject due to trailing stuff
         }
 
@@ -82,22 +102,21 @@ final class SlsVersionMatcherParser {
     }
 
     // "x" is signified by the magic negative number -1, which is distinct from Integer.MIN_VALUE which is a failure
-    private static int[] numberOrX(String string, int startIndex) {
-        int[] result = literalX(string, startIndex);
-        if (result[1] != Integer.MIN_VALUE) {
-            result[1] = MAGIC_X_NUMBER;
-            return result;
+    private static ParseResult numberOrX(String string, int startIndex) {
+        ParseResult xResult = literalX(string, startIndex);
+        if (xResult.ok) {
+            return ParseResult.ok(xResult.index, MAGIC_X_NUMBER);
         }
 
-        result = number(string, startIndex);
-        if (result[1] != Integer.MIN_VALUE) {
-            return result;
+        ParseResult numberResult = number(string, startIndex);
+        if (numberResult.ok) {
+            return numberResult;
         }
 
-        return new int[] {startIndex, Integer.MIN_VALUE};
+        return ParseResult.fail(startIndex);
     }
 
-    private static int[] number(String string, int startIndex) {
+    private static ParseResult number(String string, int startIndex) {
         int next = startIndex;
         int len = string.length();
         while (next < len) {
@@ -109,15 +128,15 @@ final class SlsVersionMatcherParser {
             }
         }
         if (next == startIndex) {
-            return new int[] {startIndex, Integer.MIN_VALUE};
+            return ParseResult.fail(startIndex);
         } else if (next == startIndex + 1) {
-            return new int[] {next, Character.digit(string.codePointAt(startIndex), 10)};
+            return ParseResult.ok(next, Character.digit(string.codePointAt(startIndex), 10));
         } else {
             try {
-                return new int[] {next, Integer.parseUnsignedInt(string.substring(startIndex, next))};
+                return ParseResult.ok(next, Integer.parseUnsignedInt(string.substring(startIndex, next)));
             } catch (NumberFormatException e) {
                 if (e.getMessage().endsWith("exceeds range of unsigned int.")) {
-                    return new int[] {startIndex, Integer.MIN_VALUE};
+                    return ParseResult.fail(startIndex);
                 } else {
                     throw e;
                 }
@@ -126,19 +145,19 @@ final class SlsVersionMatcherParser {
     }
 
     // 0 signifies success
-    private static int[] literalX(String string, int startIndex) {
+    private static ParseResult literalX(String string, int startIndex) {
         if (startIndex < string.length() && string.codePointAt(startIndex) == 'x') {
-            return new int[] {startIndex + 1, 0};
+            return ParseResult.ok(startIndex + 1, 0);
         } else {
-            return new int[] {startIndex, Integer.MIN_VALUE};
+            return ParseResult.fail(startIndex);
         }
     }
 
-    private static int[] literalDot(String string, int startIndex) {
+    private static ParseResult literalDot(String string, int startIndex) {
         if (startIndex < string.length() && string.codePointAt(startIndex) == '.') {
-            return new int[] {startIndex + 1, 0};
+            return ParseResult.ok(startIndex + 1, 0);
         } else {
-            return new int[] {startIndex, Integer.MIN_VALUE};
+            return ParseResult.fail(startIndex);
         }
     }
 
