@@ -18,6 +18,7 @@ package com.palantir.sls.versions;
 
 import static com.palantir.logsafe.Preconditions.checkNotNull;
 
+import com.google.common.primitives.Ints;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.regex.Matcher;
@@ -48,14 +49,7 @@ final class RegexSlsVersionMatcherParser {
     }
 
     private static OptionalInt parseInt(String maybeInt) {
-        if (maybeInt.codePointAt(0) == 'x') {
-            return OptionalInt.empty();
-        }
-
-        try {
-            return OptionalInt.of(Integer.parseInt(maybeInt));
-        } catch (NumberFormatException e) {
-            return OptionalInt.empty();
-        }
+        Integer maybeInteger = Ints.tryParse(maybeInt);
+        return maybeInteger != null ? OptionalInt.of(maybeInteger) : OptionalInt.empty();
     }
 }
