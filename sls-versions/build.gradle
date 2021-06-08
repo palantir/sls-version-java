@@ -11,14 +11,10 @@ dependencies {
     annotationProcessor 'org.immutables:value'
     compileOnly 'org.immutables:value::annotations'
 
-    testCompile 'com.fasterxml.jackson.core:jackson-databind'
-    testCompile 'junit:junit'
-    testCompile 'org.assertj:assertj-core'
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind'
+    testImplementation 'org.assertj:assertj-core'
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'com.google.guava:guava'
-    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine', {
-        because 'allows JUnit 3 and JUnit 4 tests to run'
-    }
     testImplementation 'net.jqwik:jqwik-api'
     testRuntimeOnly 'net.jqwik:jqwik'
 
@@ -31,7 +27,7 @@ dependencies {
 
 tasks.withType(Test) {
     useJUnitPlatform {
-        includeEngines 'junit-platform', 'jqwik'
+        includeEngines 'jqwik', 'junit-jupiter'
     }
 }
 
