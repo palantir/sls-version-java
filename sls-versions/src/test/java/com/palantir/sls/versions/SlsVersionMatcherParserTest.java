@@ -32,14 +32,14 @@ import net.jqwik.api.constraints.NumericChars;
 
 /**
  * This test uses the <a href="https://jqwik.net/">jqwik library</a>
- * to generate a whole bunch of random test cases, and validate that the {@link HandRolledMatcherParser} behaves
- * identically to the reference {@link RegexMatcherParser}.
+ * to generate a whole bunch of random test cases, and validate that the {@link SlsVersionMatcherParser} behaves
+ * identically to the reference {@link RegexSlsVersionMatcherParser}.
  *
  * It's effectively a java version of Haskell's QuickCheck library, and has cool features like 'shrinking', whereby
  * it will try to present the smallest possible repro of any failure rather than the obscure long version it may have
  * discovered first.
  */
-public final class HandRolledMatcherParserTest {
+public final class SlsVersionMatcherParserTest {
 
     @Property(seed = "3226259347315412165", tries = 2000)
     public void valid_parsing(
@@ -47,9 +47,9 @@ public final class HandRolledMatcherParserTest {
             @ForAll("validComponent") String minor,
             @ForAll("validComponent") String patch) {
         String string = major + '.' + minor + '.' + patch;
-        assertThat(HandRolledMatcherParser.safeValueOf(string))
+        assertThat(SlsVersionMatcherParser.safeValueOf(string))
                 .describedAs(string)
-                .isEqualTo(RegexMatcherParser.safeValueOf(string));
+                .isEqualTo(RegexSlsVersionMatcherParser.safeValueOf(string));
     }
 
     @Provide
@@ -68,8 +68,8 @@ public final class HandRolledMatcherParserTest {
 
     @Property(seed = "3226259347315412165", tries = 2000)
     public void nonsense_parsing(@ForAll @Nonsense String nonsense) {
-        assertThat(HandRolledMatcherParser.safeValueOf(nonsense))
+        assertThat(SlsVersionMatcherParser.safeValueOf(nonsense))
                 .describedAs(nonsense)
-                .isEqualTo(RegexMatcherParser.safeValueOf(nonsense));
+                .isEqualTo(RegexSlsVersionMatcherParser.safeValueOf(nonsense));
     }
 }

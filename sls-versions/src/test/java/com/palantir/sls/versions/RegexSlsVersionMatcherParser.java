@@ -23,11 +23,15 @@ import java.util.OptionalInt;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-final class RegexMatcherParser {
+/**
+ * Exists in the test source-set only, because this is a just a reference impl which we use to verify correctness of
+ * {@link SlsVersionMatcherParser}.
+ */
+final class RegexSlsVersionMatcherParser {
 
     private static final Pattern PATTERN = Pattern.compile("^(([0-9]+|x))\\.(([0-9]+|x))\\.(([0-9]+|x))$");
 
-    private RegexMatcherParser() {}
+    private RegexSlsVersionMatcherParser() {}
 
     public static Optional<SlsVersionMatcher> safeValueOf(String value) {
         checkNotNull(value, "value cannot be null");

@@ -20,13 +20,13 @@ import java.util.Optional;
 import java.util.OptionalInt;
 
 /**
- * A hand-rolled implementation of {@link RegexMatcherParser}.
+ * A hand-rolled implementation of {@link RegexSlsVersionMatcherParser}.
  *
  * Uses two-element int[] arrays as the 'result' type to represent a successful/failed parse, where result[0] always
  * contains the index into the string we're looking at, and result[1] contains the value returned by the parser
  * combinator.
  */
-final class HandRolledMatcherParser {
+final class SlsVersionMatcherParser {
 
     private static final int MAGIC_X_NUMBER = -1;
 
@@ -144,5 +144,5 @@ final class HandRolledMatcherParser {
         }
     }
 
-    private HandRolledMatcherParser() {}
+    private SlsVersionMatcherParser() {}
 }

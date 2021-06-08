@@ -41,26 +41,27 @@ import org.openjdk.jmh.runner.options.TimeValue;
 @Measurement(iterations = 3, time = 3, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
 @Threads(4)
+@SuppressWarnings("checkstyle:hideutilityclassconstructor")
 public class SlsVersionMatcherBenchmark {
 
     @Benchmark
     public static Optional<SlsVersionMatcher> matcher_with_one_x_x() {
-        return RegexMatcherParser.safeValueOf("1.x.x");
+        return RegexSlsVersionMatcherParser.safeValueOf("1.x.x");
     }
 
     @Benchmark
     public static Optional<SlsVersionMatcher> matcher_with_all_numbers() {
-        return RegexMatcherParser.safeValueOf("2.3.4");
+        return RegexSlsVersionMatcherParser.safeValueOf("2.3.4");
     }
 
     @Benchmark
     public static Optional<SlsVersionMatcher> fast_matcher_with_one_x_x() {
-        return HandRolledMatcherParser.safeValueOf("1.x.x");
+        return SlsVersionMatcherParser.safeValueOf("1.x.x");
     }
 
     @Benchmark
     public static Optional<SlsVersionMatcher> fast_matcher_with_all_numbers() {
-        return HandRolledMatcherParser.safeValueOf("2.3.4");
+        return SlsVersionMatcherParser.safeValueOf("2.3.4");
     }
 
     public static void main(String[] _args) throws Exception {
