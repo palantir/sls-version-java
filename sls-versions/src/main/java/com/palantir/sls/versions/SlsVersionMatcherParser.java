@@ -21,32 +21,8 @@ import java.util.OptionalInt;
 
 /**
  * A hand-rolled implementation of {@code RegexSlsVersionMatcherParser}.
- *
- * Uses two-element int[] arrays as the 'result' type to represent a successful/failed parse, where result[0] always
- * contains the index into the string we're looking at, and result[1] contains the value returned by the parser
- * combinator.
  */
 final class SlsVersionMatcherParser {
-
-    static class ParseResult {
-        private final boolean ok;
-        private final int index;
-        private final int result;
-
-        private ParseResult(boolean ok, int index, int result) {
-            this.ok = ok;
-            this.index = index;
-            this.result = result;
-        }
-
-        static ParseResult ok(int index, int result) {
-            return new ParseResult(true, index, result);
-        }
-
-        static ParseResult fail(int index) {
-            return new ParseResult(false, index, Integer.MIN_VALUE);
-        }
-    }
 
     private static final int MAGIC_X_NUMBER = -1;
 
@@ -57,7 +33,7 @@ final class SlsVersionMatcherParser {
 
         // major
         ParseResult result = numberOrX(string, 0);
-        if (!result.ok) {
+        if (result.failed()) {
             return Optional.empty(); // reject
         }
         if (result.result != MAGIC_X_NUMBER) {
@@ -66,13 +42,13 @@ final class SlsVersionMatcherParser {
 
         // dot
         result = literalDot(string, result.index);
-        if (!result.ok) {
+        if (result.failed()) {
             return Optional.empty();
         }
 
         // minor
         result = numberOrX(string, result.index);
-        if (!result.ok) {
+        if (result.failed()) {
             return Optional.empty(); // reject
         }
         if (result.result != MAGIC_X_NUMBER) {
@@ -81,13 +57,13 @@ final class SlsVersionMatcherParser {
 
         // dot
         result = literalDot(string, result.index);
-        if (!result.ok) {
+        if (result.failed()) {
             return Optional.empty();
         }
 
         // patch
         result = numberOrX(string, result.index);
-        if (!result.ok) {
+        if (result.failed()) {
             return Optional.empty(); // reject
         }
         if (result.result != MAGIC_X_NUMBER) {
@@ -104,12 +80,12 @@ final class SlsVersionMatcherParser {
     // "x" is signified by the magic negative number -1, which is distinct from Integer.MIN_VALUE which is a failure
     private static ParseResult numberOrX(String string, int startIndex) {
         ParseResult xResult = literalX(string, startIndex);
-        if (xResult.ok) {
+        if (xResult.ok()) {
             return ParseResult.ok(xResult.index, MAGIC_X_NUMBER);
         }
 
         ParseResult numberResult = number(string, startIndex);
-        if (numberResult.ok) {
+        if (numberResult.ok()) {
             return numberResult;
         }
 
@@ -158,6 +134,32 @@ final class SlsVersionMatcherParser {
             return ParseResult.ok(startIndex + 1, 0);
         } else {
             return ParseResult.fail(startIndex);
+        }
+    }
+
+    static class ParseResult {
+        private final int index;
+        private final int result;
+
+        private ParseResult(int index, int result) {
+            this.index = index;
+            this.result = result;
+        }
+
+        static ParseResult ok(int index, int result) {
+            return new ParseResult(index, result);
+        }
+
+        static ParseResult fail(int index) {
+            return new ParseResult(index, Integer.MIN_VALUE);
+        }
+
+        boolean ok() {
+            return result != Integer.MIN_VALUE;
+        }
+
+        boolean failed() {
+            return result == Integer.MIN_VALUE;
         }
     }
 
