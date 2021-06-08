@@ -36,45 +36,45 @@ final class SlsVersionMatcherParser {
         OptionalInt patch = OptionalInt.empty();
 
         // major
-        int[] result = numberOrX(string, 0);
-        if (result[1] == Integer.MIN_VALUE) {
+        int[] majorResult = numberOrX(string, 0);
+        if (majorResult[1] == Integer.MIN_VALUE) {
             return Optional.empty(); // reject
         }
-        if (result[1] != MAGIC_X_NUMBER) {
-            major = OptionalInt.of(result[1]);
+        if (majorResult[1] != MAGIC_X_NUMBER) {
+            major = OptionalInt.of(majorResult[1]);
         }
 
         // dot
-        result = literalDot(string, result[0]);
-        if (result[1] == Integer.MIN_VALUE) {
+        int[] dot = literalDot(string, majorResult[0]);
+        if (dot[1] == Integer.MIN_VALUE) {
             return Optional.empty();
         }
 
         // minor
-        result = numberOrX(string, result[0]);
-        if (result[1] == Integer.MIN_VALUE) {
+        int[] minorResult = numberOrX(string, dot[0]);
+        if (minorResult[1] == Integer.MIN_VALUE) {
             return Optional.empty(); // reject
         }
-        if (result[1] != MAGIC_X_NUMBER) {
-            minor = OptionalInt.of(result[1]);
+        if (minorResult[1] != MAGIC_X_NUMBER) {
+            minor = OptionalInt.of(minorResult[1]);
         }
 
         // dot
-        result = literalDot(string, result[0]);
-        if (result[1] == Integer.MIN_VALUE) {
+        int[] secondDot = literalDot(string, minorResult[0]);
+        if (secondDot[1] == Integer.MIN_VALUE) {
             return Optional.empty();
         }
 
         // patch
-        result = numberOrX(string, result[0]);
-        if (result[1] == Integer.MIN_VALUE) {
+        int[] patchResult = numberOrX(string, secondDot[0]);
+        if (patchResult[1] == Integer.MIN_VALUE) {
             return Optional.empty(); // reject
         }
-        if (result[1] != MAGIC_X_NUMBER) {
-            patch = OptionalInt.of(result[1]);
+        if (patchResult[1] != MAGIC_X_NUMBER) {
+            patch = OptionalInt.of(patchResult[1]);
         }
 
-        if (result[0] < string.length()) {
+        if (patchResult[0] < string.length()) {
             return Optional.empty(); // reject due to trailing stuff
         }
 
