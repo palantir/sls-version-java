@@ -25,9 +25,7 @@ import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.annotations.TearDown;
 import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
@@ -44,14 +42,7 @@ import org.openjdk.jmh.runner.options.TimeValue;
 @Measurement(iterations = 3, time = 3, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
 @Threads(4)
-@SuppressWarnings({"checkstyle:hideutilityclassconstructor", "checkstyle:VisibilityModifier"})
 public class SlsVersionMatcherBenchmark {
-
-    @Setup
-    public final void before() {}
-
-    @TearDown
-    public final void after() {}
 
     @Benchmark
     public static void matcher_with_one_x_x(Blackhole blackhole) {
