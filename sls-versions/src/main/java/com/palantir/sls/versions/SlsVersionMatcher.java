@@ -21,14 +21,11 @@ import static com.palantir.logsafe.Preconditions.checkNotNull;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.google.common.primitives.Ints;
 import com.palantir.logsafe.SafeArg;
 import com.palantir.logsafe.UnsafeArg;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.OptionalInt;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.immutables.value.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +39,6 @@ import org.slf4j.LoggerFactory;
 public abstract class SlsVersionMatcher {
 
     private static final Logger log = LoggerFactory.getLogger(SlsVersionMatcher.class);
-    private static final Pattern PATTERN = Pattern.compile("^(([0-9]+|x))\\.(([0-9]+|x))\\.(([0-9]+|x))$");
 
     private static final Comparator<OptionalInt> EMPTY_IS_GREATER =
             Comparator.comparingInt(num -> num.isPresent() ? num.getAsInt() : Integer.MAX_VALUE);
@@ -52,8 +48,8 @@ public abstract class SlsVersionMatcher {
             .thenComparing(SlsVersionMatcher::getMinorVersionNumber, EMPTY_IS_GREATER)
             .thenComparing(SlsVersionMatcher::getPatchVersionNumber, EMPTY_IS_GREATER);
 
-    @Value.Parameter
     @Value.Auxiliary
+    @Value.Parameter
     public abstract String getValue();
 
     @Value.Parameter
@@ -75,36 +71,32 @@ public abstract class SlsVersionMatcher {
     /** The same as {@link #valueOf(String)}, but returns {@link Optional#empty} if the format is invalid. */
     public static Optional<SlsVersionMatcher> safeValueOf(String value) {
         checkNotNull(value, "value cannot be null");
+        return SlsVersionMatcherParser.safeValueOf(value);
+    }
 
-        Matcher matcher = PATTERN.matcher(value);
-        if (!matcher.matches()) {
+    static Optional<SlsVersionMatcher> maybeCreate(
+            String value, OptionalInt major, OptionalInt minor, OptionalInt patch) {
+        SlsVersionMatcher maybeMatcher = ImmutableSlsVersionMatcher.of(value, major, minor, patch);
+
+        if (maybeMatcher.getPatchVersionNumber().isPresent()
+                && (!maybeMatcher.getMinorVersionNumber().isPresent()
+                        || !maybeMatcher.getMajorVersionNumber().isPresent())) {
+            // String contains a pattern where major or minor version is underspecified.
+            // Example: x.x.2, 1.x.3, x.2.3
+            log.info(
+                    "Not a valid matcher, a patch version is specified, yet a major or minor is not specified",
+                    SafeArg.of("matcher", maybeMatcher));
             return Optional.empty();
-        } else {
-            OptionalInt major = parseInt(matcher.group(1));
-            OptionalInt minor = parseInt(matcher.group(3));
-            OptionalInt patch = parseInt(matcher.group(5));
-            SlsVersionMatcher maybeMatcher = ImmutableSlsVersionMatcher.of(value, major, minor, patch);
-
-            if (maybeMatcher.getPatchVersionNumber().isPresent()
-                    && (!maybeMatcher.getMinorVersionNumber().isPresent()
-                            || !maybeMatcher.getMajorVersionNumber().isPresent())) {
-                // String contains a pattern where major or minor version is underspecified.
-                // Example: x.x.2, 1.x.3, x.2.3
-                log.info(
-                        "Not a valid matcher, a patch version is specified, yet a major or minor is not specified",
-                        SafeArg.of("matcher", maybeMatcher));
-                return Optional.empty();
-            }
-            if (maybeMatcher.getMinorVersionNumber().isPresent()
-                    && !maybeMatcher.getMajorVersionNumber().isPresent()) {
-                // String contains a pattern where major version is underspecified. Example: x.2.x
-                log.info(
-                        "Not a valid matcher, a minor version is specified, yet a major is not specified",
-                        SafeArg.of("matcher", maybeMatcher));
-                return Optional.empty();
-            }
-            return Optional.of(maybeMatcher);
         }
+        if (maybeMatcher.getMinorVersionNumber().isPresent()
+                && !maybeMatcher.getMajorVersionNumber().isPresent()) {
+            // String contains a pattern where major version is underspecified. Example: x.2.x
+            log.info(
+                    "Not a valid matcher, a minor version is specified, yet a major is not specified",
+                    SafeArg.of("matcher", maybeMatcher));
+            return Optional.empty();
+        }
+        return Optional.of(maybeMatcher);
     }
 
     /**
@@ -165,11 +157,6 @@ public abstract class SlsVersionMatcher {
     @Value.Lazy
     protected Optional<OrderableSlsVersion> concreteSlsVersion() {
         return OrderableSlsVersion.safeValueOf(getValue());
-    }
-
-    private static OptionalInt parseInt(String maybeInt) {
-        Integer maybeInteger = Ints.tryParse(maybeInt);
-        return maybeInteger != null ? OptionalInt.of(maybeInteger) : OptionalInt.empty();
     }
 
     @JsonValue
