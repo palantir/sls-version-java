@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
 /**
- * This class encourages callers to call the parsing logic once, rather than fall into the trap of calling
+ * This class encourages callers to call the parsing logic once, rather than fall into the trap of accidentally calling
  * {@link Matcher#matches} multiple times.
  */
 @Immutable
@@ -39,8 +39,8 @@ final class RegexParser {
     }
 
     @Nullable
-    public RegexGroups tryParse(String string) {
+    public Matcher tryParse(String string) {
         Matcher matcher = pattern.matcher(string);
-        return matcher.matches() ? new RegexGroups(matcher) : null;
+        return matcher.matches() ? matcher : null;
     }
 }

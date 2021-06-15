@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.palantir.logsafe.UnsafeArg;
 import java.util.Optional;
+import java.util.regex.Matcher;
 import org.immutables.value.Value;
 
 /**
@@ -53,9 +54,9 @@ public abstract class OrderableSlsVersion extends SlsVersion implements Comparab
         }
 
         SlsVersionType finalType = ORDERED_VERSION_TYPES[0];
-        RegexGroups groups = null;
+        Matcher groups = null;
         for (SlsVersionType type : ORDERED_VERSION_TYPES) {
-            RegexGroups maybeGroups = type.getPattern().tryParse(value);
+            Matcher maybeGroups = type.getPattern().tryParse(value);
             if (maybeGroups != null) {
                 finalType = type;
                 groups = maybeGroups;
@@ -69,15 +70,15 @@ public abstract class OrderableSlsVersion extends SlsVersion implements Comparab
         OrderableSlsVersion.Builder orderableSlsVersion = new Builder()
                 .type(finalType)
                 .value(value)
-                .majorVersionNumber(groups.groupAsInt(1))
-                .minorVersionNumber(groups.groupAsInt(2))
-                .patchVersionNumber(groups.groupAsInt(3));
+                .majorVersionNumber(Integer.parseInt(groups.group(1)))
+                .minorVersionNumber(Integer.parseInt(groups.group(2)))
+                .patchVersionNumber(Integer.parseInt(groups.group(3)));
 
         if (groups.groupCount() >= 4) {
-            orderableSlsVersion.firstSequenceVersionNumber(groups.groupAsInt(4));
+            orderableSlsVersion.firstSequenceVersionNumber(Integer.parseInt(groups.group(4)));
         }
         if (groups.groupCount() >= 5) {
-            orderableSlsVersion.secondSequenceVersionNumber(groups.groupAsInt(5));
+            orderableSlsVersion.secondSequenceVersionNumber(Integer.parseInt(groups.group(5)));
         }
 
         return Optional.of(orderableSlsVersion.build());
