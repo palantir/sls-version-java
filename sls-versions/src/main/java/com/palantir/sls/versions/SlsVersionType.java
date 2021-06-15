@@ -16,27 +16,25 @@
 
 package com.palantir.sls.versions;
 
-import java.util.regex.Pattern;
-
 /**
  * Defines the available types of SLS versions together with regular expressions for parsing strings into corresponding
  * {@link SlsVersion} objects.
  */
 public enum SlsVersionType {
-    RELEASE_SNAPSHOT(Pattern.compile("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-([0-9]+)-g[a-f0-9]+$"), 4),
-    RELEASE(Pattern.compile("^([0-9]+)\\.([0-9]+)\\.([0-9]+)$"), 3),
-    RELEASE_CANDIDATE_SNAPSHOT(Pattern.compile("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-rc([0-9]+)-([0-9]+)-g[a-f0-9]+$"), 2),
-    RELEASE_CANDIDATE(Pattern.compile("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-rc([0-9]+)$"), 1),
-    NON_ORDERABLE(Pattern.compile("^([0-9]+)\\.([0-9]+)\\.([0-9]+)(-[a-z0-9-]+)?(\\.dirty)?$"), 0);
+    RELEASE_SNAPSHOT(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-([0-9]+)-g[a-f0-9]+$"), 4),
+    RELEASE(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)$"), 3),
+    RELEASE_CANDIDATE_SNAPSHOT(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-rc([0-9]+)-([0-9]+)-g[a-f0-9]+$"), 2),
+    RELEASE_CANDIDATE(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-rc([0-9]+)$"), 1),
+    NON_ORDERABLE(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)(-[a-z0-9-]+)?(\\.dirty)?$"), 0);
 
-    private final Pattern pattern;
+    private final RegexParser pattern;
     private final int priority;
 
-    public Pattern getPattern() {
+    RegexParser getPattern() {
         return pattern;
     }
 
-    SlsVersionType(Pattern pattern, int priority) {
+    SlsVersionType(RegexParser pattern, int priority) {
         this.pattern = pattern;
         this.priority = priority;
     }
