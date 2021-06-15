@@ -52,12 +52,12 @@ public abstract class OrderableSlsVersion extends SlsVersion implements Comparab
             return Optional.empty();
         }
 
-        SlsVersionType type = ORDERED_VERSION_TYPES[0];
+        SlsVersionType finalType = ORDERED_VERSION_TYPES[0];
         RegexGroups groups = null;
-        for (SlsVersionType orderedVersionType : ORDERED_VERSION_TYPES) {
+        for (SlsVersionType type : ORDERED_VERSION_TYPES) {
             RegexGroups maybeGroups = type.getPattern().tryParse(value);
             if (maybeGroups != null) {
-                type = orderedVersionType;
+                finalType = type;
                 groups = maybeGroups;
                 break;
             }
@@ -67,7 +67,7 @@ public abstract class OrderableSlsVersion extends SlsVersion implements Comparab
         }
 
         OrderableSlsVersion.Builder orderableSlsVersion = new Builder()
-                .type(type)
+                .type(finalType)
                 .value(value)
                 .majorVersionNumber(groups.groupAsInt(1))
                 .minorVersionNumber(groups.groupAsInt(2))
