@@ -39,7 +39,7 @@ final class RegexParser {
     }
 
     @Nullable
-    public Matcher tryParse(String string) {
+    Matcher tryParse(String string) {
         Matcher matcher = pattern.matcher(string);
         return matcher.matches() ? matcher : null;
     }
