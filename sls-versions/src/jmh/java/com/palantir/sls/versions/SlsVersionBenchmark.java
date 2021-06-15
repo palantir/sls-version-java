@@ -16,6 +16,7 @@
 
 package com.palantir.sls.versions;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -62,8 +63,8 @@ public class SlsVersionBenchmark {
     VersionString versionString;
 
     @Benchmark
-    public Object slsVersion_valueOf() {
-        return SlsVersion.valueOf(versionString.string);
+    public Optional<OrderableSlsVersion> safeValueOf() {
+        return OrderableSlsVersion.safeValueOf(versionString.string);
     }
 
     public static void main(String[] _args) throws Exception {
