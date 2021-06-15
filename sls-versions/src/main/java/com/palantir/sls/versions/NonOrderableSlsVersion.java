@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.palantir.logsafe.UnsafeArg;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -42,16 +41,16 @@ public abstract class NonOrderableSlsVersion extends SlsVersion {
             return Optional.empty();
         }
 
-        Matcher matcher = SlsVersionType.NON_ORDERABLE.getPattern().matcher(value);
-        if (!matcher.matches()) {
+        RegexGroups groups = SlsVersionType.NON_ORDERABLE.getPattern().tryParse(value);
+        if (groups == null) {
             return Optional.empty();
         }
 
         return Optional.of(new NonOrderableSlsVersion.Builder()
                 .value(value)
-                .majorVersionNumber(Integer.parseInt(matcher.group(1)))
-                .minorVersionNumber(Integer.parseInt(matcher.group(2)))
-                .patchVersionNumber(Integer.parseInt(matcher.group(3)))
+                .majorVersionNumber(groups.groupAsInt(1))
+                .minorVersionNumber(groups.groupAsInt(2))
+                .patchVersionNumber(groups.groupAsInt(3))
                 .type(SlsVersionType.NON_ORDERABLE)
                 .build());
     }
