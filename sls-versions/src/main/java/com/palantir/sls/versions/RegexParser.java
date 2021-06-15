@@ -17,6 +17,7 @@
 package com.palantir.sls.versions;
 
 import com.google.errorprone.annotations.Immutable;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
@@ -38,8 +39,9 @@ final class RegexParser {
         return new RegexParser(pattern);
     }
 
+    /** Returns a {@link MatchResult} if the provided string matches the pattern, or null otherwise. */
     @Nullable
-    Matcher tryParse(String string) {
+    MatchResult tryParse(String string) {
         Matcher matcher = pattern.matcher(string);
         return matcher.matches() ? matcher : null;
     }

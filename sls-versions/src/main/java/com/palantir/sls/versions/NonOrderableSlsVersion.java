@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.palantir.logsafe.UnsafeArg;
 import java.util.Optional;
-import java.util.regex.Matcher;
+import java.util.regex.MatchResult;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -42,7 +42,7 @@ public abstract class NonOrderableSlsVersion extends SlsVersion {
             return Optional.empty();
         }
 
-        Matcher groups = SlsVersionType.NON_ORDERABLE.getParser().tryParse(value);
+        MatchResult groups = SlsVersionType.NON_ORDERABLE.getParser().tryParse(value);
         if (groups == null) {
             return Optional.empty();
         }

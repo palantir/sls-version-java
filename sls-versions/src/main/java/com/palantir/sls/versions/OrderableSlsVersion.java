@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.palantir.logsafe.UnsafeArg;
 import java.util.Optional;
-import java.util.regex.Matcher;
+import java.util.regex.MatchResult;
 import org.immutables.value.Value;
 
 /**
@@ -54,9 +54,9 @@ public abstract class OrderableSlsVersion extends SlsVersion implements Comparab
         }
 
         SlsVersionType finalType = ORDERED_VERSION_TYPES[0];
-        Matcher groups = null;
+        MatchResult groups = null;
         for (SlsVersionType type : ORDERED_VERSION_TYPES) {
-            Matcher maybeGroups = type.getParser().tryParse(value);
+            MatchResult maybeGroups = type.getParser().tryParse(value);
             if (maybeGroups != null) {
                 finalType = type;
                 groups = maybeGroups;
