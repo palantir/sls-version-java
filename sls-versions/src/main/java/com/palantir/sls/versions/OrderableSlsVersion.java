@@ -56,7 +56,7 @@ public abstract class OrderableSlsVersion extends SlsVersion implements Comparab
         SlsVersionType finalType = ORDERED_VERSION_TYPES[0];
         Matcher groups = null;
         for (SlsVersionType type : ORDERED_VERSION_TYPES) {
-            Matcher maybeGroups = type.getPattern().tryParse(value);
+            Matcher maybeGroups = type.getParser().tryParse(value);
             if (maybeGroups != null) {
                 finalType = type;
                 groups = maybeGroups;

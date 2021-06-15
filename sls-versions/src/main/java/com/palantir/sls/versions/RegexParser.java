@@ -43,4 +43,8 @@ final class RegexParser {
         Matcher matcher = pattern.matcher(string);
         return matcher.matches() ? matcher : null;
     }
+
+    Pattern getPattern() {
+        return pattern;
+    }
 }

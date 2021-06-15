@@ -42,7 +42,7 @@ public abstract class NonOrderableSlsVersion extends SlsVersion {
             return Optional.empty();
         }
 
-        Matcher groups = SlsVersionType.NON_ORDERABLE.getPattern().tryParse(value);
+        Matcher groups = SlsVersionType.NON_ORDERABLE.getParser().tryParse(value);
         if (groups == null) {
             return Optional.empty();
         }

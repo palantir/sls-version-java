@@ -16,6 +16,8 @@
 
 package com.palantir.sls.versions;
 
+import java.util.regex.Pattern;
+
 /**
  * Defines the available types of SLS versions together with regular expressions for parsing strings into corresponding
  * {@link SlsVersion} objects.
@@ -27,15 +29,19 @@ public enum SlsVersionType {
     RELEASE_CANDIDATE(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-rc([0-9]+)$"), 1),
     NON_ORDERABLE(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)(-[a-z0-9-]+)?(\\.dirty)?$"), 0);
 
-    private final RegexParser pattern;
+    private final RegexParser regexParser;
     private final int priority;
 
-    RegexParser getPattern() {
-        return pattern;
+    public Pattern getPattern() {
+        return regexParser.getPattern();
     }
 
-    SlsVersionType(RegexParser pattern, int priority) {
-        this.pattern = pattern;
+    RegexParser getParser() {
+        return regexParser;
+    }
+
+    SlsVersionType(RegexParser regexParser, int priority) {
+        this.regexParser = regexParser;
         this.priority = priority;
     }
 
