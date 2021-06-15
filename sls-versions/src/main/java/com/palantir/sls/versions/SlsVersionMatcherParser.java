@@ -121,7 +121,8 @@ final class SlsVersionMatcherParser {
             try {
                 return ok(next, Integer.parseUnsignedInt(string.substring(startIndex, next)));
             } catch (NumberFormatException e) {
-                if (e.getMessage().endsWith("exceeds range of unsigned int.")) {
+                String message = e.getMessage();
+                if (message != null && message.endsWith("exceeds range of unsigned int.")) {
                     return fail(startIndex);
                 } else {
                     throw e;

@@ -26,10 +26,12 @@ apply plugin: 'com.palantir.baseline'
 apply plugin: 'com.palantir.git-version'
 apply plugin: 'com.palantir.consistent-versions'
 
+version gitVersion()
+
 allprojects {
     apply plugin: 'com.palantir.java-format'
     group 'com.palantir.sls.versions'
-    version gitVersion()
+    version rootProject.version
 
     repositories {
         mavenCentral()
@@ -43,5 +45,20 @@ subprojects {
 
     tasks.check.dependsOn(javadoc)
     sourceCompatibility = 1.8
+
+    tasks.withType(JavaCompile) {
+        options.compilerArgs += ['-Werror']
+    }
+
+    plugins.withId('com.palantir.baseline-error-prone', {
+        dependencies {
+            compileOnly 'com.google.code.findbugs:jsr305'
+            annotationProcessor 'com.uber.nullaway:nullaway'
+        }
+
+        tasks.withType(JavaCompile) {
+            options.errorprone.errorproneArgs.add '-XepOpt:NullAway:AnnotatedPackages=com.palantir'
+        }
+    })
 }
 

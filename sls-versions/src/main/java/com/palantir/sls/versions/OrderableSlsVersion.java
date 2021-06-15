@@ -22,8 +22,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.palantir.logsafe.UnsafeArg;
 import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.regex.Matcher;
+import java.util.regex.MatchResult;
 import org.immutables.value.Value;
 
 /**
@@ -54,37 +53,32 @@ public abstract class OrderableSlsVersion extends SlsVersion implements Comparab
             return Optional.empty();
         }
 
-        SlsVersionType type = getTypeOrNull(value);
-        if (type == null) {
-            return Optional.empty();
-        }
-
-        Matcher matcher = type.getPattern().matcher(value);
-        matcher.matches(); // without calling matches, the groups are not available.
-        OptionalInt firstSequence =
-                matcher.groupCount() > 3 ? OptionalInt.of(Integer.parseInt(matcher.group(4))) : OptionalInt.empty();
-        OptionalInt secondSequence =
-                matcher.groupCount() > 4 ? OptionalInt.of(Integer.parseInt(matcher.group(5))) : OptionalInt.empty();
-
-        return Optional.of(new OrderableSlsVersion.Builder()
-                .value(value)
-                .majorVersionNumber(Integer.parseInt(matcher.group(1)))
-                .minorVersionNumber(Integer.parseInt(matcher.group(2)))
-                .patchVersionNumber(Integer.parseInt(matcher.group(3)))
-                .firstSequenceVersionNumber(firstSequence)
-                .secondSequenceVersionNumber(secondSequence)
-                .type(type)
-                .build());
-    }
-
-    // Note: Can avoid duplicate regex evaluate if performance ever becomes a concern.
-    private static SlsVersionType getTypeOrNull(String value) {
         for (SlsVersionType type : ORDERED_VERSION_TYPES) {
-            if (type.getPattern().matcher(value).matches()) {
-                return type;
+            MatchResult groups = type.getParser().tryParse(value);
+            if (groups != null) {
+                return Optional.of(construct(type, value, groups));
             }
         }
-        return null;
+
+        return Optional.empty();
+    }
+
+    private static OrderableSlsVersion construct(SlsVersionType type, String value, MatchResult groups) {
+        OrderableSlsVersion.Builder orderableSlsVersion = new Builder()
+                .type(type)
+                .value(value)
+                .majorVersionNumber(Integer.parseInt(groups.group(1)))
+                .minorVersionNumber(Integer.parseInt(groups.group(2)))
+                .patchVersionNumber(Integer.parseInt(groups.group(3)));
+
+        if (groups.groupCount() >= 4) {
+            orderableSlsVersion.firstSequenceVersionNumber(Integer.parseInt(groups.group(4)));
+        }
+        if (groups.groupCount() >= 5) {
+            orderableSlsVersion.secondSequenceVersionNumber(Integer.parseInt(groups.group(5)));
+        }
+
+        return orderableSlsVersion.build();
     }
 
     /** Returns true iff the given coordinate has a version which can be parsed into a valid orderable SLS version. */
