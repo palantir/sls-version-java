@@ -53,22 +53,19 @@ public abstract class OrderableSlsVersion extends SlsVersion implements Comparab
             return Optional.empty();
         }
 
-        SlsVersionType finalType = ORDERED_VERSION_TYPES[0];
-        MatchResult groups = null;
         for (SlsVersionType type : ORDERED_VERSION_TYPES) {
-            MatchResult maybeGroups = type.getParser().tryParse(value);
-            if (maybeGroups != null) {
-                finalType = type;
-                groups = maybeGroups;
-                break;
+            MatchResult groups = type.getParser().tryParse(value);
+            if (groups != null) {
+                return Optional.of(construct(type, value, groups));
             }
         }
-        if (groups == null) {
-            return Optional.empty();
-        }
 
+        return Optional.empty();
+    }
+
+    private static OrderableSlsVersion construct(SlsVersionType type, String value, MatchResult groups) {
         OrderableSlsVersion.Builder orderableSlsVersion = new Builder()
-                .type(finalType)
+                .type(type)
                 .value(value)
                 .majorVersionNumber(Integer.parseInt(groups.group(1)))
                 .minorVersionNumber(Integer.parseInt(groups.group(2)))
@@ -81,7 +78,7 @@ public abstract class OrderableSlsVersion extends SlsVersion implements Comparab
             orderableSlsVersion.secondSequenceVersionNumber(Integer.parseInt(groups.group(5)));
         }
 
-        return Optional.of(orderableSlsVersion.build());
+        return orderableSlsVersion.build();
     }
 
     /** Returns true iff the given coordinate has a version which can be parsed into a valid orderable SLS version. */
