@@ -17,7 +17,6 @@
 package com.palantir.sls.versions;
 
 import com.google.errorprone.annotations.Immutable;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
@@ -27,7 +26,7 @@ import javax.annotation.Nullable;
  * {@link Matcher#matches} multiple times.
  */
 @Immutable
-final class RegexParser {
+final class RegexParser implements Parser {
     private final Pattern pattern;
 
     RegexParser(Pattern pattern) {
@@ -40,13 +39,15 @@ final class RegexParser {
     }
 
     /** Returns a {@link MatchResult} if the provided string matches the pattern, or null otherwise. */
+    @Override
     @Nullable
-    MatchResult tryParse(String string) {
+    public MatchResult tryParse(String string) {
         Matcher matcher = pattern.matcher(string);
-        return matcher.matches() ? matcher : null;
+        return matcher.matches() ? new MatchResult.RegexMatchResult(matcher) : null;
     }
 
-    Pattern getPattern() {
+    @Override
+    public Pattern getPattern() {
         return pattern;
     }
 }

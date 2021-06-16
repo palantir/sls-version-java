@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.palantir.logsafe.UnsafeArg;
 import java.util.Optional;
-import java.util.regex.MatchResult;
 import org.immutables.value.Value;
 
 /**
@@ -67,15 +66,15 @@ public abstract class OrderableSlsVersion extends SlsVersion implements Comparab
         OrderableSlsVersion.Builder orderableSlsVersion = new Builder()
                 .type(type)
                 .value(value)
-                .majorVersionNumber(Integer.parseInt(groups.group(1)))
-                .minorVersionNumber(Integer.parseInt(groups.group(2)))
-                .patchVersionNumber(Integer.parseInt(groups.group(3)));
+                .majorVersionNumber(groups.groupAsInt(1))
+                .minorVersionNumber(groups.groupAsInt(2))
+                .patchVersionNumber(groups.groupAsInt(3));
 
         if (groups.groupCount() >= 4) {
-            orderableSlsVersion.firstSequenceVersionNumber(Integer.parseInt(groups.group(4)));
+            orderableSlsVersion.firstSequenceVersionNumber(groups.groupAsInt(4));
         }
         if (groups.groupCount() >= 5) {
-            orderableSlsVersion.secondSequenceVersionNumber(Integer.parseInt(groups.group(5)));
+            orderableSlsVersion.secondSequenceVersionNumber(groups.groupAsInt(5));
         }
 
         return orderableSlsVersion.build();

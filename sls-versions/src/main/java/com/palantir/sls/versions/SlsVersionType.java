@@ -24,24 +24,24 @@ import java.util.regex.Pattern;
  */
 public enum SlsVersionType {
     RELEASE_SNAPSHOT(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-([0-9]+)-g[a-f0-9]+$"), 4),
-    RELEASE(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)$"), 3),
+    RELEASE(ReleaseVersionParser.INSTANCE, 3),
     RELEASE_CANDIDATE_SNAPSHOT(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-rc([0-9]+)-([0-9]+)-g[a-f0-9]+$"), 2),
     RELEASE_CANDIDATE(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-rc([0-9]+)$"), 1),
     NON_ORDERABLE(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)(-[a-z0-9-]+)?(\\.dirty)?$"), 0);
 
-    private final RegexParser regexParser;
+    private final Parser parser;
     private final int priority;
 
     public Pattern getPattern() {
-        return regexParser.getPattern();
+        return parser.getPattern();
     }
 
-    RegexParser getParser() {
-        return regexParser;
+    Parser getParser() {
+        return parser;
     }
 
-    SlsVersionType(RegexParser regexParser, int priority) {
-        this.regexParser = regexParser;
+    SlsVersionType(Parser parser, int priority) {
+        this.parser = parser;
         this.priority = priority;
     }
 
