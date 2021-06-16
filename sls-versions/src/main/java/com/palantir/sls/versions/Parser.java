@@ -23,8 +23,10 @@ import javax.annotation.Nullable;
 @Immutable
 interface Parser {
 
+    /** Returns a {@link MatchResult} if the provided string matches the pattern, or null otherwise. */
     @Nullable
     MatchResult tryParse(String string);
 
+    /** An equivalent java regex. */
     Pattern getPattern();
 }

@@ -19,6 +19,8 @@ package com.palantir.sls.versions;
 import java.util.regex.Matcher;
 
 interface MatchResult {
+
+    /** 1-indexed, to match java regexes. */
     int groupAsInt(int group);
 
     int groupCount();
