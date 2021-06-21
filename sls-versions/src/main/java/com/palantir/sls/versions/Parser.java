@@ -17,37 +17,16 @@
 package com.palantir.sls.versions;
 
 import com.google.errorprone.annotations.Immutable;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
-/**
- * This class encourages callers to call the parsing logic once, rather than fall into the trap of accidentally calling
- * {@link Matcher#matches} multiple times.
- */
 @Immutable
-final class RegexParser implements Parser {
-    private final Pattern pattern;
-
-    RegexParser(Pattern pattern) {
-        this.pattern = pattern;
-    }
-
-    static RegexParser of(String regex) {
-        Pattern pattern = Pattern.compile(regex);
-        return new RegexParser(pattern);
-    }
+interface Parser {
 
     /** Returns a {@link MatchResult} if the provided string matches the pattern, or null otherwise. */
-    @Override
     @Nullable
-    public MatchResult tryParse(String string) {
-        Matcher matcher = pattern.matcher(string);
-        return matcher.matches() ? new MatchResult.RegexMatchResult(matcher) : null;
-    }
+    MatchResult tryParse(String string);
 
-    @Override
-    public Pattern getPattern() {
-        return pattern;
-    }
+    /** An equivalent java regex. */
+    Pattern getPattern();
 }

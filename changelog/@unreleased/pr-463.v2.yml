@@ -1,0 +1,6 @@
+type: improvement
+improvement:
+  description: Parsing the simplest `x.y.z` type of `OrderableSlsVersion` no longer
+    uses regexes. Allocation is reduced by about 75%
+  links:
+  - https://github.com/palantir/sls-version-java/pull/463
