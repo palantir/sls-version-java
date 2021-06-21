@@ -43,10 +43,6 @@ interface MatchResult {
                 throw new NumberFormatException();
             }
 
-            if (groupEnd - groupStart == 1) {
-                return Character.digit(string.codePointAt(groupStart), RADIX);
-            }
-
             return Integer.parseUnsignedInt(string, groupStart, groupEnd, RADIX);
         }
 
