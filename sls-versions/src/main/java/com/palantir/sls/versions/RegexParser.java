@@ -43,7 +43,7 @@ final class RegexParser implements Parser {
     @Nullable
     public MatchResult tryParse(String string) {
         Matcher matcher = pattern.matcher(string);
-        return matcher.matches() ? new MatchResult.RegexMatchResult(matcher) : null;
+        return matcher.matches() ? new MatchResult.RegexMatchResult(string, matcher) : null;
     }
 
     @Override
