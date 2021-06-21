@@ -1,0 +1,7 @@
+type: break
+break:
+  description: This library no longer runs on Java 8 and requires Java 11. This allows
+    parsing of all types of sls version to no longer involve allocating strings just
+    to parse them as integers again.
+  links:
+  - https://github.com/palantir/sls-version-java/pull/466
