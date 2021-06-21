@@ -31,6 +31,7 @@ final class Parsers {
 
     static final int MAGIC_X_NUMBER = -1;
     private static final long INT_MASK = (1L << 32) - 1;
+    private static final int PARSE_FAILED = Integer.MIN_VALUE;
 
     private Parsers() {}
 
@@ -103,11 +104,11 @@ final class Parsers {
     }
 
     static long fail(int index) {
-        return ((long) index) << 32 | (Integer.MIN_VALUE & INT_MASK);
+        return ((long) index) << 32 | (PARSE_FAILED & INT_MASK);
     }
 
     static boolean isOk(long state) {
-        return getResult(state) != Integer.MIN_VALUE;
+        return getResult(state) != PARSE_FAILED;
     }
 
     static boolean failed(long state) {
