@@ -1,0 +1,6 @@
+type: break
+break:
+  description: This library now requires Java 11+ (previously it could run on Java
+    8+). This allows us to eliminate some String allocations from parsing SLS versions.
+  links:
+  - https://github.com/palantir/sls-version-java/pull/466
