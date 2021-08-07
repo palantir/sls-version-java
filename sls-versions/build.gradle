@@ -23,6 +23,7 @@ dependencies {
     jmh 'org.openjdk.jmh:jmh-core'
     jmh project(':sls-versions')
     jmh 'org.apache.logging.log4j:log4j-slf4j-impl'
+    implementation 'com.palantir.safe-logging:logger'
 }
 
 tasks.withType(Test) {
