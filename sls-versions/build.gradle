@@ -18,8 +18,7 @@ dependencies {
     testImplementation 'net.jqwik:jqwik-api'
     testRuntimeOnly 'net.jqwik:jqwik'
 
-    annotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess'
-    compileOnly 'org.openjdk.jmh:jmh-generator-annprocess'
+    jmhAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess'
     jmh 'org.openjdk.jmh:jmh-core'
     jmh project(':sls-versions')
     jmh 'org.apache.logging.log4j:log4j-slf4j-impl'
