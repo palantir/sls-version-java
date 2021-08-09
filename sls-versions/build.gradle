@@ -6,7 +6,7 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations'
     compile 'com.palantir.safe-logging:preconditions'
     compile 'com.palantir.safe-logging:safe-logging'
-    compile 'org.slf4j:slf4j-api'
+    implementation 'com.palantir.safe-logging:logger'
 
     annotationProcessor 'org.immutables:value'
     compileOnly 'org.immutables:value::annotations'

@@ -23,12 +23,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.palantir.logsafe.SafeArg;
 import com.palantir.logsafe.UnsafeArg;
+import com.palantir.logsafe.logger.SafeLogger;
+import com.palantir.logsafe.logger.SafeLoggerFactory;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.OptionalInt;
 import org.immutables.value.Value;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * An SLS version matcher as defined by the [SLS
@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 @ImmutablesStyle
 public abstract class SlsVersionMatcher {
 
-    private static final Logger log = LoggerFactory.getLogger(SlsVersionMatcher.class);
+    private static final SafeLogger log = SafeLoggerFactory.get(SlsVersionMatcher.class);
 
     private static final Comparator<OptionalInt> EMPTY_IS_GREATER =
             Comparator.comparingInt(num -> num.isPresent() ? num.getAsInt() : Integer.MAX_VALUE);
