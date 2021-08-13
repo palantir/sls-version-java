@@ -3,9 +3,9 @@ apply plugin: 'com.palantir.revapi'
 apply plugin: 'me.champeau.jmh'
 
 dependencies {
-    compile 'com.fasterxml.jackson.core:jackson-annotations'
-    compile 'com.palantir.safe-logging:preconditions'
-    compile 'com.palantir.safe-logging:safe-logging'
+    api 'com.fasterxml.jackson.core:jackson-annotations'
+    api 'com.palantir.safe-logging:preconditions'
+    api 'com.palantir.safe-logging:safe-logging'
     implementation 'com.palantir.safe-logging:logger'
 
     annotationProcessor 'org.immutables:value'
