@@ -24,6 +24,7 @@ apply plugin: 'com.palantir.external-publish'
 apply plugin: 'com.palantir.baseline'
 apply plugin: 'com.palantir.git-version'
 apply plugin: 'com.palantir.consistent-versions'
+apply plugin: 'com.palantir.baseline-java-versions'
 
 version gitVersion()
 
@@ -42,7 +43,6 @@ subprojects {
     apply plugin: 'org.inferred.processors'
 
     tasks.check.dependsOn(javadoc)
-    sourceCompatibility = 11
 
     tasks.withType(JavaCompile) {
         options.compilerArgs += ['-Werror']
@@ -58,5 +58,9 @@ subprojects {
             options.errorprone.errorproneArgs.add '-XepOpt:NullAway:AnnotatedPackages=com.palantir'
         }
     })
+}
+
+javaVersions {
+    libraryTarget = 11
 }
 
