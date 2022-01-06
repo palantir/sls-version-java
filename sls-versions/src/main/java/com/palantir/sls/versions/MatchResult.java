@@ -47,10 +47,8 @@ interface MatchResult {
 
             int integer = Integer.parseUnsignedInt(string, groupStart, groupEnd, RADIX);
             if (integer < 0) {
-                throw new SafeIllegalStateException(
-                        "Can't parse segment as integer as it overflowed",
-                        SafeArg.of("string", string),
-                        SafeArg.of("segment", string.substring(groupStart, groupEnd)));
+                // Extracted to a function to help inlining, as this is probably very uncommon.
+                throw safeIllegalStateException(groupStart, groupEnd);
             }
             return integer;
         }
@@ -58,6 +56,13 @@ interface MatchResult {
         @Override
         public int groupCount() {
             return matcher.groupCount();
+        }
+
+        private SafeIllegalStateException safeIllegalStateException(int groupStart, int groupEnd) {
+            return new SafeIllegalStateException(
+                    "Can't parse segment as integer as it overflowed",
+                    SafeArg.of("string", string),
+                    SafeArg.of("segment", string.substring(groupStart, groupEnd)));
         }
     }
 
