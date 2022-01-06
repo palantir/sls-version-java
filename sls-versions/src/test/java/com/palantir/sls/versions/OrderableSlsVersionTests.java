@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -226,6 +227,22 @@ public class OrderableSlsVersionTests {
                         throwable -> assertThat(throwable)
                                 .hasMessageContaining("" + "Can't parse segment as integer as it overflowed: {string="
                                         + overflowVersion));
+    }
+
+    @Test
+    void leading_zeros() {
+        assertThat(Stream.of("9.9.10", "9.9.2", "9.9.02", "9.9.1", "9.9.01")
+                        .map(OrderableSlsVersion::valueOf)
+                        .sorted()
+                        .map(OrderableSlsVersion::toString))
+                .describedAs("This sorting behaviour might look odd, but it's because the patch segment "
+                        + "is interpreted as an integer, and 01 and 1 are the same.")
+                .containsExactly("9.9.1", "9.9.01", "9.9.2", "9.9.02", "9.9.10");
+
+        assertThat(Stream.of("9.9.1", "9.9.01", "9.9.2", "9.9.02", "9.9.10").sorted())
+                .describedAs(
+                        "Just for comparison, here's the lexicographical ordering, " + "which is totally different")
+                .containsExactly("9.9.01", "9.9.02", "9.9.1", "9.9.10", "9.9.2");
     }
 
     private void assertVersionsInOrder(String smaller, String larger) {
