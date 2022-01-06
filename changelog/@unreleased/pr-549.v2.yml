@@ -1,0 +1,7 @@
+type: fix
+fix:
+  description: '`OrderableSlsVersion.valueOf` will now refuse to interpret a version
+    string containing a number greater than Integer.MAX_VALUE as a valid orderable
+    version. Previously they would be parsed, but have surprising sorting behaviour.'
+  links:
+  - https://github.com/palantir/sls-version-java/pull/549
