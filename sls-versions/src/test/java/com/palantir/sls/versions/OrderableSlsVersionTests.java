@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 public class OrderableSlsVersionTests {
 
@@ -205,6 +207,25 @@ public class OrderableSlsVersionTests {
         assertVersionsEqual("1.0.0-2-gaaaaa", "1.0.0-2-gbbbbb");
         assertVersionsEqual("1.0.0-rc3", "1.0.0-rc3");
         assertVersionsEqual("1.0.0-rc3-4-gaaaaa", "1.0.0-rc3-4-gbbbbbb");
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+            strings = {
+                "2147483648.0.0",
+                "0.2147483648.0",
+                "0.0.2147483648",
+                "0.0.0-rc2147483648",
+                "0.0.0-2147483648-gaaa"
+            })
+    void integer_overflow(String overflowVersion) {
+        assertThatThrownBy(() -> OrderableSlsVersion.valueOf(overflowVersion))
+                .satisfiesAnyOf(
+                        throwable -> assertThat(throwable)
+                                .hasMessage("Not an orderable version: {value}: {value=" + overflowVersion + "}"),
+                        throwable -> assertThat(throwable)
+                                .hasMessageContaining("" + "Can't parse segment as integer as it overflowed: {string="
+                                        + overflowVersion));
     }
 
     private void assertVersionsInOrder(String smaller, String larger) {
