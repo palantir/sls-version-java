@@ -207,6 +207,19 @@ public class OrderableSlsVersionTests {
         assertVersionsEqual("1.0.0-rc3-4-gaaaaa", "1.0.0-rc3-4-gbbbbbb");
     }
 
+    @Test
+    void integer_overflow() {
+        OrderableSlsVersion v0 = OrderableSlsVersion.valueOf("6.12.0");
+        OrderableSlsVersion v1 = OrderableSlsVersion.valueOf("6.12.2201051644");
+        OrderableSlsVersion v2 = OrderableSlsVersion.valueOf("6.12.2201051645");
+
+        assertThat(v0)
+                .describedAs("This breaks if you interpret the 'patch' component as an integer, because it "
+                        + "wraps around and becomes negative")
+                .isLessThan(v1);
+        assertThat(v1).isLessThan(v2);
+    }
+
     private void assertVersionsInOrder(String smaller, String larger) {
         assertThat(OrderableSlsVersion.valueOf(smaller)).isLessThan(OrderableSlsVersion.valueOf(larger));
         assertThat(VersionComparator.INSTANCE.compare(
