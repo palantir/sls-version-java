@@ -16,6 +16,8 @@
 
 package com.palantir.sls.versions;
 
+import com.palantir.logsafe.SafeArg;
+import com.palantir.logsafe.exceptions.SafeIllegalStateException;
 import java.util.regex.Matcher;
 
 interface MatchResult {
@@ -43,7 +45,14 @@ interface MatchResult {
                 throw new NumberFormatException();
             }
 
-            return Integer.parseUnsignedInt(string, groupStart, groupEnd, RADIX);
+            int integer = Integer.parseUnsignedInt(string, groupStart, groupEnd, RADIX);
+            if (integer < 0) {
+                throw new SafeIllegalStateException(
+                        "Can't parse segment as integer as it overflowed",
+                        SafeArg.of("string", string),
+                        SafeArg.of("segment", string.substring(groupStart, groupEnd)));
+            }
+            return integer;
         }
 
         @Override

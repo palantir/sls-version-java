@@ -67,7 +67,12 @@ final class Parsers {
             return ok(next, Character.digit(string.codePointAt(startIndex), 10));
         } else {
             try {
-                return ok(next, Integer.parseUnsignedInt(string, startIndex, next, 10));
+                int result = Integer.parseUnsignedInt(string, startIndex, next, 10);
+                if (result < 0) {
+                    // i.e. we overflowed the int
+                    return fail(startIndex);
+                }
+                return ok(next, result);
             } catch (NumberFormatException e) {
                 if (e.getMessage() != null && e.getMessage().endsWith("exceeds range of unsigned int.")) {
                     return fail(startIndex);
