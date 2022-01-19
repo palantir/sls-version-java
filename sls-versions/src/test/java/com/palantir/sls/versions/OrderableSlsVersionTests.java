@@ -136,7 +136,7 @@ public class OrderableSlsVersionTests {
         Collections.shuffle(shuffledVersions);
         Collections.sort(shuffledVersions, VersionComparator.INSTANCE);
 
-        assertThat(shuffledVersions).isEqualTo(orderedVersions);
+        assertThat(shuffledVersions).containsExactlyElementsOf(orderedVersions);
     }
 
     @Test
