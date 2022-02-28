@@ -1,7 +1,7 @@
 com.fasterxml.jackson.core:* = 2.11.1
 org.immutables:* = 2.8.8
 com.palantir.safe-logging:* = 1.22.0
-com.google.guava:guava = 31.0.1-jre
+com.google.guava:guava = 31.1-jre
 com.uber.nullaway:nullaway = 0.9.5
 
 # Test dependencies
