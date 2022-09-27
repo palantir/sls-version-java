@@ -2,12 +2,13 @@
 com.fasterxml.jackson.core:jackson-annotations:2.13.3 (2 constraints: c3178471)
 com.google.code.findbugs:jsr305:3.0.2 (1 constraints: 170aecb4)
 com.google.errorprone:error_prone_annotations:2.11.0 (5 constraints: 8849c88a)
-com.palantir.safe-logging:logger:3.0.0 (1 constraints: 0505fa35)
-com.palantir.safe-logging:logger-slf4j:3.0.0 (1 constraints: fe0d5342)
-com.palantir.safe-logging:logger-spi:3.0.0 (2 constraints: 0b1e2f7a)
-com.palantir.safe-logging:preconditions:3.0.0 (1 constraints: 0505fa35)
-com.palantir.safe-logging:safe-logging:3.0.0 (4 constraints: 7633be58)
+com.palantir.safe-logging:logger:3.1.0 (1 constraints: 0605fd35)
+com.palantir.safe-logging:logger-slf4j:3.1.0 (1 constraints: ff0d5642)
+com.palantir.safe-logging:logger-spi:3.1.0 (2 constraints: 0d1e647a)
+com.palantir.safe-logging:preconditions:3.1.0 (1 constraints: 0605fd35)
+com.palantir.safe-logging:safe-logging:3.1.0 (4 constraints: 7a33dd59)
 org.immutables:value:2.8.8 (1 constraints: 14051536)
+org.jetbrains:annotations:23.0.0 (1 constraints: 31115ed1)
 org.slf4j:slf4j-api:1.7.31 (1 constraints: 471091b6)
 
 [Test dependencies]
