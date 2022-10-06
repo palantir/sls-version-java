@@ -23,7 +23,7 @@ import com.palantir.logsafe.UnsafeArg;
 import java.util.Optional;
 import org.immutables.value.Value;
 
-@Value.Immutable(lazyhash = true)
+@Value.Immutable
 @ImmutablesStyle
 public abstract class NonOrderableSlsVersion extends SlsVersion {
 
