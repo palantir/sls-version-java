@@ -255,13 +255,44 @@ public final class OrderableSlsVersionTests {
     @ParameterizedTest
     @ValueSource(
             strings = {
-                "0.0.0", "0.0.1", "0.1.0", "0.1.1", "1.0.0", "1.0.1", "1.1.0", "1.1.1", "1.1.10",
+                "0.0.0",
+                "0.0.1",
+                "0.1.0",
+                "0.1.1",
+                "1.0.0",
+                "1.0.1",
+                "1.1.0",
+                "1.1.1",
+                "1.1.10",
+                "1.2.3-rc4",
             })
-    void intern_normalized_versions(String version) {
-        assertThat(OrderableSlsVersion.valueOf(version))
-                .isEqualByComparingTo(OrderableSlsVersion.valueOf(version))
-                .isEqualTo(OrderableSlsVersion.valueOf(version))
-                .isSameAs(OrderableSlsVersion.valueOf(version));
+    void intern_normalized_versions(String value) {
+        assertThat(OrderableSlsVersion.valueOf(value))
+                .isEqualTo(OrderableSlsVersion.valueOf(value))
+                .isEqualByComparingTo(OrderableSlsVersion.valueOf(value))
+                .isSameAs(OrderableSlsVersion.valueOf(value));
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+            strings = {
+                "0.0.00",
+                "0.0.01",
+                "0.01.0",
+                "0.01.01",
+                "01.0.0",
+                "01.0.1",
+                "01.01.0",
+                "01.01.01",
+                "01.01.010",
+                "1.0.0-rc3-4-gaaaaa",
+                "1.0.0-rc3-4-gbbbbbb",
+            })
+    void does_not_intern_non_normalized_versions(String value) {
+        assertThat(OrderableSlsVersion.valueOf(value))
+                .isEqualTo(OrderableSlsVersion.valueOf(value))
+                .isEqualByComparingTo(OrderableSlsVersion.valueOf(value))
+                .isNotSameAs(OrderableSlsVersion.valueOf(value));
     }
 
     private void assertVersionsInOrder(String smaller, String larger) {
