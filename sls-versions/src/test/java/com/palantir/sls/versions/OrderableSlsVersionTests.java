@@ -120,8 +120,9 @@ public class OrderableSlsVersionTests {
     @Test
     public void testVersionIsEqualToItself() {
         for (String v : ORDERABLE_VERSIONS_IN_ORDER) {
-            assertThat(OrderableSlsVersion.valueOf(v)).isEqualTo(OrderableSlsVersion.valueOf(v));
-            assertThat(OrderableSlsVersion.valueOf(v)).isEqualByComparingTo(OrderableSlsVersion.valueOf(v));
+            assertThat(OrderableSlsVersion.valueOf(v))
+                    .isEqualTo(OrderableSlsVersion.valueOf(v))
+                    .isEqualByComparingTo(OrderableSlsVersion.valueOf(v));
         }
     }
 
@@ -253,15 +254,37 @@ public class OrderableSlsVersionTests {
                 .containsExactly("9.9.01", "9.9.02", "9.9.1", "9.9.10", "9.9.2");
     }
 
+    @ParameterizedTest
+    @ValueSource(
+            strings = {
+                "0.0.0", "0.0.1", "0.1.0", "0.1.1", "1.0.0", "1.0.1", "1.1.0", "1.1.1", "1.1.10",
+            })
+    void intern_normalized_versions(String version) {
+        assertThat(OrderableSlsVersion.valueOf(version))
+                .isEqualByComparingTo(OrderableSlsVersion.valueOf(version))
+                .isEqualTo(OrderableSlsVersion.valueOf(version))
+                .isSameAs(OrderableSlsVersion.valueOf(version));
+    }
+
     private void assertVersionsInOrder(String smaller, String larger) {
-        assertThat(OrderableSlsVersion.valueOf(smaller)).isLessThan(OrderableSlsVersion.valueOf(larger));
+        assertThat(OrderableSlsVersion.valueOf(smaller))
+                .isLessThan(OrderableSlsVersion.valueOf(larger))
+                .isNotEqualByComparingTo(OrderableSlsVersion.valueOf(larger));
+        assertThat(OrderableSlsVersion.valueOf(larger))
+                .isGreaterThanOrEqualTo(OrderableSlsVersion.valueOf(smaller))
+                .isNotEqualByComparingTo(OrderableSlsVersion.valueOf(smaller));
         assertThat(VersionComparator.INSTANCE.compare(
                         OrderableSlsVersion.valueOf(smaller), OrderableSlsVersion.valueOf(larger)))
                 .isEqualTo(-1);
+        assertThat(VersionComparator.INSTANCE.compare(
+                        OrderableSlsVersion.valueOf(larger), OrderableSlsVersion.valueOf(smaller)))
+                .isEqualTo(1);
     }
 
     private void assertVersionsEqual(String left, String right) {
-        assertThat(OrderableSlsVersion.valueOf(left)).isEqualByComparingTo(OrderableSlsVersion.valueOf(right));
+        assertThat(OrderableSlsVersion.valueOf(left))
+                .isEqualTo(OrderableSlsVersion.valueOf(right))
+                .isEqualByComparingTo(OrderableSlsVersion.valueOf(right));
         assertThat(VersionComparator.INSTANCE.compare(
                         OrderableSlsVersion.valueOf(left), OrderableSlsVersion.valueOf(right)))
                 .isZero();

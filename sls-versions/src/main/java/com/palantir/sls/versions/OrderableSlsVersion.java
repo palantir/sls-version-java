@@ -19,7 +19,11 @@ package com.palantir.sls.versions;
 import static com.palantir.logsafe.Preconditions.checkArgument;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.google.common.collect.Interner;
+import com.google.common.collect.Interners;
+import com.palantir.logsafe.SafeArg;
 import com.palantir.logsafe.UnsafeArg;
+import com.palantir.logsafe.exceptions.SafeIllegalStateException;
 import java.util.Optional;
 import org.immutables.value.Value;
 
@@ -27,9 +31,11 @@ import org.immutables.value.Value;
  * An orderable version string as defined by the [SLS
  * spec](https://github.com/palantir/sls-version-java#sls-product-version-specification).
  */
-@Value.Immutable
+@Value.Immutable(lazyhash = true)
 @ImmutablesStyle
 public abstract class OrderableSlsVersion extends SlsVersion implements Comparable<OrderableSlsVersion> {
+
+    private static final Interner<OrderableSlsVersion> interner = Interners.newWeakInterner();
 
     private static final SlsVersionType[] ORDERED_VERSION_TYPES = {
         SlsVersionType.RELEASE,
@@ -76,7 +82,37 @@ public abstract class OrderableSlsVersion extends SlsVersion implements Comparab
             orderableSlsVersion.secondSequenceVersionNumber(groups.groupAsInt(5));
         }
 
-        return orderableSlsVersion.build();
+        OrderableSlsVersion version = orderableSlsVersion.build();
+        if (version.isNormalized()) {
+            // only intern fully normalized values where there are no leading zeros or git commits
+            return interner.intern(version);
+        }
+        return version;
+    }
+
+    private boolean isNormalized() {
+        return getValue().equals(normalizedVersionString());
+    }
+
+    private String normalizedVersionString() {
+        switch (getType()) {
+            case RELEASE:
+                return getMajorVersionNumber() + "." + getMinorVersionNumber() + '.' + getPatchVersionNumber();
+            case RELEASE_CANDIDATE:
+                return getMajorVersionNumber() + "." + getMinorVersionNumber() + '.' + getPatchVersionNumber() + "-rc"
+                        + firstSequenceVersionNumber().orElseThrow();
+            case RELEASE_CANDIDATE_SNAPSHOT:
+                return getMajorVersionNumber() + "." + getMinorVersionNumber() + '.' + getPatchVersionNumber() + "-rc"
+                        + firstSequenceVersionNumber().orElseThrow()
+                        + "-" + secondSequenceVersionNumber().orElseThrow();
+            case RELEASE_SNAPSHOT:
+                return getMajorVersionNumber() + "." + getMinorVersionNumber() + '.' + getPatchVersionNumber() + '-'
+                        + firstSequenceVersionNumber().orElseThrow();
+            case NON_ORDERABLE:
+            default:
+                throw new SafeIllegalStateException(
+                        "Invalid type", SafeArg.of("type", getType()), SafeArg.of("version", this));
+        }
     }
 
     /** Returns true iff the given coordinate has a version which can be parsed into a valid orderable SLS version. */

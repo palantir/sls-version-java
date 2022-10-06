@@ -6,6 +6,8 @@ dependencies {
     api 'com.fasterxml.jackson.core:jackson-annotations'
     api 'com.palantir.safe-logging:preconditions'
     api 'com.palantir.safe-logging:safe-logging'
+
+    implementation 'com.google.guava:guava'
     implementation 'com.palantir.safe-logging:logger'
 
     annotationProcessor 'org.immutables:value'
