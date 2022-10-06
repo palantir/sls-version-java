@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -104,17 +105,21 @@ public class OrderableSlsVersionTests {
 
     @Test
     public void testParsesStructureCorrectly() {
+        RecursiveComparisonConfiguration ignoreHashCode = RecursiveComparisonConfiguration.builder()
+                .withIgnoredFields("hashCode")
+                .build();
         assertThat(OrderableSlsVersion.valueOf("1.2.3"))
-                .isEqualToComparingFieldByField(version("1.2.3", 1, 2, 3, SlsVersionType.RELEASE, null, null));
+                .usingRecursiveComparison(ignoreHashCode)
+                .isEqualTo(version("1.2.3", 1, 2, 3, SlsVersionType.RELEASE, null, null));
         assertThat(OrderableSlsVersion.valueOf("1.2.3-rc4"))
-                .isEqualToComparingFieldByField(
-                        version("1.2.3-rc4", 1, 2, 3, SlsVersionType.RELEASE_CANDIDATE, 4, null));
+                .usingRecursiveComparison(ignoreHashCode)
+                .isEqualTo(version("1.2.3-rc4", 1, 2, 3, SlsVersionType.RELEASE_CANDIDATE, 4, null));
         assertThat(OrderableSlsVersion.valueOf("1.2.3-rc2-1-gabc"))
-                .isEqualToComparingFieldByField(
-                        version("1.2.3-rc2-1-gabc", 1, 2, 3, SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT, 2, 1));
+                .usingRecursiveComparison(ignoreHashCode)
+                .isEqualTo(version("1.2.3-rc2-1-gabc", 1, 2, 3, SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT, 2, 1));
         assertThat(OrderableSlsVersion.valueOf("1.2.3-4-gabc"))
-                .isEqualToComparingFieldByField(
-                        version("1.2.3-4-gabc", 1, 2, 3, SlsVersionType.RELEASE_SNAPSHOT, 4, null));
+                .usingRecursiveComparison(ignoreHashCode)
+                .isEqualTo(version("1.2.3-4-gabc", 1, 2, 3, SlsVersionType.RELEASE_SNAPSHOT, 4, null));
     }
 
     @Test
