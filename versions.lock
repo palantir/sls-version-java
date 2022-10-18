@@ -13,7 +13,7 @@ org.slf4j:slf4j-api:1.7.31 (1 constraints: 471091b6)
 
 [Test dependencies]
 com.fasterxml.jackson.core:jackson-core:2.13.4 (1 constraints: 8a123921)
-com.fasterxml.jackson.core:jackson-databind:2.13.4.1 (1 constraints: 9b054146)
+com.fasterxml.jackson.core:jackson-databind:2.13.4.2 (1 constraints: 9c054246)
 com.google.guava:failureaccess:1.0.1 (1 constraints: 140ae1b4)
 com.google.guava:guava:31.1-jre (1 constraints: 47069c47)
 com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava (1 constraints: bd17c918)
