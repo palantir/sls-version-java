@@ -3,7 +3,7 @@ com.fasterxml.jackson.core:jackson-databind = 2.14.1
 org.immutables:* = 2.9.3
 com.palantir.safe-logging:* = 3.2.0
 com.google.guava:guava = 31.1-jre
-com.uber.nullaway:nullaway = 0.10.7
+com.uber.nullaway:nullaway = 0.10.8
 
 # Test dependencies
 org.assertj:assertj-core = 3.24.1
