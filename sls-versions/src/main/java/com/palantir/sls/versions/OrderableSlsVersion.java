@@ -19,7 +19,6 @@ package com.palantir.sls.versions;
 import static com.palantir.logsafe.Preconditions.checkArgument;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.palantir.logsafe.UnsafeArg;
 import java.util.Optional;
 import org.immutables.value.Value;
@@ -85,7 +84,6 @@ public abstract class OrderableSlsVersion extends SlsVersion implements Comparab
         return safeValueOf(coordinate).isPresent();
     }
 
-    @JsonValue
     @Override
     public final String toString() {
         return getValue();

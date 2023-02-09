@@ -1,0 +1,5 @@
+type: fix
+fix:
+  description: '`SlsVersion` is now serializable.'
+  links:
+  - https://github.com/palantir/sls-version-java/pull/763

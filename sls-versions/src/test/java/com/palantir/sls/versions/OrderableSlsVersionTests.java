@@ -20,6 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.palantir.logsafe.exceptions.SafeIllegalArgumentException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -84,13 +86,19 @@ public class OrderableSlsVersionTests {
     @Test
     public void testSerialization() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
+        ObjectReader reader = mapper.readerFor(OrderableSlsVersion.class);
+        ObjectWriter writer = mapper.writerFor(OrderableSlsVersion.class);
+
         for (String versionString : ORDERABLE_VERSIONS_IN_ORDER) {
             OrderableSlsVersion version = OrderableSlsVersion.valueOf(versionString);
+
             String serialized = mapper.writeValueAsString(version);
             assertThat(serialized).isEqualTo("\"" + versionString + "\"");
+            assertThat(serialized).isEqualTo(writer.writeValueAsString(version));
 
-            OrderableSlsVersion deserialized = mapper.readValue(serialized, OrderableSlsVersion.class);
+            SlsVersion deserialized = mapper.readValue(serialized, SlsVersion.class);
             assertThat(deserialized).isEqualTo(version);
+            assertThat(deserialized).isEqualTo(reader.readValue(serialized, SlsVersion.class));
         }
     }
 

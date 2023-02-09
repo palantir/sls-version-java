@@ -17,6 +17,7 @@
 package com.palantir.sls.versions;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.palantir.logsafe.UnsafeArg;
 import com.palantir.logsafe.exceptions.SafeIllegalArgumentException;
 import java.io.Serializable;
@@ -51,6 +52,7 @@ public abstract class SlsVersion implements Serializable {
     }
 
     /** The full version string. */
+    @JsonValue
     @Value.Auxiliary
     public abstract String getValue();
 
