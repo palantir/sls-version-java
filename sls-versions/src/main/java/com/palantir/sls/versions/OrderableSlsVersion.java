@@ -85,7 +85,11 @@ public abstract class OrderableSlsVersion extends SlsVersion implements Comparab
         return safeValueOf(coordinate).isPresent();
     }
 
+    @Override
     @JsonValue
+    @Value.Auxiliary
+    public abstract String getValue();
+
     @Override
     public final String toString() {
         return getValue();

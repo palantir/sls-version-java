@@ -17,12 +17,12 @@
 package com.palantir.sls.versions;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.palantir.logsafe.UnsafeArg;
 import com.palantir.logsafe.exceptions.SafeIllegalArgumentException;
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.OptionalInt;
-import org.immutables.value.Value;
 
 public abstract class SlsVersion implements Serializable {
 
@@ -51,7 +51,7 @@ public abstract class SlsVersion implements Serializable {
     }
 
     /** The full version string. */
-    @Value.Auxiliary
+    @JsonValue
     public abstract String getValue();
 
     public abstract int getMajorVersionNumber();

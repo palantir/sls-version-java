@@ -19,29 +19,47 @@ package com.palantir.sls.versions;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
 public class SlsVersionTests {
-    private static final ObjectMapper mapper = new ObjectMapper();
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final ObjectReader READER = MAPPER.readerFor(SlsVersion.class);
+    private static final ObjectWriter WRITER = MAPPER.writerFor(SlsVersion.class);
 
     @Test
     public void testCanCreateOrderableVersions() throws IOException {
         String versionString = "1.0.0";
         SlsVersion version = SlsVersion.valueOf(versionString);
+
         assertThat(version).isInstanceOf(OrderableSlsVersion.class);
-        String serialized = mapper.writeValueAsString(version);
-        assertThat(mapper.readValue(serialized, SlsVersion.class)).isEqualTo(version);
+
+        String serialized = MAPPER.writeValueAsString(version);
+        assertThat(serialized).isEqualTo("\"" + versionString + "\"");
+        assertThat(serialized).isEqualTo(WRITER.writeValueAsString(version));
+
+        SlsVersion deserialized = MAPPER.readValue(serialized, SlsVersion.class);
+        assertThat(deserialized).isEqualTo(version);
+        assertThat(deserialized).isEqualTo(READER.readValue(serialized, SlsVersion.class));
     }
 
     @Test
     public void testCanCreateNonOrderableVersions() throws IOException {
         String versionString = "1.0.0-foo";
         SlsVersion version = SlsVersion.valueOf(versionString);
+
         assertThat(version).isInstanceOf(NonOrderableSlsVersion.class);
 
-        String serialized = mapper.writeValueAsString(version);
-        assertThat(mapper.readValue(serialized, SlsVersion.class)).isEqualTo(version);
+        String serialized = MAPPER.writeValueAsString(version);
+        assertThat(serialized).isEqualTo("\"" + versionString + "\"");
+        assertThat(serialized).isEqualTo(WRITER.writeValueAsString(version));
+
+        SlsVersion deserialized = MAPPER.readValue(serialized, SlsVersion.class);
+        assertThat(deserialized).isEqualTo(version);
+        assertThat(deserialized).isEqualTo(READER.readValue(serialized, SlsVersion.class));
     }
 
     @Test

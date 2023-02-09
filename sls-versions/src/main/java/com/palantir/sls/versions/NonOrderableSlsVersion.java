@@ -63,7 +63,11 @@ public abstract class NonOrderableSlsVersion extends SlsVersion {
         return safeValueOf(coordinate).isPresent() && !OrderableSlsVersion.check(coordinate);
     }
 
+    @Override
     @JsonValue
+    @Value.Auxiliary
+    public abstract String getValue();
+
     @Override
     public final String toString() {
         return getValue();

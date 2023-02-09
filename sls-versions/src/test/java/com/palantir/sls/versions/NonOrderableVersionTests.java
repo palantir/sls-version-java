@@ -20,12 +20,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.palantir.logsafe.exceptions.SafeIllegalArgumentException;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
 public class NonOrderableVersionTests {
-
     private static final String[] VALID_NONORDERABLE_VERSIONS =
             new String[] {"1.0.0.dirty", "0.0.1-custom-description-42", "2.0.0-1-gaaaaaa.dirty"};
 
@@ -69,13 +70,19 @@ public class NonOrderableVersionTests {
     @Test
     public void testSerialization() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
+        ObjectReader reader = mapper.readerFor(NonOrderableSlsVersion.class);
+        ObjectWriter writer = mapper.writerFor(NonOrderableSlsVersion.class);
+
         String versionString = "1.2.3-foo";
         NonOrderableSlsVersion version = NonOrderableSlsVersion.valueOf(versionString);
+
         String serialized = mapper.writeValueAsString(version);
         assertThat(serialized).isEqualTo("\"" + versionString + "\"");
+        assertThat(serialized).isEqualTo(writer.writeValueAsString(version));
 
-        NonOrderableSlsVersion deserialized = mapper.readValue(serialized, NonOrderableSlsVersion.class);
+        SlsVersion deserialized = mapper.readValue(serialized, SlsVersion.class);
         assertThat(deserialized).isEqualTo(version);
+        assertThat(deserialized).isEqualTo(reader.readValue(serialized, SlsVersion.class));
     }
 
     @Test
