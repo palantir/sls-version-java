@@ -23,6 +23,7 @@ import com.palantir.logsafe.exceptions.SafeIllegalArgumentException;
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.OptionalInt;
+import org.immutables.value.Value;
 
 public abstract class SlsVersion implements Serializable {
 
@@ -52,6 +53,7 @@ public abstract class SlsVersion implements Serializable {
 
     /** The full version string. */
     @JsonValue
+    @Value.Auxiliary
     public abstract String getValue();
 
     public abstract int getMajorVersionNumber();
