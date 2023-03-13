@@ -17,15 +17,16 @@
 package com.palantir.sls.versions;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.google.common.collect.ImmutableList;
 import com.palantir.logsafe.exceptions.SafeIllegalArgumentException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.OptionalInt;
@@ -33,103 +34,101 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-public class OrderableSlsVersionTests {
+public final class OrderableSlsVersionTests {
 
-    private static final String[] ORDERABLE_VERSIONS_IN_ORDER = new String[] {
-        "0.0.0",
-        "00.00.01",
-        "0.1.0",
-        "0.1.1",
-        "1.2.0",
-        "1.2.3-rc1",
-        "1.2.3-rc1-4-ga",
-        "1.2.3-rc2",
-        "1.2.3-rc2-1-ga",
-        "1.2.3-rc2-3-gb",
-        "1.2.3",
-        "1.2.3-9-gb",
-        "1.2.3-10-ga",
-        "1.2.4",
-        "1.3.5",
-        "1.4.0",
-        "9.9.9",
-        "10.0.0",
-        "10.0.0-1-gaaaaaa",
-        "10.0.0-2-ga"
-    };
-
-    private static final String[] ILLEGAL_VERSIONS = new String[] {"", "1.0", "1.z.9", "1.0.0.1", "1.0.0-FOO"};
-
-    @Test
-    public void testCanCreateValidVersions() {
-        for (String v : ORDERABLE_VERSIONS_IN_ORDER) {
-            OrderableSlsVersion.valueOf(v);
-        }
+    static List<String> orderableVersionsInOrder() {
+        return ImmutableList.of(
+                "0.0.0",
+                "00.00.01",
+                "0.1.0",
+                "0.1.1",
+                "1.2.0",
+                "1.2.3-rc1",
+                "1.2.3-rc1-4-ga",
+                "1.2.3-rc2",
+                "1.2.3-rc2-1-ga",
+                "1.2.3-rc2-3-gb",
+                "1.2.3",
+                "1.2.3-9-gb",
+                "1.2.3-10-ga",
+                "1.2.4",
+                "1.3.5",
+                "1.4.0",
+                "9.9.9",
+                "10.0.0",
+                "10.0.0-1-gaaaaaa",
+                "10.0.0-2-ga");
     }
 
-    @Test
-    public void testCannotCreateInvalidVersions() {
-        for (String v : ILLEGAL_VERSIONS) {
-            assertThatThrownBy(() -> OrderableSlsVersion.valueOf(v)).isInstanceOf(SafeIllegalArgumentException.class);
-        }
+    @ParameterizedTest
+    @MethodSource("orderableVersionsInOrder")
+    public void testCanCreateValidVersions(String value) {
+        assertThatCode(() -> OrderableSlsVersion.valueOf(value)).doesNotThrowAnyException();
     }
 
-    @Test
-    public void testToStringYieldsOriginalStrings() {
-        for (String v : ORDERABLE_VERSIONS_IN_ORDER) {
-            assertThat(OrderableSlsVersion.valueOf(v).toString()).isEqualTo(v);
-        }
+    @ParameterizedTest
+    @ValueSource(strings = {"", "1.0", "1.z.9", "1.0.0.1", "1.0.0-FOO", "1.2.3.Final"})
+    public void testCannotCreateInvalidVersions(String illegalVersion) {
+        assertThatThrownBy(() -> OrderableSlsVersion.valueOf(illegalVersion))
+                .isInstanceOf(SafeIllegalArgumentException.class);
     }
 
-    @Test
-    public void testSerialization() throws IOException {
+    @ParameterizedTest
+    @MethodSource("orderableVersionsInOrder")
+    public void testToStringYieldsOriginalStrings(String value) {
+        assertThat(OrderableSlsVersion.valueOf(value).toString()).isEqualTo(value);
+    }
+
+    @ParameterizedTest
+    @MethodSource("orderableVersionsInOrder")
+    public void testSerialization(String versionString) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         ObjectReader reader = mapper.readerFor(OrderableSlsVersion.class);
         ObjectWriter writer = mapper.writerFor(OrderableSlsVersion.class);
 
-        for (String versionString : ORDERABLE_VERSIONS_IN_ORDER) {
-            OrderableSlsVersion version = OrderableSlsVersion.valueOf(versionString);
+        OrderableSlsVersion version = OrderableSlsVersion.valueOf(versionString);
 
-            String serialized = mapper.writeValueAsString(version);
-            assertThat(serialized).isEqualTo("\"" + versionString + "\"");
-            assertThat(serialized).isEqualTo(writer.writeValueAsString(version));
+        String serialized = mapper.writeValueAsString(version);
+        assertThat(serialized).isEqualTo("\"" + versionString + "\"");
+        assertThat(serialized).isEqualTo(writer.writeValueAsString(version));
 
-            SlsVersion deserialized = mapper.readValue(serialized, SlsVersion.class);
-            assertThat(deserialized).isEqualTo(version);
-            assertThat(deserialized).isEqualTo(reader.readValue(serialized, SlsVersion.class));
-        }
+        SlsVersion deserialized = mapper.readValue(serialized, SlsVersion.class);
+        assertThat(deserialized).isEqualTo(version);
+        assertThat(deserialized).isEqualTo(reader.readValue(serialized, SlsVersion.class));
     }
 
     @Test
     public void testParsesStructureCorrectly() {
         assertThat(OrderableSlsVersion.valueOf("1.2.3"))
-                .isEqualToComparingFieldByField(version("1.2.3", 1, 2, 3, SlsVersionType.RELEASE, null, null));
+                .usingRecursiveComparison()
+                .isEqualTo(version("1.2.3", 1, 2, 3, SlsVersionType.RELEASE, null, null));
         assertThat(OrderableSlsVersion.valueOf("1.2.3-rc4"))
-                .isEqualToComparingFieldByField(
-                        version("1.2.3-rc4", 1, 2, 3, SlsVersionType.RELEASE_CANDIDATE, 4, null));
+                .usingRecursiveComparison()
+                .isEqualTo(version("1.2.3-rc4", 1, 2, 3, SlsVersionType.RELEASE_CANDIDATE, 4, null));
         assertThat(OrderableSlsVersion.valueOf("1.2.3-rc2-1-gabc"))
-                .isEqualToComparingFieldByField(
-                        version("1.2.3-rc2-1-gabc", 1, 2, 3, SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT, 2, 1));
+                .usingRecursiveComparison()
+                .isEqualTo(version("1.2.3-rc2-1-gabc", 1, 2, 3, SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT, 2, 1));
         assertThat(OrderableSlsVersion.valueOf("1.2.3-4-gabc"))
-                .isEqualToComparingFieldByField(
-                        version("1.2.3-4-gabc", 1, 2, 3, SlsVersionType.RELEASE_SNAPSHOT, 4, null));
+                .usingRecursiveComparison()
+                .isEqualTo(version("1.2.3-4-gabc", 1, 2, 3, SlsVersionType.RELEASE_SNAPSHOT, 4, null));
     }
 
-    @Test
-    public void testVersionIsEqualToItself() {
-        for (String v : ORDERABLE_VERSIONS_IN_ORDER) {
-            assertThat(OrderableSlsVersion.valueOf(v)).isEqualTo(OrderableSlsVersion.valueOf(v));
-            assertThat(OrderableSlsVersion.valueOf(v)).isEqualByComparingTo(OrderableSlsVersion.valueOf(v));
-        }
+    @ParameterizedTest
+    @MethodSource("orderableVersionsInOrder")
+    public void testVersionIsEqualToItself(String value) {
+        assertThat(OrderableSlsVersion.valueOf(value))
+                .isEqualTo(OrderableSlsVersion.valueOf(value))
+                .isEqualByComparingTo(OrderableSlsVersion.valueOf(value));
     }
 
     @Test
     public void testVersionOrdering() {
-        for (int i = 0; i < ORDERABLE_VERSIONS_IN_ORDER.length - 1; ++i) {
-            String left = ORDERABLE_VERSIONS_IN_ORDER[i];
-            String right = ORDERABLE_VERSIONS_IN_ORDER[i + 1];
+        for (int i = 0; i < orderableVersionsInOrder().size() - 1; ++i) {
+            String left = orderableVersionsInOrder().get(i);
+            String right = orderableVersionsInOrder().get(i + 1);
             assertThat(OrderableSlsVersion.valueOf(left)).isLessThan(OrderableSlsVersion.valueOf(right));
             assertThat(OrderableSlsVersion.valueOf(right)).isGreaterThan(OrderableSlsVersion.valueOf(left));
         }
@@ -137,7 +136,7 @@ public class OrderableSlsVersionTests {
 
     @Test
     public void compareToFunctionWordsForOrderableVersions() {
-        List<OrderableSlsVersion> orderedVersions = Arrays.stream(ORDERABLE_VERSIONS_IN_ORDER)
+        List<OrderableSlsVersion> orderedVersions = orderableVersionsInOrder().stream()
                 .map(OrderableSlsVersion::valueOf)
                 .collect(Collectors.toList());
         List<OrderableSlsVersion> shuffledVersions = new ArrayList<>(orderedVersions);
@@ -253,15 +252,66 @@ public class OrderableSlsVersionTests {
                 .containsExactly("9.9.01", "9.9.02", "9.9.1", "9.9.10", "9.9.2");
     }
 
+    @ParameterizedTest
+    @ValueSource(
+            strings = {
+                "0.0.0",
+                "0.0.1",
+                "0.1.0",
+                "0.1.1",
+                "1.0.0",
+                "1.0.1",
+                "1.1.0",
+                "1.1.1",
+                "1.1.10",
+                "1.2.3-rc4",
+            })
+    void normalized_versions(String value) {
+        assertThat(OrderableSlsVersion.valueOf(value))
+                .isEqualTo(OrderableSlsVersion.valueOf(value))
+                .isEqualByComparingTo(OrderableSlsVersion.valueOf(value));
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+            strings = {
+                "0.0.00",
+                "0.0.01",
+                "0.01.0",
+                "0.01.01",
+                "01.0.0",
+                "01.0.1",
+                "01.01.0",
+                "01.01.01",
+                "01.01.010",
+                "1.0.0-rc3-4-gaaaaa",
+                "1.0.0-rc3-4-gbbbbbb",
+            })
+    void non_normalized_versions(String value) {
+        assertThat(OrderableSlsVersion.valueOf(value))
+                .isEqualTo(OrderableSlsVersion.valueOf(value))
+                .isEqualByComparingTo(OrderableSlsVersion.valueOf(value));
+    }
+
     private void assertVersionsInOrder(String smaller, String larger) {
-        assertThat(OrderableSlsVersion.valueOf(smaller)).isLessThan(OrderableSlsVersion.valueOf(larger));
+        assertThat(OrderableSlsVersion.valueOf(smaller))
+                .isLessThan(OrderableSlsVersion.valueOf(larger))
+                .isNotEqualByComparingTo(OrderableSlsVersion.valueOf(larger));
+        assertThat(OrderableSlsVersion.valueOf(larger))
+                .isGreaterThanOrEqualTo(OrderableSlsVersion.valueOf(smaller))
+                .isNotEqualByComparingTo(OrderableSlsVersion.valueOf(smaller));
         assertThat(VersionComparator.INSTANCE.compare(
                         OrderableSlsVersion.valueOf(smaller), OrderableSlsVersion.valueOf(larger)))
                 .isEqualTo(-1);
+        assertThat(VersionComparator.INSTANCE.compare(
+                        OrderableSlsVersion.valueOf(larger), OrderableSlsVersion.valueOf(smaller)))
+                .isEqualTo(1);
     }
 
     private void assertVersionsEqual(String left, String right) {
-        assertThat(OrderableSlsVersion.valueOf(left)).isEqualByComparingTo(OrderableSlsVersion.valueOf(right));
+        assertThat(OrderableSlsVersion.valueOf(left))
+                .isEqualTo(OrderableSlsVersion.valueOf(right))
+                .isEqualByComparingTo(OrderableSlsVersion.valueOf(right));
         assertThat(VersionComparator.INSTANCE.compare(
                         OrderableSlsVersion.valueOf(left), OrderableSlsVersion.valueOf(right)))
                 .isZero();
