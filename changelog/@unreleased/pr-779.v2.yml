@@ -1,0 +1,8 @@
+type: improvement
+improvement:
+  description: |-
+    Simplify VersionComparators
+
+    Modernize and expand OrderableSlsVersionTests
+  links:
+  - https://github.com/palantir/sls-version-java/pull/779
