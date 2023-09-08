@@ -89,7 +89,12 @@ public enum VersionComparator implements Comparator<OrderableSlsVersion> {
         // Substitute -1 if not present because snapshots are greater than non-snapshots.
         OptionalInt leftInt = left.secondSequenceVersionNumber();
         OptionalInt rightInt = right.secondSequenceVersionNumber();
-        return Integer.compare(leftInt.orElse(-1), rightInt.orElse(-1));
+        int secondSequenceCompare = Integer.compare(leftInt.orElse(-1), rightInt.orElse(-1));
+        if (secondSequenceCompare != 0) {
+            return secondSequenceCompare;
+        }
+
+        return stringCompare(left, right);
     }
 
     private int compareFirstSequenceVersions(OrderableSlsVersion left, OrderableSlsVersion right) {
@@ -105,6 +110,17 @@ public enum VersionComparator implements Comparator<OrderableSlsVersion> {
                 "Expected to find a first sequence number for version",
                 SafeArg.of("version", right.getValue()));
 
-        return Integer.compare(leftInt.getAsInt(), rightInt.getAsInt());
+        int firstSequenceCompare = Integer.compare(leftInt.getAsInt(), rightInt.getAsInt());
+        if (firstSequenceCompare != 0) {
+            return firstSequenceCompare;
+        }
+
+        return stringCompare(left, right);
+    }
+
+    private int stringCompare(OrderableSlsVersion left, OrderableSlsVersion right) {
+        // We know everything but the hash is equal between the two versions.
+        // We fall back to string based comparison to settle potential differences between git hashes.
+        return left.toString().compareTo(right.toString());
     }
 }

@@ -76,4 +76,11 @@ public class SlsVersionTests {
     public void testCheckWithGarbage() {
         assertThat(SlsVersion.check("foo")).isFalse();
     }
+
+    @Test
+    public void testCommitHashesAreRespected() {
+        SlsVersion v1 = SlsVersion.valueOf("1.890.0-6-g524919a");
+        SlsVersion v2 = SlsVersion.valueOf("1.890.0-6-g75d58e5");
+        assertThat(v1).isNotEqualTo(v2);
+    }
 }
