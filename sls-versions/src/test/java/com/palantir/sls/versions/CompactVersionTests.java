@@ -29,22 +29,22 @@ public final class CompactVersionTests {
 
     private static final List<OrderableSlsVersion> versions = Arrays.asList(
                     "0.0.0-rc0",
-                    "0.0.0-rc0-1-gbbb",
+                    "0.0.0-rc0-1-gaaaaaa",
                     "0.0.0",
-                    "0.0.0-1-gbbb",
+                    "0.0.0-1-gaaaaaa",
                     "0.0.1",
                     "0.1.0",
                     "0.1.1",
                     "1.0.0-rc0",
-                    "1.0.0-rc0-2-gbbb",
+                    "1.0.0-rc0-2-gaaaaaa",
                     "1.0.0-rc1",
-                    "1.0.0-rc1-1-gbbb",
+                    "1.0.0-rc1-1-gaaaaaa",
                     "1.0.0",
-                    "1.0.0-1-gbbb",
-                    "1.0.0-2-gbbb",
+                    "1.0.0-1-gaaaaaa",
+                    "1.0.0-2-gaaaaaa",
                     "1.0.1",
                     "1.1.1",
-                    "1048575.1048575.1048575-rc1048575-1048575-gbbb")
+                    "1048575.1048575.1048575-rc1048575-1048575-gaaaaaa")
             .stream()
             .map(OrderableSlsVersion::valueOf)
             .collect(Collectors.toList());

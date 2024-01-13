@@ -28,6 +28,13 @@ import java.util.OptionalInt;
  * numeric components of an {@link OrderableSlsVersion}. To enable representing bytes as two SafeLong values, this
  * implementation packs at most 53 bits into a single {@code long}.
  *
+ * @deprecated The CompactVersion is deprecated as it does not conform to the SLS version specification.
+ * Specifically:
+ *   1. The SLS spec does not limit the number of releases, however this implementation is limited to 2^20 major,
+ *      minor and patch version numbers. This has already seen broken in production.
+ *   2. We have started considering versions with different hashes to be non-equal versions. CompactVersion does not
+ *      store the hash, meaning it will not be able to distinguish between different versions.
+ *
  * <p>Bits are allocated as follows, from lowest bits to highest: <code>
  * LSB SafeLong:
  * 20 bits: distance from release
@@ -46,6 +53,7 @@ import java.util.OptionalInt;
  * constituent longs holding only positive values. This is partially accomplished by using less than the full number of
  * bits available, and thus by avoiding twos-complement representation issues when the highest bit in the long is set.
  */
+@Deprecated
 public final class CompactVersion implements Comparable<CompactVersion> {
     private static final int MASK_20_BITS = 0xFFFFF;
     private static final int MASK_12_BITS = 0xFFF;

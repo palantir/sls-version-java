@@ -54,10 +54,13 @@ public class OrderableSlsVersionTests {
         "1.2.4",
         "1.3.5",
         "1.4.0",
+        "1.890.0-6-g524919a",
+        "1.890.0-6-g75d58e5",
         "9.9.9",
         "10.0.0",
         "10.0.0-1-gaaaaaa",
-        "10.0.0-2-ga"
+        "10.0.0-2-ga",
+        "104.30230902.1"
     };
 
     private static final String[] ILLEGAL_VERSIONS = new String[] {"", "1.0", "1.z.9", "1.0.0.1", "1.0.0-FOO"};
@@ -213,9 +216,7 @@ public class OrderableSlsVersionTests {
     @Test
     public void testEqualVersions() {
         assertVersionsEqual("1.0.0", "1.0.0");
-        assertVersionsEqual("1.0.0-2-gaaaaa", "1.0.0-2-gbbbbb");
         assertVersionsEqual("1.0.0-rc3", "1.0.0-rc3");
-        assertVersionsEqual("1.0.0-rc3-4-gaaaaa", "1.0.0-rc3-4-gbbbbbb");
     }
 
     @ParameterizedTest
@@ -257,7 +258,7 @@ public class OrderableSlsVersionTests {
         assertThat(OrderableSlsVersion.valueOf(smaller)).isLessThan(OrderableSlsVersion.valueOf(larger));
         assertThat(VersionComparator.INSTANCE.compare(
                         OrderableSlsVersion.valueOf(smaller), OrderableSlsVersion.valueOf(larger)))
-                .isEqualTo(-1);
+                .isNegative();
     }
 
     private void assertVersionsEqual(String left, String right) {
