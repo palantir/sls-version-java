@@ -1,14 +1,14 @@
 # Run ./gradlew --write-locks to regenerate this file
 com.fasterxml.jackson.core:jackson-annotations:2.15.3 (2 constraints: c717fa71)
 com.google.code.findbugs:jsr305:3.0.2 (1 constraints: 170aecb4)
-com.google.errorprone:error_prone_annotations:2.23.0 (5 constraints: a7492a95)
-com.palantir.safe-logging:logger:3.6.0 (1 constraints: 0b050c36)
-com.palantir.safe-logging:logger-slf4j:3.6.0 (1 constraints: 040e6542)
-com.palantir.safe-logging:logger-spi:3.6.0 (2 constraints: 171e6d7b)
-com.palantir.safe-logging:preconditions:3.6.0 (1 constraints: 0b050c36)
-com.palantir.safe-logging:safe-logging:3.6.0 (4 constraints: 8e33785f)
+com.google.errorprone:error_prone_annotations:2.23.0 (5 constraints: 97498290)
+com.palantir.safe-logging:logger:3.7.0 (1 constraints: 0c050f36)
+com.palantir.safe-logging:logger-slf4j:3.7.0 (1 constraints: 050e6842)
+com.palantir.safe-logging:logger-spi:3.7.0 (2 constraints: 191ea27b)
+com.palantir.safe-logging:preconditions:3.7.0 (1 constraints: 0c050f36)
+com.palantir.safe-logging:safe-logging:3.7.0 (4 constraints: 92339760)
 org.immutables:value:2.10.0 (1 constraints: 35052f3b)
-org.jetbrains:annotations:24.0.1 (1 constraints: 331164d1)
+org.jetbrains:annotations:24.1.0 (1 constraints: 331166d1)
 org.slf4j:slf4j-api:1.7.36 (2 constraints: 2321cfd3)
 
 [Test dependencies]
