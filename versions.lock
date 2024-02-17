@@ -7,7 +7,7 @@ com.palantir.safe-logging:logger-slf4j:3.7.0 (1 constraints: 050e6842)
 com.palantir.safe-logging:logger-spi:3.7.0 (2 constraints: 191ea27b)
 com.palantir.safe-logging:preconditions:3.7.0 (1 constraints: 0c050f36)
 com.palantir.safe-logging:safe-logging:3.7.0 (4 constraints: 92339760)
-org.immutables:value:2.10.0 (1 constraints: 35052f3b)
+org.immutables:value:2.10.1 (1 constraints: 3605303b)
 org.jetbrains:annotations:24.1.0 (1 constraints: 331166d1)
 org.slf4j:slf4j-api:1.7.36 (2 constraints: 2321cfd3)
 
