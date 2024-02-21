@@ -8,7 +8,7 @@ com.uber.nullaway:nullaway = 0.10.23
 # Test dependencies
 org.assertj:assertj-core = 3.25.3
 org.openjdk.jmh:* = 1.37
-org.apache.logging.log4j:log4j-slf4j-impl = 2.22.1
+org.apache.logging.log4j:log4j-slf4j-impl = 2.23.0
 org.junit.jupiter:* = 5.10.2
 
 # Disable dependency upgrader for services that we set minimum runtime constraints for
