@@ -130,11 +130,11 @@ public class SlsVersionMatcherTest {
 
     @Test
     void surprising_interning_consequences() {
-        SlsVersionMatcher instance1 = matcher("01.x.x");
-        SlsVersionMatcher instance2 = matcher("1.x.x");
+        SlsVersionMatcher instance1 = matcher("09876543.x.x");
+        SlsVersionMatcher instance2 = matcher("9876543.x.x");
         assertThat(instance1).isEqualTo(instance2);
         assertThat(instance1).isSameAs(instance2);
-        assertThat(instance2).hasToString("01.x.x");
+        assertThat(instance2).hasToString("09876543.x.x");
     }
 
     private static void assertMatcherOrder(SlsVersionMatcher smaller, SlsVersionMatcher larger) {
