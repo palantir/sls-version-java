@@ -53,3 +53,6 @@ __init__.pyc
 # Editor files
 *~
 sls-versions/.jqwik-database
+
+# Gradle JDKs setup
+!gradle/*
