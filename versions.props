@@ -1,5 +1,5 @@
-com.fasterxml.jackson.core:* = 2.18.2
-com.fasterxml.jackson.core:jackson-databind = 2.18.2
+com.fasterxml.jackson.core:* = 2.18.3
+com.fasterxml.jackson.core:jackson-databind = 2.18.3
 org.immutables:* = 2.10.1
 com.palantir.safe-logging:* = 3.8.0
 com.google.guava:guava = 33.4.0-jre
