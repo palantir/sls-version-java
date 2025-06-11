@@ -96,6 +96,7 @@ public final class CompactVersion implements Comparable<CompactVersion> {
         return type.equals(SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT) ? 1 : 0;
     }
 
+    @SuppressWarnings("for-rollout:StatementSwitchToExpressionSwitch")
     private static long encodePriority2(SlsVersionType type) {
         switch (type) {
             case RELEASE_SNAPSHOT:
@@ -126,6 +127,7 @@ public final class CompactVersion implements Comparable<CompactVersion> {
      * {@link OrderableSlsVersion} does not require equality and because this class' compact representation does not
      * store the string, the git hash will always be set to {@code gaaaaaa}.
      */
+    @SuppressWarnings("for-rollout:StatementSwitchToExpressionSwitch")
     public OrderableSlsVersion toSlsVersion() {
         int majorVersionNumber = (int) (msb >> 32) & MASK_20_BITS;
         int minorVersionNumber = (int) (msb >> 12) & MASK_20_BITS;
@@ -202,10 +204,10 @@ public final class CompactVersion implements Comparable<CompactVersion> {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof CompactVersion)) {
+        if (!(obj instanceof CompactVersion other)) {
             return false;
         }
-        CompactVersion other = (CompactVersion) obj;
+
         return msb == other.msb && lsb == other.lsb;
     }
 
