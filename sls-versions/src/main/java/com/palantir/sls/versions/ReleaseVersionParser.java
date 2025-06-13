@@ -63,7 +63,6 @@ enum ReleaseVersionParser implements Parser {
         return new Int3MatchResult(first, second, third);
     }
 
-    @SuppressWarnings("for-rollout:ConstantPatternCompile")
     @Override
     public Pattern getPattern() {
         return Pattern.compile("^([0-9]+)\\.([0-9]+)\\.([0-9]+)$");
