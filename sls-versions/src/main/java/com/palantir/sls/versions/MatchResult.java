@@ -77,7 +77,7 @@ interface MatchResult {
             this.third = third;
         }
 
-        @SuppressWarnings({"for-rollout:MissingDefault", "for-rollout:StatementSwitchToExpressionSwitch"})
+        @SuppressWarnings("for-rollout:StatementSwitchToExpressionSwitch")
         @Override
         public int groupAsInt(int group) {
             switch (group) {
