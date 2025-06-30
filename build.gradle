@@ -16,14 +16,12 @@ buildscript {
         classpath 'com.palantir.gradle.revapi:gradle-revapi:1.8.0'
         classpath 'com.palantir.javaformat:gradle-palantir-java-format:2.69.0'
         classpath 'com.palantir.suppressible-error-prone:gradle-suppressible-error-prone:2.11.0'
-        classpath 'gradle.plugin.org.inferred:gradle-processors:3.7.0'
         classpath 'me.champeau.jmh:jmh-gradle-plugin:0.7.3'
     }
 }
 
 plugins {
 id 'com.palantir.git-version' version '4.0.0'
-id 'org.inferred.processors' version '3.7.0'
 }
 
 apply plugin: 'com.palantir.external-publish'
@@ -50,7 +48,6 @@ allprojects {
 
 subprojects {
     apply plugin: 'java-library'
-    apply plugin: 'org.inferred.processors'
 
     tasks.check.dependsOn(javadoc)
 
