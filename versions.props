@@ -1,6 +1,7 @@
 com.fasterxml.jackson.*:* = 2.19.1
 org.immutables:* = 2.11.1
 com.palantir.safe-logging:* = 3.9.0
+com.google.code.findbugs:jsr305 = 3.0.2
 com.google.guava:guava = 33.4.8-jre
 com.uber.nullaway:nullaway = 0.12.7
 
