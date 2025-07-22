@@ -77,16 +77,18 @@ interface MatchResult {
             this.third = third;
         }
 
-        @SuppressWarnings("for-rollout:StatementSwitchToExpressionSwitch")
         @Override
         public int groupAsInt(int group) {
             switch (group) {
-                case 1:
+                case 1 -> {
                     return first;
-                case 2:
+                }
+                case 2 -> {
                     return second;
-                case 3:
+                }
+                case 3 -> {
                     return third;
+                }
             }
             throw new IndexOutOfBoundsException();
         }

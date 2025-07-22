@@ -96,20 +96,14 @@ public final class CompactVersion implements Comparable<CompactVersion> {
         return type.equals(SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT) ? 1 : 0;
     }
 
-    @SuppressWarnings("for-rollout:StatementSwitchToExpressionSwitch")
     private static long encodePriority2(SlsVersionType type) {
-        switch (type) {
-            case RELEASE_SNAPSHOT:
-                return 2;
-            case RELEASE:
-                return 1;
-            case RELEASE_CANDIDATE:
-            case RELEASE_CANDIDATE_SNAPSHOT:
-                return 0;
-            case NON_ORDERABLE:
+        return switch (type) {
+            case RELEASE_SNAPSHOT -> 2;
+            case RELEASE -> 1;
+            case RELEASE_CANDIDATE, RELEASE_CANDIDATE_SNAPSHOT -> 0;
+            case NON_ORDERABLE ->
                 throw new SafeIllegalArgumentException("Unable to store NON_ORDERABLE types in CompactVersion");
-        }
-        throw new SafeIllegalArgumentException("Unknown SlsVersionType", SafeArg.of("slsVersionType", type));
+        };
     }
 
     private static long encode20b(int value, @CompileTimeConstant String component) {
@@ -127,7 +121,6 @@ public final class CompactVersion implements Comparable<CompactVersion> {
      * {@link OrderableSlsVersion} does not require equality and because this class' compact representation does not
      * store the string, the git hash will always be set to {@code gaaaaaa}.
      */
-    @SuppressWarnings("for-rollout:StatementSwitchToExpressionSwitch")
     public OrderableSlsVersion toSlsVersion() {
         int majorVersionNumber = (int) (msb >> 32) & MASK_20_BITS;
         int minorVersionNumber = (int) (msb >> 12) & MASK_20_BITS;
@@ -143,19 +136,13 @@ public final class CompactVersion implements Comparable<CompactVersion> {
         OptionalInt firstSeq = OptionalInt.empty();
         OptionalInt secondSeq = OptionalInt.empty();
         switch (type) {
-            case RELEASE_CANDIDATE:
-                firstSeq = OptionalInt.of(rcNumber);
-                break;
-            case RELEASE_SNAPSHOT:
-                firstSeq = OptionalInt.of(distanceFromVersion);
-                break;
-            case RELEASE_CANDIDATE_SNAPSHOT:
+            case RELEASE_CANDIDATE -> firstSeq = OptionalInt.of(rcNumber);
+            case RELEASE_SNAPSHOT -> firstSeq = OptionalInt.of(distanceFromVersion);
+            case RELEASE_CANDIDATE_SNAPSHOT -> {
                 firstSeq = OptionalInt.of(rcNumber);
                 secondSeq = OptionalInt.of(distanceFromVersion);
-                break;
-            case RELEASE:
-            case NON_ORDERABLE:
-                break;
+            }
+            case RELEASE, NON_ORDERABLE -> {}
         }
         return new OrderableSlsVersion.Builder()
                 .majorVersionNumber(majorVersionNumber)
