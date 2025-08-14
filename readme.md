@@ -36,6 +36,7 @@ This specification describes _orderable_ and _non-orderable_ product version str
 Orderable version strings fall into one of 4 version types as defined by a category (release or release candidate)
 and whether it is a snapshot version or not (snapshot versions contain a commit hash at the end), the cross section
 of which produces the following:
+
  ```
 Version Type                        Example                 Format
 ------------                        -------                 ------
@@ -58,52 +59,52 @@ decisions about forward-vs-backwards product migrations. Further, it simplifies 
 via version ranges; for instance, a product may declare that it is compatible with a second product with a version in
 `[1.2.3, 2.0.0)`.
 
-For any two orderable versions, v1 and v2, we can define whether v1 is a *bigger* (equivalently, *later*, *newer*, etc)
+For any two orderable versions, `v1` and v2, we can define whether `v1` is a *larger* (equivalently, *later*, *newer*, etc)
 than v2. For the four variants, there can be up to three numeric components identifying a version. From left to right,
-they are: the usual notation of the base version (e.g., for `1.2.3`, 1=major, 2=minor, 3=patch), an optional second
+they are: the usual notation of the base version (e.g., for `1.2.3`, 1=major, 2=minor, 3=patch), an optional first
 numeric component to identify a release candidate (e.g. `-rc3`) or a snapshot version (e.g. `-5-gnm4s9ba`), and finally
 an optional third numeric component to identify a release candidate snapshot version (e.g. `-rc3-5-gnm4s9ba`).
 
-Intuitively, given the same base version, snapshot versions are bigger than non-snapshot versions, normal release
-versions are bigger than release candidate versions, and a normal release snapshot version is bigger than a release
-candidate of any kind. The following top-down procedure determines whether v1 is bigger than v2, written `v1 > v2`;
+Intuitively, the version types define an ordering of versions for a given base version:
+- For a given base version, release snapshot versions are larger than release versions
+- For a given base version, release versions are larger than release candidate and release candidate snapshot versions
+- For a given base and rc version, release candidate snapshot versions are larger than release candidate versions
+
+The following top-down procedure determines whether `v1` is larger than v2, written `v1 > v2`;
 comparisons like `major(v1) > major(v2)` are by integer ordering (not lexicographic ordering):
 
-- If `major(v1) > major(v2)`, then `v1 > v2`
-- If `minor(v1) > minor(v2)`, then `v1 > v2`
-- If `patch(v1) > patch(v2)`, then `v1 > v2`
-- From here on, let us assume that the base versions (major/minor/patch) are the same for v1 and v2
-- If v1 is a normal snapshot version and v2 is a normal release, then `v1 > v2`
-- If v1 is a normal release version and v2 is a rc version, then `v1 > v2`
-- If v1 and v2 are both normal snapshot versions and `snapshot(v1) > snapshot(v2)`, then `v1 > v2`
-- If v1 and v2 are both rc versions and `rc(v1) > rc(v2)`, then `v1 > v2`
-- From here on, let us assume that v1 and v2 are both rc versions of the same `rc()` number
-- If v1 is a snapshot rc version and v2 is a normal rc version, then `v1 > v2`
-- If v1 and v2 are both snapshot rc versions and `rcSnapshot(v1) > rcSnapshot(v2)`, then `v1 > v2`
-
-Further, v1 is as big as v2, written `v1 == v2`, iff neither `v1 > v2` nor `v2 > v1`.
-We write `v1 >= v2` if `v1 > v2` or `v1 == v2`.
+- We know nothing asbout `v1` and `v2`:
+  - If `major(v1) > major(v2)`, then `v1 > v2`
+  - If `minor(v1) > minor(v2)`, then `v1 > v2`
+  - If `patch(v1) > patch(v2)`, then `v1 > v2`
+- From here on, we know that `v1` and `v2` have the same base version:
+  - If both `v1` and `v2` are both release snapshot versions and `snapshot(v1) > snapshot(v2)`, then `v1 > v2`
+  - If `v1` is a release snapshot version and `v2` is not, then `v1 > v2`
+  - If both `v1` and `v2` are both release versions, then `v1 == v2`
+  - If `v1` is a release version and `v2` is not, then `v1 > v2`
+- From here on, we know that `v1` and `v2` have the same base version and are release candidate or release candidate snapshot version:
+  - If `rc(v1) > rc(v2)`, then `v1 > v2`
+  - If `v1` is a release candidate snapshot version and `v2` is not, then `v1 > v2`
+  - If `rcSnapshot(v1) > rcSnapshot(v2)`, then `v1 > v2`
 
 Examples, with each greater than all the previous:
-- RC: `1.0.0-rc1`
-- Bigger RC: `1.0.0-rc2`
-- RC Snapshot trumps RC: `1.0.0-rc2-4-gaaaaaaa`
-- Bigger RC Snapshot: `1.0.0-rc2-5-gccccccc`
-- Base trumps RC: `2.0.0`
-- Snapshot trumps all: `2.0.0-3-gaaaaaaa`
-- Bigger Snapshot: `2.0.0-4-gbbbbbbb`
-- Bigger Base: `2.1.0-rc1`
-- Release trumps RC: `2.1.0`
+- `1.0.0-rc1`
+- `1.0.0-rc1-1-gabcedf`
+- `1.0.0-rc1-2-gabcedf`
+- `1.0.0-rc2`
+- `1.0.0`
+- `1.0.0-1-gabcedf`
+- `1.0.0-2-gabcedf`
+- `1.0.1-rc1`
+- `1.0.1`
+- `1.1.0`
+- `2.0.0`
 
 Examples of equality:
-- `1.2.0 == 1.2.0`
-- `2.0.0-rc1 == 2.0.0-rc1`
-- `2.0.0-rc1-3-gaaaaaaa == 2.0.0-rc1-3-gbbbbbbb`
-- `2.0.0-5-gbbbbbbb == 2.0.0-5-gaaaaaaa1`
-
-Note that any two release and rc versions are equally big iff they are syntactically equal. As the second example
-demonstrates, this does not hold for snapshot versions.
-
+- `1.0.0-rc1 == 1.0.0-rc1`
+- `1.0.0-rc1-1-gaaaaaaa == 1.0.0-rc1-1-gbbbbbbb`
+- `1.0.0 == 1.0.0`
+- `1.0.0-1-gaaaaaaa == 1.0.0-1-gbbbbbbb`
 
 #### Version matchers
 
