@@ -23,7 +23,12 @@ public enum VersionComparator implements Comparator<OrderableSlsVersion> {
     INSTANCE;
 
     @Override
+    @SuppressWarnings("ImmutablesReferenceEquality")
     public int compare(OrderableSlsVersion version1, OrderableSlsVersion version2) {
+        if (version1 == version2) {
+            return 0;
+        }
+
         int result = Integer.compare(version1.getMajorVersionNumber(), version2.getMajorVersionNumber());
         if (result != 0) {
             return result;
