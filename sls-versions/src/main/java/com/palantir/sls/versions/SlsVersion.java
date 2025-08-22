@@ -62,8 +62,20 @@ public abstract class SlsVersion implements Serializable {
 
     public abstract int getPatchVersionNumber();
 
+    /**
+     * The first version number after major, minor, and patch. Typically either RC or snapshot version number.
+     * @deprecated Use {@link OrderableSlsVersion#rcVersionNumber()} or
+     *   {@link OrderableSlsVersion#snapshotVersionNumber()} instead.
+     */
+    @Deprecated
     public abstract OptionalInt firstSequenceVersionNumber();
 
+    /**
+     * The second version number after major, minor, and patch. Typically snapshot version number for RC snapshots.
+     * @deprecated Use {@link OrderableSlsVersion#rcVersionNumber()} or
+     *   {@link OrderableSlsVersion#snapshotVersionNumber()} instead.
+     */
+    @Deprecated
     public abstract OptionalInt secondSequenceVersionNumber();
 
     public abstract SlsVersionType getType();

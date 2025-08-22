@@ -21,6 +21,7 @@ import static com.palantir.logsafe.Preconditions.checkArgument;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.palantir.logsafe.UnsafeArg;
 import java.util.Optional;
+import java.util.OptionalInt;
 import org.immutables.value.Value;
 
 /**
@@ -37,6 +38,36 @@ public abstract class OrderableSlsVersion extends SlsVersion implements Comparab
         SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT,
         SlsVersionType.RELEASE_SNAPSHOT
     };
+
+    /**
+     * The release candidate version number, if this version is a release candidate or release candidate snapshot.
+     */
+    @Value.Derived
+    OptionalInt rcVersionNumber() {
+        if (getType() == SlsVersionType.RELEASE_CANDIDATE || getType() == SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT) {
+            // If the version is a release candidate (or RC snapshot),
+            //   the first sequence number is always the RC version number.
+            return firstSequenceVersionNumber();
+        }
+        return OptionalInt.empty();
+    }
+
+    /**
+     * The snapshot version number, if this version is a release snapshot or release candidate snapshot.
+     */
+    @Value.Derived
+    OptionalInt snapshotVersionNumber() {
+        if (getType() == SlsVersionType.RELEASE_SNAPSHOT) {
+            // If the version is a release snapshot, the first sequence number is always the snapshot version number
+            //   since there isn't an RC version number.
+            return firstSequenceVersionNumber();
+        } else if (getType() == SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT) {
+            // For RC snapshots, the first sequence number is the RC version number,
+            //   and the second sequence number is the snapshot version number.
+            return secondSequenceVersionNumber();
+        }
+        return OptionalInt.empty();
+    }
 
     @JsonCreator
     public static OrderableSlsVersion valueOf(String value) {

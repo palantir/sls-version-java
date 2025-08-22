@@ -71,14 +71,8 @@ public final class CompactVersion implements Comparable<CompactVersion> {
     public static CompactVersion from(OrderableSlsVersion version) {
         long patch = encode20b(version.getPatchVersionNumber(), "patch");
 
-        int rcNumber = version.firstSequenceVersionNumber().orElse(0);
-        int distanceFromVersion = version.secondSequenceVersionNumber().orElse(0);
-        if (version.getType().equals(SlsVersionType.RELEASE_SNAPSHOT)) {
-            // in this version format (1.0.0-10-gaaaaaa), the first sequence number represents the distance
-            // from the version rather than the implicit RC number
-            rcNumber = 0;
-            distanceFromVersion = version.firstSequenceVersionNumber().orElse(0);
-        }
+        int rcNumber = version.rcVersionNumber().orElse(0);
+        int distanceFromVersion = version.snapshotVersionNumber().orElse(0);
 
         long lsb = encode20b(distanceFromVersion, "distanceFromVersion")
                 + (encodePriority1(version.getType()) << 20)

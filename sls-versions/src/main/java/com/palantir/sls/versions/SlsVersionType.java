@@ -45,6 +45,13 @@ public enum SlsVersionType {
         this.priority = priority;
     }
 
+    /**
+     * The priority was used to have a predetermined order of version types, to ease comparison,
+     *   but suffered problems due to RELEASE_CANDIDATE_SNAPSHOT and RELEASE_CANDIDATE versions not being systematically
+     *   ordered (e.g. 1.2.3-rc1 < 1.2.3-rc1-1-gabc < 1.2.3-rc2 < 1.2.3-rc2-1-gdef).
+     * @deprecated This field is deprecated and will be removed in a future release.
+     */
+    @Deprecated(forRemoval = true)
     public int getPriority() {
         return this.priority;
     }
