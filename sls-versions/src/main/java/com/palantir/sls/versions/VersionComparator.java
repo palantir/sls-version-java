@@ -25,6 +25,7 @@ public enum VersionComparator implements Comparator<OrderableSlsVersion> {
     @Override
     @SuppressWarnings("ImmutablesReferenceEquality")
     public int compare(OrderableSlsVersion version1, OrderableSlsVersion version2) {
+        // Short-circuit if the same instance is passed in
         if (version1 == version2) {
             return 0;
         }
@@ -44,6 +45,8 @@ public enum VersionComparator implements Comparator<OrderableSlsVersion> {
             return result;
         }
 
+        // If RC version is not present, treat it as meaning positive infinite,
+        //   as all releases/release snapshots are considered newer than any RC.
         result = Integer.compare(
                 version1.rcVersionNumber().orElse(Integer.MAX_VALUE),
                 version2.rcVersionNumber().orElse(Integer.MAX_VALUE));
@@ -51,6 +54,8 @@ public enum VersionComparator implements Comparator<OrderableSlsVersion> {
             return result;
         }
 
+        // If snapshot version is not present, treat it as meaning negative infinite,
+        //   as all snapshots are considered newer than the release/RC they're tied to.
         result = Integer.compare(
                 version1.snapshotVersionNumber().orElse(Integer.MIN_VALUE),
                 version2.snapshotVersionNumber().orElse(Integer.MIN_VALUE));
