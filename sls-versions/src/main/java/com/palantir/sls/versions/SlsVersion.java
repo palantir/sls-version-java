@@ -54,17 +54,30 @@ public abstract class SlsVersion implements Serializable {
     /** The full version string. */
     @JsonValue
     @Value.Auxiliary
+    @Value.Parameter
     public abstract String getValue();
 
+    @Value.Parameter
     public abstract int getMajorVersionNumber();
 
+    @Value.Parameter
     public abstract int getMinorVersionNumber();
 
+    @Value.Parameter
     public abstract int getPatchVersionNumber();
 
+    @Value.Parameter
+    public abstract OptionalInt rcNumber();
+
+    @Value.Parameter
+    public abstract OptionalInt snapshotNumber();
+
+    @Value.Parameter
     public abstract OptionalInt firstSequenceVersionNumber();
 
+    @Value.Parameter
     public abstract OptionalInt secondSequenceVersionNumber();
 
+    @Value.Parameter
     public abstract SlsVersionType getType();
 }

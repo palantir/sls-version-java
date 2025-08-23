@@ -25,8 +25,6 @@ interface MatchResult {
     /** 1-indexed, to match java regexes. */
     int groupAsInt(int group);
 
-    int groupCount();
-
     final class RegexMatchResult implements MatchResult {
         private static final int RADIX = 10;
         private final String string;
@@ -53,11 +51,6 @@ interface MatchResult {
             return integer;
         }
 
-        @Override
-        public int groupCount() {
-            return matcher.groupCount();
-        }
-
         private SafeIllegalStateException safeIllegalStateException(int groupStart, int groupEnd) {
             return new SafeIllegalStateException(
                     "Can't parse segment as integer as it overflowed",
@@ -79,23 +72,12 @@ interface MatchResult {
 
         @Override
         public int groupAsInt(int group) {
-            switch (group) {
-                case 1 -> {
-                    return first;
-                }
-                case 2 -> {
-                    return second;
-                }
-                case 3 -> {
-                    return third;
-                }
-            }
-            throw new IndexOutOfBoundsException();
-        }
-
-        @Override
-        public int groupCount() {
-            return 3;
+            return switch (group) {
+                case 1 -> first;
+                case 2 -> second;
+                case 3 -> third;
+                default -> throw new IndexOutOfBoundsException();
+            };
         }
     }
 }

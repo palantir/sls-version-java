@@ -21,6 +21,7 @@ import static com.palantir.logsafe.Preconditions.checkArgument;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.palantir.logsafe.UnsafeArg;
 import java.util.Optional;
+import java.util.OptionalInt;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -41,17 +42,12 @@ public abstract class NonOrderableSlsVersion extends SlsVersion {
         }
 
         MatchResult groups = SlsVersionType.NON_ORDERABLE.getParser().tryParse(value);
-        if (groups == null) {
-            return Optional.empty();
+        if (groups != null) {
+            return Optional.of(ImmutableNonOrderableSlsVersion.of(
+                    value, groups.groupAsInt(1), groups.groupAsInt(2), groups.groupAsInt(3)));
         }
 
-        return Optional.of(new NonOrderableSlsVersion.Builder()
-                .value(value)
-                .majorVersionNumber(groups.groupAsInt(1))
-                .minorVersionNumber(groups.groupAsInt(2))
-                .patchVersionNumber(groups.groupAsInt(3))
-                .type(SlsVersionType.NON_ORDERABLE)
-                .build());
+        return Optional.empty();
     }
 
     /**
@@ -60,6 +56,31 @@ public abstract class NonOrderableSlsVersion extends SlsVersion {
      */
     public static boolean check(String coordinate) {
         return safeValueOf(coordinate).isPresent() && !OrderableSlsVersion.check(coordinate);
+    }
+
+    @Override
+    public final OptionalInt rcNumber() {
+        return OptionalInt.empty();
+    }
+
+    @Override
+    public final OptionalInt snapshotNumber() {
+        return OptionalInt.empty();
+    }
+
+    @Override
+    public final OptionalInt firstSequenceVersionNumber() {
+        return OptionalInt.empty();
+    }
+
+    @Override
+    public final OptionalInt secondSequenceVersionNumber() {
+        return OptionalInt.empty();
+    }
+
+    @Override
+    public final SlsVersionType getType() {
+        return SlsVersionType.NON_ORDERABLE;
     }
 
     @Override

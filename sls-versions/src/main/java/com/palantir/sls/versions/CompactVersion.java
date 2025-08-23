@@ -30,7 +30,7 @@ import java.util.OptionalInt;
  *
  * <p>Bits are allocated as follows, from lowest bits to highest: <code>
  * LSB SafeLong:
- * 20 bits: distance from release
+ * 20 bits: Snapshot number
  *  2 bits: priority1 (1 = RELEASE_CANDIDATE_SNAPSHOT, 0 = else; 2 and 3 are unused values)
  * 20 bits: RC number
  *  2 bits: priority2 (2 = RELEASE_SNAPSHOT, 1 = RELEASE, 0 = RELEASE_CANDIDATE; 3 is an unused value)
@@ -71,16 +71,10 @@ public final class CompactVersion implements Comparable<CompactVersion> {
     public static CompactVersion from(OrderableSlsVersion version) {
         long patch = encode20b(version.getPatchVersionNumber(), "patch");
 
-        int rcNumber = version.firstSequenceVersionNumber().orElse(0);
-        int distanceFromVersion = version.secondSequenceVersionNumber().orElse(0);
-        if (version.getType().equals(SlsVersionType.RELEASE_SNAPSHOT)) {
-            // in this version format (1.0.0-10-gaaaaaa), the first sequence number represents the distance
-            // from the version rather than the implicit RC number
-            rcNumber = 0;
-            distanceFromVersion = version.firstSequenceVersionNumber().orElse(0);
-        }
+        int rcNumber = version.rcNumber().orElse(0);
+        int snapshotNumber = version.snapshotNumber().orElse(0);
 
-        long lsb = encode20b(distanceFromVersion, "distanceFromVersion")
+        long lsb = encode20b(snapshotNumber, "snapshotNumber")
                 + (encodePriority1(version.getType()) << 20)
                 + (encode20b(rcNumber, "rcNumber") << 22)
                 + (encodePriority2(version.getType()) << 42)
@@ -131,34 +125,45 @@ public final class CompactVersion implements Comparable<CompactVersion> {
         SlsVersionType type = typeFromPriority(priority1, priority2);
 
         int rcNumber = (int) (lsb >> 22) & MASK_20_BITS;
-        int distanceFromVersion = (int) lsb & MASK_20_BITS;
+        int snapshotNumber = (int) lsb & MASK_20_BITS;
 
+        OptionalInt rcNum = OptionalInt.empty();
+        OptionalInt snapshotNum = OptionalInt.empty();
         OptionalInt firstSeq = OptionalInt.empty();
         OptionalInt secondSeq = OptionalInt.empty();
         switch (type) {
-            case RELEASE_CANDIDATE -> firstSeq = OptionalInt.of(rcNumber);
-            case RELEASE_SNAPSHOT -> firstSeq = OptionalInt.of(distanceFromVersion);
-            case RELEASE_CANDIDATE_SNAPSHOT -> {
-                firstSeq = OptionalInt.of(rcNumber);
-                secondSeq = OptionalInt.of(distanceFromVersion);
-            }
             case RELEASE, NON_ORDERABLE -> {}
+            case RELEASE_CANDIDATE -> {
+                rcNum = OptionalInt.of(rcNumber);
+                firstSeq = rcNum;
+            }
+            case RELEASE_SNAPSHOT -> {
+                snapshotNum = OptionalInt.of(snapshotNumber);
+                firstSeq = snapshotNum;
+                firstSeq = OptionalInt.of(snapshotNumber);
+                secondSeq = OptionalInt.empty();
+            }
+            case RELEASE_CANDIDATE_SNAPSHOT -> {
+                rcNum = OptionalInt.of(rcNumber);
+                snapshotNum = OptionalInt.of(snapshotNumber);
+                firstSeq = rcNum;
+                secondSeq = snapshotNum;
+            }
         }
-        return new OrderableSlsVersion.Builder()
-                .majorVersionNumber(majorVersionNumber)
-                .minorVersionNumber(minorVersionNumber)
-                .patchVersionNumber(patchVersionNumber)
-                .type(type)
-                .firstSequenceVersionNumber(firstSeq)
-                .secondSequenceVersionNumber(secondSeq)
-                .value(generateVersionString(
-                        majorVersionNumber,
-                        minorVersionNumber,
-                        patchVersionNumber,
-                        type,
-                        rcNumber,
-                        distanceFromVersion))
-                .build();
+
+        String value =
+                generateVersionString(majorVersionNumber, minorVersionNumber, patchVersionNumber, rcNum, snapshotNum);
+
+        return ImmutableOrderableSlsVersion.of(
+                value,
+                majorVersionNumber,
+                minorVersionNumber,
+                patchVersionNumber,
+                rcNum,
+                snapshotNum,
+                firstSeq,
+                secondSeq,
+                type);
     }
 
     private static SlsVersionType typeFromPriority(int priority1, int priority2) {
@@ -174,14 +179,14 @@ public final class CompactVersion implements Comparable<CompactVersion> {
     }
 
     private static String generateVersionString(
-            int major, int minor, int patch, SlsVersionType type, int rcNumber, int distanceFromVersion) {
+            int major, int minor, int patch, OptionalInt rcNumber, OptionalInt snapshotNumber) {
         StringBuilder sb = new StringBuilder();
         sb.append(major).append(".").append(minor).append(".").append(patch);
-        if (type.isReleaseCandidate()) {
-            sb.append("-rc").append(rcNumber);
+        if (rcNumber.isPresent()) {
+            sb.append("-rc").append(rcNumber.getAsInt());
         }
-        if (type.isSnapshot()) {
-            sb.append("-").append(distanceFromVersion).append("-gaaaaaa");
+        if (snapshotNumber.isPresent()) {
+            sb.append("-").append(snapshotNumber.getAsInt()).append("-gaaaaaa");
         }
         return sb.toString();
     }

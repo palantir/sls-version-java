@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.OptionalInt;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
@@ -105,16 +104,45 @@ public class OrderableSlsVersionTests {
     @Test
     public void testParsesStructureCorrectly() {
         assertThat(OrderableSlsVersion.valueOf("1.2.3"))
-                .isEqualToComparingFieldByField(version("1.2.3", 1, 2, 3, SlsVersionType.RELEASE, null, null));
+                .isEqualTo(new OrderableSlsVersion.Builder()
+                        .value("1.2.3-4-gabc")
+                        .majorVersionNumber(1)
+                        .minorVersionNumber(2)
+                        .patchVersionNumber(3)
+                        .type(SlsVersionType.RELEASE)
+                        .build());
         assertThat(OrderableSlsVersion.valueOf("1.2.3-rc4"))
-                .isEqualToComparingFieldByField(
-                        version("1.2.3-rc4", 1, 2, 3, SlsVersionType.RELEASE_CANDIDATE, 4, null));
+                .isEqualTo(new OrderableSlsVersion.Builder()
+                        .value("1.2.3-4-gabc")
+                        .majorVersionNumber(1)
+                        .minorVersionNumber(2)
+                        .patchVersionNumber(3)
+                        .rcNumber(4)
+                        .firstSequenceVersionNumber(4)
+                        .type(SlsVersionType.RELEASE_CANDIDATE)
+                        .build());
         assertThat(OrderableSlsVersion.valueOf("1.2.3-rc2-1-gabc"))
-                .isEqualToComparingFieldByField(
-                        version("1.2.3-rc2-1-gabc", 1, 2, 3, SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT, 2, 1));
+                .isEqualTo(new OrderableSlsVersion.Builder()
+                        .value("1.2.3-4-gabc")
+                        .majorVersionNumber(1)
+                        .minorVersionNumber(2)
+                        .patchVersionNumber(3)
+                        .rcNumber(2)
+                        .snapshotNumber(1)
+                        .firstSequenceVersionNumber(2)
+                        .secondSequenceVersionNumber(1)
+                        .type(SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT)
+                        .build());
         assertThat(OrderableSlsVersion.valueOf("1.2.3-4-gabc"))
-                .isEqualToComparingFieldByField(
-                        version("1.2.3-4-gabc", 1, 2, 3, SlsVersionType.RELEASE_SNAPSHOT, 4, null));
+                .isEqualTo(new OrderableSlsVersion.Builder()
+                        .value("1.2.3-4-gabc")
+                        .majorVersionNumber(1)
+                        .minorVersionNumber(2)
+                        .patchVersionNumber(3)
+                        .snapshotNumber(4)
+                        .firstSequenceVersionNumber(4)
+                        .type(SlsVersionType.RELEASE_SNAPSHOT)
+                        .build());
     }
 
     @Test
@@ -265,25 +293,5 @@ public class OrderableSlsVersionTests {
         assertThat(VersionComparator.INSTANCE.compare(
                         OrderableSlsVersion.valueOf(left), OrderableSlsVersion.valueOf(right)))
                 .isZero();
-    }
-
-    private OrderableSlsVersion version(
-            String version,
-            int major,
-            int minor,
-            int patch,
-            SlsVersionType type,
-            Integer firstSequence,
-            Integer secondSequence) {
-        return new OrderableSlsVersion.Builder()
-                .value(version)
-                .majorVersionNumber(major)
-                .minorVersionNumber(minor)
-                .patchVersionNumber(patch)
-                .type(type)
-                .firstSequenceVersionNumber(firstSequence == null ? OptionalInt.empty() : OptionalInt.of(firstSequence))
-                .secondSequenceVersionNumber(
-                        secondSequence == null ? OptionalInt.empty() : OptionalInt.of(secondSequence))
-                .build();
     }
 }
