@@ -129,25 +129,17 @@ public final class CompactVersion implements Comparable<CompactVersion> {
 
         OptionalInt rcNum = OptionalInt.empty();
         OptionalInt snapshotNum = OptionalInt.empty();
-        OptionalInt firstSeq = OptionalInt.empty();
-        OptionalInt secondSeq = OptionalInt.empty();
         switch (type) {
             case RELEASE, NON_ORDERABLE -> {}
             case RELEASE_CANDIDATE -> {
                 rcNum = OptionalInt.of(rcNumber);
-                firstSeq = rcNum;
             }
             case RELEASE_SNAPSHOT -> {
                 snapshotNum = OptionalInt.of(snapshotNumber);
-                firstSeq = snapshotNum;
-                firstSeq = OptionalInt.of(snapshotNumber);
-                secondSeq = OptionalInt.empty();
             }
             case RELEASE_CANDIDATE_SNAPSHOT -> {
                 rcNum = OptionalInt.of(rcNumber);
                 snapshotNum = OptionalInt.of(snapshotNumber);
-                firstSeq = rcNum;
-                secondSeq = snapshotNum;
             }
         }
 
@@ -155,15 +147,7 @@ public final class CompactVersion implements Comparable<CompactVersion> {
                 generateVersionString(majorVersionNumber, minorVersionNumber, patchVersionNumber, rcNum, snapshotNum);
 
         return ImmutableOrderableSlsVersion.of(
-                value,
-                majorVersionNumber,
-                minorVersionNumber,
-                patchVersionNumber,
-                rcNum,
-                snapshotNum,
-                firstSeq,
-                secondSeq,
-                type);
+                value, majorVersionNumber, minorVersionNumber, patchVersionNumber, rcNum, snapshotNum, type);
     }
 
     private static SlsVersionType typeFromPriority(int priority1, int priority2) {

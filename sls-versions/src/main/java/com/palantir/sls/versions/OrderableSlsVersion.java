@@ -54,54 +54,42 @@ public abstract class OrderableSlsVersion extends SlsVersion implements Comparab
                     groups.groupAsInt(3),
                     OptionalInt.empty(),
                     OptionalInt.empty(),
-                    OptionalInt.empty(),
-                    OptionalInt.empty(),
                     SlsVersionType.RELEASE));
         }
 
         groups = SlsVersionType.RELEASE_CANDIDATE.getParser().tryParse(value);
         if (groups != null) {
-            OptionalInt rcNumber = OptionalInt.of(groups.groupAsInt(4));
             return Optional.of(ImmutableOrderableSlsVersion.of(
                     value,
                     groups.groupAsInt(1),
                     groups.groupAsInt(2),
                     groups.groupAsInt(3),
-                    rcNumber,
-                    OptionalInt.empty(),
-                    rcNumber,
+                    OptionalInt.of(groups.groupAsInt(4)),
                     OptionalInt.empty(),
                     SlsVersionType.RELEASE_CANDIDATE));
         }
 
         groups = SlsVersionType.RELEASE_SNAPSHOT.getParser().tryParse(value);
         if (groups != null) {
-            OptionalInt snapshotVersion = OptionalInt.of(groups.groupAsInt(4));
             return Optional.of(ImmutableOrderableSlsVersion.of(
                     value,
                     groups.groupAsInt(1),
                     groups.groupAsInt(2),
                     groups.groupAsInt(3),
                     OptionalInt.empty(),
-                    snapshotVersion,
-                    snapshotVersion,
-                    OptionalInt.empty(),
+                    OptionalInt.of(groups.groupAsInt(4)),
                     SlsVersionType.RELEASE_SNAPSHOT));
         }
 
         groups = SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT.getParser().tryParse(value);
         if (groups != null) {
-            OptionalInt rcNumber = OptionalInt.of(groups.groupAsInt(4));
-            OptionalInt snapshotVersion = OptionalInt.of(groups.groupAsInt(5));
             return Optional.of(ImmutableOrderableSlsVersion.of(
                     value,
                     groups.groupAsInt(1),
                     groups.groupAsInt(2),
                     groups.groupAsInt(3),
-                    rcNumber,
-                    snapshotVersion,
-                    rcNumber,
-                    snapshotVersion,
+                    OptionalInt.of(groups.groupAsInt(4)),
+                    OptionalInt.of(groups.groupAsInt(5)),
                     SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT));
         }
 
@@ -111,6 +99,23 @@ public abstract class OrderableSlsVersion extends SlsVersion implements Comparab
     /** Returns true iff the given coordinate has a version which can be parsed into a valid orderable SLS version. */
     public static boolean check(String coordinate) {
         return safeValueOf(coordinate).isPresent();
+    }
+
+    @Override
+    public final OptionalInt firstSequenceVersionNumber() {
+        return switch (getType()) {
+            case RELEASE, NON_ORDERABLE -> OptionalInt.empty();
+            case RELEASE_CANDIDATE, RELEASE_CANDIDATE_SNAPSHOT -> rcNumber();
+            case RELEASE_SNAPSHOT -> snapshotNumber();
+        };
+    }
+
+    @Override
+    public final OptionalInt secondSequenceVersionNumber() {
+        return switch (getType()) {
+            case RELEASE, RELEASE_CANDIDATE, RELEASE_SNAPSHOT, NON_ORDERABLE -> OptionalInt.empty();
+            case RELEASE_CANDIDATE_SNAPSHOT -> snapshotNumber();
+        };
     }
 
     @Override

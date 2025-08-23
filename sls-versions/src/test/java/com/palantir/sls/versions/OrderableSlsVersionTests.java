@@ -118,7 +118,6 @@ public class OrderableSlsVersionTests {
                         .minorVersionNumber(2)
                         .patchVersionNumber(3)
                         .rcNumber(4)
-                        .firstSequenceVersionNumber(4)
                         .type(SlsVersionType.RELEASE_CANDIDATE)
                         .build());
         assertThat(OrderableSlsVersion.valueOf("1.2.3-rc2-1-gabc"))
@@ -129,8 +128,6 @@ public class OrderableSlsVersionTests {
                         .patchVersionNumber(3)
                         .rcNumber(2)
                         .snapshotNumber(1)
-                        .firstSequenceVersionNumber(2)
-                        .secondSequenceVersionNumber(1)
                         .type(SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT)
                         .build());
         assertThat(OrderableSlsVersion.valueOf("1.2.3-4-gabc"))
@@ -140,7 +137,6 @@ public class OrderableSlsVersionTests {
                         .minorVersionNumber(2)
                         .patchVersionNumber(3)
                         .snapshotNumber(4)
-                        .firstSequenceVersionNumber(4)
                         .type(SlsVersionType.RELEASE_SNAPSHOT)
                         .build());
     }
