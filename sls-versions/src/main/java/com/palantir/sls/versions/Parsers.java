@@ -83,6 +83,25 @@ final class Parsers {
         }
     }
 
+    static long hexString(String string, int startIndex) {
+        int next = startIndex;
+        int len = string.length();
+        while (next < len) {
+            int codepoint = string.codePointAt(next);
+            if (Character.isDigit(codepoint) || (codepoint >= 'a' && codepoint <= 'f')) {
+                next += 1;
+            } else {
+                break;
+            }
+        }
+        if (next == startIndex) {
+            return fail(startIndex);
+        } else {
+            // Not returning the hex value here - we just want to check the characters
+            return ok(next, 0);
+        }
+    }
+
     // 0 signifies success
     private static long literalX(String string, int startIndex) {
         if (startIndex < string.length() && string.codePointAt(startIndex) == 'x') {
@@ -95,6 +114,35 @@ final class Parsers {
     static long literalDot(String string, int startIndex) {
         if (startIndex < string.length() && string.codePointAt(startIndex) == '.') {
             return ok(startIndex + 1, 0);
+        } else {
+            return fail(startIndex);
+        }
+    }
+
+    static long literalDashRc(String string, int startIndex) {
+        if (startIndex + 2 < string.length()
+                && string.codePointAt(startIndex) == '-'
+                && string.codePointAt(startIndex + 1) == 'r'
+                && string.codePointAt(startIndex + 2) == 'c') {
+            return ok(startIndex + 3, 0);
+        } else {
+            return fail(startIndex);
+        }
+    }
+
+    static long literalDash(String string, int startIndex) {
+        if (startIndex < string.length() && string.codePointAt(startIndex) == '-') {
+            return ok(startIndex + 1, 0);
+        } else {
+            return fail(startIndex);
+        }
+    }
+
+    static long literalDashG(String string, int startIndex) {
+        if (startIndex + 1 < string.length()
+                && string.codePointAt(startIndex) == '-'
+                && string.codePointAt(startIndex + 1) == 'g') {
+            return ok(startIndex + 2, 0);
         } else {
             return fail(startIndex);
         }

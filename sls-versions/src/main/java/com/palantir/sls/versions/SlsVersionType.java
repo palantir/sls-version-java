@@ -23,26 +23,22 @@ import java.util.regex.Pattern;
  * {@link SlsVersion} objects.
  */
 public enum SlsVersionType {
-    RELEASE_SNAPSHOT(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-([0-9]+)-g[a-f0-9]+$"), 4),
-    RELEASE(ReleaseVersionParser.INSTANCE, 3),
-    RELEASE_CANDIDATE_SNAPSHOT(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-rc([0-9]+)-([0-9]+)-g[a-f0-9]+$"), 2),
-    RELEASE_CANDIDATE(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-rc([0-9]+)$"), 1),
-    NON_ORDERABLE(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)(-[a-z0-9-]+)?(\\.dirty)?$"), 0);
+    RELEASE_SNAPSHOT("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-([0-9]+)-g[a-f0-9]+$", 4),
+    RELEASE("^([0-9]+)\\.([0-9]+)\\.([0-9]+)$", 3),
+    RELEASE_CANDIDATE_SNAPSHOT("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-rc([0-9]+)-([0-9]+)-g[a-f0-9]+$", 2),
+    RELEASE_CANDIDATE("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-rc([0-9]+)$", 1),
+    NON_ORDERABLE("^([0-9]+)\\.([0-9]+)\\.([0-9]+)(-[a-z0-9-]+)?(\\.dirty)?$", 0);
 
-    private final Parser parser;
+    private final Pattern pattern;
     private final int priority;
 
-    public Pattern getPattern() {
-        return parser.getPattern();
-    }
-
-    Parser getParser() {
-        return parser;
-    }
-
-    SlsVersionType(Parser parser, int priority) {
-        this.parser = parser;
+    SlsVersionType(String regex, int priority) {
+        this.pattern = Pattern.compile(regex);
         this.priority = priority;
+    }
+
+    public Pattern getPattern() {
+        return pattern;
     }
 
     /**

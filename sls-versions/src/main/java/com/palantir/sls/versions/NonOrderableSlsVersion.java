@@ -19,9 +19,12 @@ package com.palantir.sls.versions;
 import static com.palantir.logsafe.Preconditions.checkArgument;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.palantir.logsafe.SafeArg;
 import com.palantir.logsafe.UnsafeArg;
+import com.palantir.logsafe.exceptions.SafeIllegalStateException;
 import java.util.Optional;
 import java.util.OptionalInt;
+import java.util.regex.Matcher;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -41,16 +44,16 @@ public abstract class NonOrderableSlsVersion extends SlsVersion {
             return Optional.empty();
         }
 
-        MatchResult groups = SlsVersionType.NON_ORDERABLE.getParser().tryParse(value);
-        if (groups == null) {
+        Matcher matcher = SlsVersionType.NON_ORDERABLE.getPattern().matcher(value);
+        if (!matcher.matches()) {
             return Optional.empty();
         }
 
         return Optional.of(new NonOrderableSlsVersion.Builder()
                 .value(value)
-                .majorVersionNumber(groups.groupAsInt(1))
-                .minorVersionNumber(groups.groupAsInt(2))
-                .patchVersionNumber(groups.groupAsInt(3))
+                .majorVersionNumber(groupAsInt(value, matcher, 1))
+                .minorVersionNumber(groupAsInt(value, matcher, 2))
+                .patchVersionNumber(groupAsInt(value, matcher, 3))
                 .build());
     }
 
@@ -80,6 +83,23 @@ public abstract class NonOrderableSlsVersion extends SlsVersion {
     @Override
     public final String toString() {
         return getValue();
+    }
+
+    private static int groupAsInt(String value, Matcher matcher, int group) {
+        int groupStart = matcher.start(group);
+        int groupEnd = matcher.end(group);
+        if (groupStart == -1) {
+            throw new NumberFormatException();
+        }
+
+        int integer = Integer.parseUnsignedInt(value, groupStart, groupEnd, 10);
+        if (integer < 0) {
+            throw new SafeIllegalStateException(
+                    "Can't parse segment as integer as it overflowed",
+                    SafeArg.of("string", value),
+                    SafeArg.of("segment", value.substring(groupStart, groupEnd)));
+        }
+        return integer;
     }
 
     public static final class Builder extends ImmutableNonOrderableSlsVersion.Builder {}

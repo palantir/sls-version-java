@@ -44,55 +44,7 @@ public abstract class OrderableSlsVersion extends SlsVersion implements Comparab
             return Optional.empty();
         }
 
-        MatchResult groups = SlsVersionType.RELEASE.getParser().tryParse(value);
-        if (groups != null) {
-            return Optional.of(new Builder()
-                    .value(value)
-                    .type(SlsVersionType.RELEASE)
-                    .majorVersionNumber(groups.groupAsInt(1))
-                    .minorVersionNumber(groups.groupAsInt(2))
-                    .patchVersionNumber(groups.groupAsInt(3))
-                    .build());
-        }
-
-        groups = SlsVersionType.RELEASE_CANDIDATE.getParser().tryParse(value);
-        if (groups != null) {
-            return Optional.of(new Builder()
-                    .value(value)
-                    .type(SlsVersionType.RELEASE_CANDIDATE)
-                    .majorVersionNumber(groups.groupAsInt(1))
-                    .minorVersionNumber(groups.groupAsInt(2))
-                    .patchVersionNumber(groups.groupAsInt(3))
-                    .rcNumber(groups.groupAsInt(4))
-                    .build());
-        }
-
-        groups = SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT.getParser().tryParse(value);
-        if (groups != null) {
-            return Optional.of(new Builder()
-                    .value(value)
-                    .type(SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT)
-                    .majorVersionNumber(groups.groupAsInt(1))
-                    .minorVersionNumber(groups.groupAsInt(2))
-                    .patchVersionNumber(groups.groupAsInt(3))
-                    .rcNumber(groups.groupAsInt(4))
-                    .snapshotNumber(groups.groupAsInt(5))
-                    .build());
-        }
-
-        groups = SlsVersionType.RELEASE_SNAPSHOT.getParser().tryParse(value);
-        if (groups != null) {
-            return Optional.of(new Builder()
-                    .value(value)
-                    .type(SlsVersionType.RELEASE_SNAPSHOT)
-                    .majorVersionNumber(groups.groupAsInt(1))
-                    .minorVersionNumber(groups.groupAsInt(2))
-                    .patchVersionNumber(groups.groupAsInt(3))
-                    .snapshotNumber(groups.groupAsInt(4))
-                    .build());
-        }
-
-        return Optional.empty();
+        return Optional.ofNullable(OrderableSlsVersionParser.INSTANCE.tryParse(value));
     }
 
     /** Returns true iff the given coordinate has a version which can be parsed into a valid orderable SLS version. */
