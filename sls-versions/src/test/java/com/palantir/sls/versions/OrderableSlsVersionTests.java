@@ -114,7 +114,7 @@ public class OrderableSlsVersionTests {
                         version("1.2.3-rc2-1-gabc", 1, 2, 3, SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT, 2, 1));
         assertThat(OrderableSlsVersion.valueOf("1.2.3-4-gabc"))
                 .isEqualToComparingFieldByField(
-                        version("1.2.3-4-gabc", 1, 2, 3, SlsVersionType.RELEASE_SNAPSHOT, 4, null));
+                        version("1.2.3-4-gabc", 1, 2, 3, SlsVersionType.RELEASE_SNAPSHOT, null, 4));
     }
 
     @Test
@@ -273,17 +273,16 @@ public class OrderableSlsVersionTests {
             int minor,
             int patch,
             SlsVersionType type,
-            Integer firstSequence,
-            Integer secondSequence) {
+            Integer rcNumber,
+            Integer snapshotNumber) {
         return new OrderableSlsVersion.Builder()
                 .value(version)
                 .majorVersionNumber(major)
                 .minorVersionNumber(minor)
                 .patchVersionNumber(patch)
                 .type(type)
-                .firstSequenceVersionNumber(firstSequence == null ? OptionalInt.empty() : OptionalInt.of(firstSequence))
-                .secondSequenceVersionNumber(
-                        secondSequence == null ? OptionalInt.empty() : OptionalInt.of(secondSequence))
+                .rcNumber(rcNumber == null ? OptionalInt.empty() : OptionalInt.of(rcNumber))
+                .snapshotNumber(snapshotNumber == null ? OptionalInt.empty() : OptionalInt.of(snapshotNumber))
                 .build();
     }
 }

@@ -49,8 +49,10 @@ public class SlsVersionBenchmark {
         RELEASE("0.16.0"),
         SNAPSHOT("0.16.0-8-g116b425"),
         RC("0.16.0-rc1"),
-        RC_SNAPSHOT("0.16.0-rc1-8-g116b425.dirty"),
-        DIRTY("0.16.0-8-g116b425.dirty");
+        RC_SNAPSHOT("0.16.0-rc1-8-g116b425"),
+        DIRTY("0.16.0-8-g116b425.dirty"),
+        DIRTY_RC("0.16.0-rc1-8-g116b425.dirty"),
+        ;
 
         private final String string;
 

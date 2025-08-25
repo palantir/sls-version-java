@@ -63,20 +63,42 @@ public abstract class SlsVersion implements Serializable {
     public abstract int getPatchVersionNumber();
 
     /**
-     * The first version number after major, minor, and patch. Typically either RC or snapshot version number.
-     * @deprecated Use {@link OrderableSlsVersion#rcVersionNumber()} or
-     *   {@link OrderableSlsVersion#snapshotVersionNumber()} instead.
+     * The release candidate version number, if this version is a release candidate or release candidate snapshot.
      */
-    @Deprecated
-    public abstract OptionalInt firstSequenceVersionNumber();
+    public abstract OptionalInt rcNumber();
 
     /**
-     * The second version number after major, minor, and patch. Typically snapshot version number for RC snapshots.
-     * @deprecated Use {@link OrderableSlsVersion#rcVersionNumber()} or
-     *   {@link OrderableSlsVersion#snapshotVersionNumber()} instead.
+     * The snapshot version number, if this version is a release snapshot or release candidate snapshot.
      */
-    @Deprecated
-    public abstract OptionalInt secondSequenceVersionNumber();
+    public abstract OptionalInt snapshotNumber();
+
+    /**
+     * The first version number after major, minor, and patch.
+     * The release candidate number, if this version is a release candidate or a release candidate snapshot,
+     *   and the snapshot number, if this version is a release snapshot.
+     *
+     * Prefer {@link SlsVersion#rcNumber()} or {@link SlsVersion#snapshotNumber()} instead, as these will be deprecated.
+     */
+    public OptionalInt firstSequenceVersionNumber() {
+        return switch (getType()) {
+            case RELEASE_CANDIDATE, RELEASE_CANDIDATE_SNAPSHOT -> rcNumber();
+            case RELEASE_SNAPSHOT -> snapshotNumber();
+            case RELEASE, NON_ORDERABLE -> OptionalInt.empty();
+        };
+    }
+
+    /**
+     * The second version number after major, minor, and patch.
+     * The snapshot number, if this version is a release candidate snapshot
+     *
+     * Prefer {@link SlsVersion#rcNumber()} or {@link SlsVersion#snapshotNumber()} instead, as these will be deprecated.
+     */
+    public OptionalInt secondSequenceVersionNumber() {
+        return switch (getType()) {
+            case RELEASE_CANDIDATE_SNAPSHOT -> snapshotNumber();
+            case RELEASE, RELEASE_CANDIDATE, RELEASE_SNAPSHOT, NON_ORDERABLE -> OptionalInt.empty();
+        };
+    }
 
     public abstract SlsVersionType getType();
 }

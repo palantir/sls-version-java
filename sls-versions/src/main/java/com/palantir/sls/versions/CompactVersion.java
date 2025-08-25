@@ -30,7 +30,7 @@ import java.util.OptionalInt;
  *
  * <p>Bits are allocated as follows, from lowest bits to highest: <code>
  * LSB SafeLong:
- * 20 bits: distance from release
+ * 20 bits: snapshot number
  *  2 bits: priority1 (1 = RELEASE_CANDIDATE_SNAPSHOT, 0 = else; 2 and 3 are unused values)
  * 20 bits: RC number
  *  2 bits: priority2 (2 = RELEASE_SNAPSHOT, 1 = RELEASE, 0 = RELEASE_CANDIDATE; 3 is an unused value)
@@ -71,8 +71,8 @@ public final class CompactVersion implements Comparable<CompactVersion> {
     public static CompactVersion from(OrderableSlsVersion version) {
         long patch = encode20b(version.getPatchVersionNumber(), "patch");
 
-        int rcNumber = version.rcVersionNumber().orElse(0);
-        int distanceFromVersion = version.snapshotVersionNumber().orElse(0);
+        int rcNumber = version.rcNumber().orElse(0);
+        int distanceFromVersion = version.snapshotNumber().orElse(0);
 
         long lsb = encode20b(distanceFromVersion, "distanceFromVersion")
                 + (encodePriority1(version.getType()) << 20)
@@ -125,16 +125,16 @@ public final class CompactVersion implements Comparable<CompactVersion> {
         SlsVersionType type = typeFromPriority(priority1, priority2);
 
         int rcNumber = (int) (lsb >> 22) & MASK_20_BITS;
-        int distanceFromVersion = (int) lsb & MASK_20_BITS;
+        int snapshotNumber = (int) lsb & MASK_20_BITS;
 
-        OptionalInt firstSeq = OptionalInt.empty();
-        OptionalInt secondSeq = OptionalInt.empty();
+        OptionalInt rcNum = OptionalInt.empty();
+        OptionalInt snapshotNum = OptionalInt.empty();
         switch (type) {
-            case RELEASE_CANDIDATE -> firstSeq = OptionalInt.of(rcNumber);
-            case RELEASE_SNAPSHOT -> firstSeq = OptionalInt.of(distanceFromVersion);
+            case RELEASE_CANDIDATE -> rcNum = OptionalInt.of(rcNumber);
+            case RELEASE_SNAPSHOT -> snapshotNum = OptionalInt.of(snapshotNumber);
             case RELEASE_CANDIDATE_SNAPSHOT -> {
-                firstSeq = OptionalInt.of(rcNumber);
-                secondSeq = OptionalInt.of(distanceFromVersion);
+                rcNum = OptionalInt.of(rcNumber);
+                snapshotNum = OptionalInt.of(snapshotNumber);
             }
             case RELEASE, NON_ORDERABLE -> {}
         }
@@ -143,15 +143,10 @@ public final class CompactVersion implements Comparable<CompactVersion> {
                 .minorVersionNumber(minorVersionNumber)
                 .patchVersionNumber(patchVersionNumber)
                 .type(type)
-                .firstSequenceVersionNumber(firstSeq)
-                .secondSequenceVersionNumber(secondSeq)
+                .rcNumber(rcNum)
+                .snapshotNumber(snapshotNum)
                 .value(generateVersionString(
-                        majorVersionNumber,
-                        minorVersionNumber,
-                        patchVersionNumber,
-                        type,
-                        rcNumber,
-                        distanceFromVersion))
+                        majorVersionNumber, minorVersionNumber, patchVersionNumber, type, rcNumber, snapshotNumber))
                 .build();
     }
 

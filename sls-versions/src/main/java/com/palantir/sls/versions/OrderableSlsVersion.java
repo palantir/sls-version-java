@@ -21,7 +21,6 @@ import static com.palantir.logsafe.Preconditions.checkArgument;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.palantir.logsafe.UnsafeArg;
 import java.util.Optional;
-import java.util.OptionalInt;
 import org.immutables.value.Value;
 
 /**
@@ -31,43 +30,6 @@ import org.immutables.value.Value;
 @Value.Immutable
 @ImmutablesStyle
 public abstract class OrderableSlsVersion extends SlsVersion implements Comparable<OrderableSlsVersion> {
-
-    private static final SlsVersionType[] ORDERED_VERSION_TYPES = {
-        SlsVersionType.RELEASE,
-        SlsVersionType.RELEASE_CANDIDATE,
-        SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT,
-        SlsVersionType.RELEASE_SNAPSHOT
-    };
-
-    /**
-     * The release candidate version number, if this version is a release candidate or release candidate snapshot.
-     */
-    @Value.Derived
-    OptionalInt rcVersionNumber() {
-        if (getType() == SlsVersionType.RELEASE_CANDIDATE || getType() == SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT) {
-            // If the version is a release candidate (or RC snapshot),
-            //   the first sequence number is always the RC version number.
-            return firstSequenceVersionNumber();
-        }
-        return OptionalInt.empty();
-    }
-
-    /**
-     * The snapshot version number, if this version is a release snapshot or release candidate snapshot.
-     */
-    @Value.Derived
-    OptionalInt snapshotVersionNumber() {
-        if (getType() == SlsVersionType.RELEASE_SNAPSHOT) {
-            // If the version is a release snapshot, the first sequence number is always the snapshot version number
-            //   since there isn't an RC version number.
-            return firstSequenceVersionNumber();
-        } else if (getType() == SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT) {
-            // For RC snapshots, the first sequence number is the RC version number,
-            //   and the second sequence number is the snapshot version number.
-            return secondSequenceVersionNumber();
-        }
-        return OptionalInt.empty();
-    }
 
     @JsonCreator
     public static OrderableSlsVersion valueOf(String value) {
@@ -82,32 +44,55 @@ public abstract class OrderableSlsVersion extends SlsVersion implements Comparab
             return Optional.empty();
         }
 
-        for (SlsVersionType type : ORDERED_VERSION_TYPES) {
-            MatchResult groups = type.getParser().tryParse(value);
-            if (groups != null) {
-                return Optional.of(construct(type, value, groups));
-            }
+        MatchResult groups = SlsVersionType.RELEASE.getParser().tryParse(value);
+        if (groups != null) {
+            return Optional.of(new Builder()
+                    .value(value)
+                    .type(SlsVersionType.RELEASE)
+                    .majorVersionNumber(groups.groupAsInt(1))
+                    .minorVersionNumber(groups.groupAsInt(2))
+                    .patchVersionNumber(groups.groupAsInt(3))
+                    .build());
+        }
+
+        groups = SlsVersionType.RELEASE_CANDIDATE.getParser().tryParse(value);
+        if (groups != null) {
+            return Optional.of(new Builder()
+                    .value(value)
+                    .type(SlsVersionType.RELEASE_CANDIDATE)
+                    .majorVersionNumber(groups.groupAsInt(1))
+                    .minorVersionNumber(groups.groupAsInt(2))
+                    .patchVersionNumber(groups.groupAsInt(3))
+                    .rcNumber(groups.groupAsInt(4))
+                    .build());
+        }
+
+        groups = SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT.getParser().tryParse(value);
+        if (groups != null) {
+            return Optional.of(new Builder()
+                    .value(value)
+                    .type(SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT)
+                    .majorVersionNumber(groups.groupAsInt(1))
+                    .minorVersionNumber(groups.groupAsInt(2))
+                    .patchVersionNumber(groups.groupAsInt(3))
+                    .rcNumber(groups.groupAsInt(4))
+                    .snapshotNumber(groups.groupAsInt(5))
+                    .build());
+        }
+
+        groups = SlsVersionType.RELEASE_SNAPSHOT.getParser().tryParse(value);
+        if (groups != null) {
+            return Optional.of(new Builder()
+                    .value(value)
+                    .type(SlsVersionType.RELEASE_SNAPSHOT)
+                    .majorVersionNumber(groups.groupAsInt(1))
+                    .minorVersionNumber(groups.groupAsInt(2))
+                    .patchVersionNumber(groups.groupAsInt(3))
+                    .snapshotNumber(groups.groupAsInt(4))
+                    .build());
         }
 
         return Optional.empty();
-    }
-
-    private static OrderableSlsVersion construct(SlsVersionType type, String value, MatchResult groups) {
-        OrderableSlsVersion.Builder orderableSlsVersion = new Builder()
-                .type(type)
-                .value(value)
-                .majorVersionNumber(groups.groupAsInt(1))
-                .minorVersionNumber(groups.groupAsInt(2))
-                .patchVersionNumber(groups.groupAsInt(3));
-
-        if (groups.groupCount() >= 4) {
-            orderableSlsVersion.firstSequenceVersionNumber(groups.groupAsInt(4));
-        }
-        if (groups.groupCount() >= 5) {
-            orderableSlsVersion.secondSequenceVersionNumber(groups.groupAsInt(5));
-        }
-
-        return orderableSlsVersion.build();
     }
 
     /** Returns true iff the given coordinate has a version which can be parsed into a valid orderable SLS version. */

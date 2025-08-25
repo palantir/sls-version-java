@@ -45,20 +45,22 @@ public enum VersionComparator implements Comparator<OrderableSlsVersion> {
             return result;
         }
 
-        // If RC version is not present, treat it as meaning positive infinite,
-        //   as all releases/release snapshots are considered newer than any RC.
+        // If release candidate version is not present, treat it the maximum value.
+        // All release and release snapshots versions are newer than any release candidate
+        //   or release candidate snapshot version.
         result = Integer.compare(
-                version1.rcVersionNumber().orElse(Integer.MAX_VALUE),
-                version2.rcVersionNumber().orElse(Integer.MAX_VALUE));
+                version1.rcNumber().orElse(Integer.MAX_VALUE),
+                version2.rcNumber().orElse(Integer.MAX_VALUE));
         if (result != 0) {
             return result;
         }
 
-        // If snapshot version is not present, treat it as meaning negative infinite,
-        //   as all snapshots are considered newer than the release/RC they're tied to.
+        // If snapshot version is not present, treat it as the minimum value.
+        // All release snapshots and release candidate snapshots versions are newer than
+        //   their corresponding release and release candidate versions, respectively.
         result = Integer.compare(
-                version1.snapshotVersionNumber().orElse(Integer.MIN_VALUE),
-                version2.snapshotVersionNumber().orElse(Integer.MIN_VALUE));
+                version1.snapshotNumber().orElse(Integer.MIN_VALUE),
+                version2.snapshotNumber().orElse(Integer.MIN_VALUE));
         if (result != 0) {
             return result;
         }
