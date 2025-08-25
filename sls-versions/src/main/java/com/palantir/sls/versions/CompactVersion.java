@@ -72,9 +72,9 @@ public final class CompactVersion implements Comparable<CompactVersion> {
         long patch = encode20b(version.getPatchVersionNumber(), "patch");
 
         int rcNumber = version.rcNumber().orElse(0);
-        int distanceFromVersion = version.snapshotNumber().orElse(0);
+        int snapshotNumber = version.snapshotNumber().orElse(0);
 
-        long lsb = encode20b(distanceFromVersion, "distanceFromVersion")
+        long lsb = encode20b(snapshotNumber, "snapshotNumber")
                 + (encodePriority1(version.getType()) << 20)
                 + (encode20b(rcNumber, "rcNumber") << 22)
                 + (encodePriority2(version.getType()) << 42)
@@ -146,7 +146,7 @@ public final class CompactVersion implements Comparable<CompactVersion> {
                 .rcNumber(rcNum)
                 .snapshotNumber(snapshotNum)
                 .value(generateVersionString(
-                        majorVersionNumber, minorVersionNumber, patchVersionNumber, type, rcNumber, snapshotNumber))
+                        majorVersionNumber, minorVersionNumber, patchVersionNumber, rcNum, snapshotNum))
                 .build();
     }
 
@@ -163,14 +163,14 @@ public final class CompactVersion implements Comparable<CompactVersion> {
     }
 
     private static String generateVersionString(
-            int major, int minor, int patch, SlsVersionType type, int rcNumber, int distanceFromVersion) {
+            int major, int minor, int patch, OptionalInt rcNumber, OptionalInt snapshotNumber) {
         StringBuilder sb = new StringBuilder();
         sb.append(major).append(".").append(minor).append(".").append(patch);
-        if (type.isReleaseCandidate()) {
-            sb.append("-rc").append(rcNumber);
+        if (rcNumber.isPresent()) {
+            sb.append("-rc").append(rcNumber.getAsInt());
         }
-        if (type.isSnapshot()) {
-            sb.append("-").append(distanceFromVersion).append("-gaaaaaa");
+        if (snapshotNumber.isPresent()) {
+            sb.append("-").append(snapshotNumber.getAsInt()).append("-gaaaaaa");
         }
         return sb.toString();
     }
