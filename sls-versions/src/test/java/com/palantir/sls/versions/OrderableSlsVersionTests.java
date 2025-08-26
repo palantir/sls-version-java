@@ -24,6 +24,11 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.palantir.logsafe.exceptions.SafeIllegalArgumentException;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -61,6 +66,25 @@ public class OrderableSlsVersionTests {
     };
 
     private static final String[] ILLEGAL_VERSIONS = new String[] {"", "1.0", "1.z.9", "1.0.0.1", "1.0.0-FOO"};
+
+    @Test
+    public void write() throws Exception {
+        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(Files.newOutputStream(
+                Path.of("/Users/pkoenig/Downloads/version.ser"),
+                StandardOpenOption.CREATE,
+                StandardOpenOption.TRUNCATE_EXISTING))) {
+            objectOutputStream.writeObject(OrderableSlsVersion.valueOf("1.2.3-rc4-5-gaaaaaa"));
+        }
+    }
+
+    @Test
+    public void read() throws Exception {
+        try (ObjectInputStream objectInputStream =
+                new ObjectInputStream(Files.newInputStream(Path.of("/Users/pkoenig/Downloads/version.ser")))) {
+            OrderableSlsVersion version = (OrderableSlsVersion) objectInputStream.readObject();
+            assertThat(version).isEqualTo(OrderableSlsVersion.valueOf("1.2.3-rc4-5-gaaaaaa"));
+        }
+    }
 
     @Test
     public void testCanCreateValidVersions() {
