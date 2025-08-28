@@ -23,8 +23,9 @@ public enum VersionComparator implements Comparator<OrderableSlsVersion> {
     INSTANCE;
 
     @Override
+    @SuppressWarnings("ImmutablesReferenceEquality")
     public int compare(OrderableSlsVersion version1, OrderableSlsVersion version2) {
-        if (version1.getValue().equals(version2.getValue())) {
+        if (version1 == version2) {
             return 0;
         }
 
