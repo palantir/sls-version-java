@@ -23,8 +23,10 @@ import com.palantir.logsafe.exceptions.SafeIllegalArgumentException;
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.OptionalInt;
+import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
+@SuppressWarnings("DesignForExtension")
 public abstract class SlsVersion implements Serializable {
 
     @JsonCreator
@@ -62,9 +64,21 @@ public abstract class SlsVersion implements Serializable {
 
     public abstract int getPatchVersionNumber();
 
-    public abstract OptionalInt firstSequenceVersionNumber();
+    @Nullable
+    abstract Integer getFirstSequenceVersionNumber();
 
-    public abstract OptionalInt secondSequenceVersionNumber();
+    public OptionalInt firstSequenceVersionNumber() {
+        Integer firstSeq = getFirstSequenceVersionNumber();
+        return firstSeq == null ? OptionalInt.empty() : OptionalInt.of(firstSeq);
+    }
+
+    @Nullable
+    abstract Integer getSecondSequenceVersionNumber();
+
+    public OptionalInt secondSequenceVersionNumber() {
+        Integer secondSeq = getSecondSequenceVersionNumber();
+        return secondSeq == null ? OptionalInt.empty() : OptionalInt.of(secondSeq);
+    }
 
     public abstract SlsVersionType getType();
 }

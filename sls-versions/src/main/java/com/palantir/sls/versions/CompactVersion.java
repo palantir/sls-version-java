@@ -20,7 +20,6 @@ import com.google.errorprone.annotations.CompileTimeConstant;
 import com.palantir.logsafe.Preconditions;
 import com.palantir.logsafe.SafeArg;
 import com.palantir.logsafe.exceptions.SafeIllegalArgumentException;
-import java.util.OptionalInt;
 
 /**
  * Stores a compact representation of {@link OrderableSlsVersion} that is lexicographically ordered when rendered as a
@@ -133,14 +132,14 @@ public final class CompactVersion implements Comparable<CompactVersion> {
         int rcNumber = (int) (lsb >> 22) & MASK_20_BITS;
         int distanceFromVersion = (int) lsb & MASK_20_BITS;
 
-        OptionalInt firstSeq = OptionalInt.empty();
-        OptionalInt secondSeq = OptionalInt.empty();
+        Integer firstSeq = null;
+        Integer secondSeq = null;
         switch (type) {
-            case RELEASE_CANDIDATE -> firstSeq = OptionalInt.of(rcNumber);
-            case RELEASE_SNAPSHOT -> firstSeq = OptionalInt.of(distanceFromVersion);
+            case RELEASE_CANDIDATE -> firstSeq = rcNumber;
+            case RELEASE_SNAPSHOT -> firstSeq = distanceFromVersion;
             case RELEASE_CANDIDATE_SNAPSHOT -> {
-                firstSeq = OptionalInt.of(rcNumber);
-                secondSeq = OptionalInt.of(distanceFromVersion);
+                firstSeq = rcNumber;
+                secondSeq = distanceFromVersion;
             }
             case RELEASE, NON_ORDERABLE -> {}
         }

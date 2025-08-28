@@ -50,16 +50,20 @@ public enum VersionComparator implements Comparator<OrderableSlsVersion> {
             return result;
         }
 
+        Integer maybeFirstSequence1 = version1.getFirstSequenceVersionNumber();
+        Integer maybeFirstSequence2 = version2.getFirstSequenceVersionNumber();
         result = Integer.compare(
-                version1.firstSequenceVersionNumber().orElse(0),
-                version2.firstSequenceVersionNumber().orElse(0));
+                maybeFirstSequence1 == null ? 0 : maybeFirstSequence1,
+                maybeFirstSequence2 == null ? 0 : maybeFirstSequence2);
         if (result != 0) {
             return result;
         }
 
+        Integer maybeSecondSequence1 = version1.getSecondSequenceVersionNumber();
+        Integer maybeSecondSequence2 = version2.getSecondSequenceVersionNumber();
         result = Integer.compare(
-                version1.secondSequenceVersionNumber().orElse(0),
-                version2.secondSequenceVersionNumber().orElse(0));
+                maybeSecondSequence1 == null ? 0 : maybeSecondSequence1,
+                maybeSecondSequence2 == null ? 0 : maybeSecondSequence2);
         if (result != 0) {
             return result;
         }

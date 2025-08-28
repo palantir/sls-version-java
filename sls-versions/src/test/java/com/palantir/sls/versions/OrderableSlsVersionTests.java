@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.OptionalInt;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
@@ -281,9 +280,8 @@ public class OrderableSlsVersionTests {
                 .minorVersionNumber(minor)
                 .patchVersionNumber(patch)
                 .type(type)
-                .firstSequenceVersionNumber(firstSequence == null ? OptionalInt.empty() : OptionalInt.of(firstSequence))
-                .secondSequenceVersionNumber(
-                        secondSequence == null ? OptionalInt.empty() : OptionalInt.of(secondSequence))
+                .firstSequenceVersionNumber(firstSequence)
+                .secondSequenceVersionNumber(secondSequence)
                 .build();
     }
 }
