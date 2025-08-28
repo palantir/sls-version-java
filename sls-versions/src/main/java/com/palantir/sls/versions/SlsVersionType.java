@@ -23,9 +23,9 @@ import java.util.regex.Pattern;
  * {@link SlsVersion} objects.
  */
 public enum SlsVersionType {
-    RELEASE_SNAPSHOT(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-([0-9]+)-g[a-f0-9]+$"), 4),
-    RELEASE(ReleaseVersionParser.INSTANCE, 3),
-    RELEASE_CANDIDATE_SNAPSHOT(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-rc([0-9]+)-([0-9]+)-g[a-f0-9]+$"), 2),
+    RELEASE_SNAPSHOT(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-([0-9]+)-g[a-f0-9]+$"), 3),
+    RELEASE(ReleaseVersionParser.INSTANCE, 2),
+    RELEASE_CANDIDATE_SNAPSHOT(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-rc([0-9]+)-([0-9]+)-g[a-f0-9]+$"), 1),
     RELEASE_CANDIDATE(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)-rc([0-9]+)$"), 1),
     NON_ORDERABLE(RegexParser.of("^([0-9]+)\\.([0-9]+)\\.([0-9]+)(-[a-z0-9-]+)?(\\.dirty)?$"), 0);
 
