@@ -21,6 +21,7 @@ import static com.palantir.logsafe.Preconditions.checkArgument;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.palantir.logsafe.UnsafeArg;
 import java.util.Optional;
+import javax.annotation.Nullable;
 import org.immutables.value.Value;
 
 /**
@@ -37,6 +38,23 @@ public abstract class OrderableSlsVersion extends SlsVersion implements Comparab
         SlsVersionType.RELEASE_CANDIDATE_SNAPSHOT,
         SlsVersionType.RELEASE_SNAPSHOT
     };
+
+    @Nullable
+    final Integer rcNumber() {
+        return switch (getType()) {
+            case RELEASE_CANDIDATE, RELEASE_CANDIDATE_SNAPSHOT -> getFirstSequenceVersionNumber();
+            case RELEASE, RELEASE_SNAPSHOT, NON_ORDERABLE -> null;
+        };
+    }
+
+    @Nullable
+    final Integer snapshotNumber() {
+        return switch (getType()) {
+            case RELEASE_SNAPSHOT -> getFirstSequenceVersionNumber();
+            case RELEASE_CANDIDATE_SNAPSHOT -> getSecondSequenceVersionNumber();
+            case RELEASE, RELEASE_CANDIDATE, NON_ORDERABLE -> null;
+        };
+    }
 
     @JsonCreator
     public static OrderableSlsVersion valueOf(String value) {

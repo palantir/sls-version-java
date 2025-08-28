@@ -44,26 +44,25 @@ public enum VersionComparator implements Comparator<OrderableSlsVersion> {
             return result;
         }
 
+        // If release candidate version is not present, treat it the maximum value.
+        // All release and release snapshots versions are newer than any release candidate
+        //   or release candidate snapshot version.
+        Integer maybeRc1 = version1.rcNumber();
+        Integer maybeRc2 = version2.rcNumber();
         result = Integer.compare(
-                version1.getType().getPriority(), version2.getType().getPriority());
+                maybeRc1 == null ? Integer.MAX_VALUE : maybeRc1, maybeRc2 == null ? Integer.MAX_VALUE : maybeRc2);
         if (result != 0) {
             return result;
         }
 
-        Integer maybeFirstSequence1 = version1.getFirstSequenceVersionNumber();
-        Integer maybeFirstSequence2 = version2.getFirstSequenceVersionNumber();
+        // If snapshot version is not present, treat it as the minimum value.
+        // All release snapshots and release candidate snapshots versions are newer than
+        //   their corresponding release and release candidate versions, respectively.
+        Integer maybeSnapshot1 = version1.snapshotNumber();
+        Integer maybeSnapshot2 = version2.snapshotNumber();
         result = Integer.compare(
-                maybeFirstSequence1 == null ? 0 : maybeFirstSequence1,
-                maybeFirstSequence2 == null ? 0 : maybeFirstSequence2);
-        if (result != 0) {
-            return result;
-        }
-
-        Integer maybeSecondSequence1 = version1.getSecondSequenceVersionNumber();
-        Integer maybeSecondSequence2 = version2.getSecondSequenceVersionNumber();
-        result = Integer.compare(
-                maybeSecondSequence1 == null ? 0 : maybeSecondSequence1,
-                maybeSecondSequence2 == null ? 0 : maybeSecondSequence2);
+                maybeSnapshot1 == null ? Integer.MIN_VALUE : maybeSnapshot1,
+                maybeSnapshot2 == null ? Integer.MIN_VALUE : maybeSnapshot2);
         if (result != 0) {
             return result;
         }
