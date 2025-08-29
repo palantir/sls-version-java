@@ -21,11 +21,15 @@ import static com.palantir.logsafe.Preconditions.checkArgument;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.palantir.logsafe.UnsafeArg;
 import java.util.Optional;
+import org.immutables.serial.Serial;
 import org.immutables.value.Value;
 
 @Value.Immutable
 @ImmutablesStyle
+@Serial.Version(value = 8200475591920425177L)
 public abstract class NonOrderableSlsVersion extends SlsVersion {
+
+    private static final long serialVersionUID = -5283676181284606311L;
 
     @JsonCreator
     public static NonOrderableSlsVersion valueOf(String value) {
