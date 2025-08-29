@@ -93,7 +93,7 @@ public class SlsVersionTests {
         Path path =
                 SERIALIZABLE_CASES_PATH.resolve(String.format("v" + version)).resolve(input.getValue() + ".ser");
 
-        if (!Files.exists(path)) {
+        if (!Files.exists(path) && Boolean.getBoolean("recreate")) {
             writeObject(path, input);
         }
 
@@ -102,6 +102,16 @@ public class SlsVersionTests {
         assertThat(actual).isEqualTo(expected);
     }
 
+    // The version number here is intended to represent a specific version of this library. The
+    // version number is used in the expected file path in order to be able to test the serialization behavior of the
+    // same value in different versions of this library.
+    //
+    // The version number and expected file for existing test cases should NEVER be changed. The expected value for
+    // existing test cases can be changed if the SlsVersion API changes (but the existing serialized values still need
+    // to deserialize "correctly").
+    //
+    // When changing to the serialization behehavior and adding new test cases, the new test cases should always use a
+    // new version number.
     private static List<Arguments> serializable_arguments() {
         return List.of(
                 Arguments.of(
