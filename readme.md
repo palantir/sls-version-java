@@ -59,21 +59,21 @@ decisions about forward-vs-backwards product migrations. Further, it simplifies 
 via version ranges; for instance, a product may declare that it is compatible with a second product with a version in
 `[1.2.3, 2.0.0)`.
 
-For any two orderable versions, `v1` and v2, we can define whether `v1` is a *larger* (equivalently, *later*, *newer*, etc)
-than v2. For the four variants, there can be up to three numeric components identifying a version. From left to right,
+For any two orderable versions, `v1` and `v2`, we can define whether `v1` is a *larger* (equivalently, *later*, *newer*, etc)
+than `v2`. For the four variants, there can be up to three numeric components identifying a version. From left to right,
 they are: the usual notation of the base version (e.g., for `1.2.3`, 1=major, 2=minor, 3=patch), an optional first
 numeric component to identify a release candidate (e.g. `-rc3`) or a snapshot version (e.g. `-5-gnm4s9ba`), and finally
-an optional third numeric component to identify a release candidate snapshot version (e.g. `-rc3-5-gnm4s9ba`).
+an optional second numeric component to identify a release candidate snapshot version (e.g. `-rc3-5-gnm4s9ba`).
 
 Intuitively, the version types define an ordering of versions for a given base version:
 - For a given base version, release snapshot versions are larger than release versions
 - For a given base version, release versions are larger than release candidate and release candidate snapshot versions
 - For a given base and rc version, release candidate snapshot versions are larger than release candidate versions
 
-The following top-down procedure determines whether `v1` is larger than v2, written `v1 > v2`;
+The following top-down procedure determines whether `v1` is larger than `v2`, written `v1 > v2`;
 comparisons like `major(v1) > major(v2)` are by integer ordering (not lexicographic ordering):
 
-- We know nothing asbout `v1` and `v2`:
+- We know nothing about `v1` and `v2`:
   - If `major(v1) > major(v2)`, then `v1 > v2`
   - If `minor(v1) > minor(v2)`, then `v1 > v2`
   - If `patch(v1) > patch(v2)`, then `v1 > v2`

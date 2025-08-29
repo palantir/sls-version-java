@@ -48,6 +48,8 @@ public enum SlsVersionType {
     /**
      * Provides a first-level ordering of versions that have the same major/minor/patch versions. Version types with a
      * higher priority are greater than version types with a lower priority.
+     *
+     * <p><b>Note</b>: RELEASE_CANDIDATE and RELEASE_CANDIDATE_SNAPSHOT have the same priority.
      */
     public int getPriority() {
         return this.priority;
