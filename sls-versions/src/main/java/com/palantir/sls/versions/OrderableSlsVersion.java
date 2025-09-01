@@ -21,6 +21,7 @@ import static com.palantir.logsafe.Preconditions.checkArgument;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.palantir.logsafe.UnsafeArg;
 import java.util.Optional;
+import org.immutables.serial.Serial;
 import org.immutables.value.Value;
 
 /**
@@ -29,7 +30,10 @@ import org.immutables.value.Value;
  */
 @Value.Immutable
 @ImmutablesStyle
+@Serial.Version(value = 1396122010215857210L)
 public abstract class OrderableSlsVersion extends SlsVersion implements Comparable<OrderableSlsVersion> {
+
+    private static final long serialVersionUID = -8422496404637895757L;
 
     private static final SlsVersionType[] ORDERED_VERSION_TYPES = {
         SlsVersionType.RELEASE,

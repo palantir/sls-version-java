@@ -9,6 +9,7 @@ dependencies {
     implementation 'com.palantir.safe-logging:logger'
 
     annotationProcessor 'org.immutables:value'
+    compileOnly 'org.immutables:serial'
     compileOnly 'org.immutables:value::annotations'
 
     testImplementation 'com.fasterxml.jackson.core:jackson-databind'

@@ -27,6 +27,8 @@ import org.immutables.value.Value;
 
 public abstract class SlsVersion implements Serializable {
 
+    private static final long serialVersionUID = -4387436969618893669L;
+
     @JsonCreator
     public static SlsVersion valueOf(String value) {
         Optional<OrderableSlsVersion> optionalOrderableVersion = OrderableSlsVersion.safeValueOf(value);
