@@ -56,12 +56,12 @@ public class SlsVersionComparisonBenchmark {
         RC_SNAPSHOT("0.16.0-rc1-8-g116b425"),
         ;
 
-        private final OrderableSlsVersion version;
+        private final OrderableSlsVersion version1;
         // Used to avoid comparing the object's identities when comparing the same version
         private final OrderableSlsVersion version2;
 
         Version(String string) {
-            this.version = OrderableSlsVersion.valueOf(string);
+            this.version1 = OrderableSlsVersion.valueOf(string);
             this.version2 = OrderableSlsVersion.valueOf(string);
         }
     }
@@ -74,7 +74,7 @@ public class SlsVersionComparisonBenchmark {
 
     @Benchmark
     public int compare() {
-        return version1.version.compareTo(version2.version2);
+        return version1.version1.compareTo(version2.version2);
     }
 
     public static void main(String[] _args) throws Exception {
