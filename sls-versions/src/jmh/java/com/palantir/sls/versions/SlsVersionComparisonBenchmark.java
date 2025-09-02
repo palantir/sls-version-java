@@ -16,7 +16,6 @@
 
 package com.palantir.sls.versions;
 
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -42,36 +41,45 @@ import org.openjdk.jmh.runner.options.TimeValue;
 @Measurement(iterations = 3, time = 3, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
 @Threads(4)
-@SuppressWarnings({"checkstyle:hideutilityclassconstructor", "VisibilityModifier", "DesignForExtension"})
-public class SlsVersionBenchmark {
+@SuppressWarnings({
+    "checkstyle:hideutilityclassconstructor",
+    "VisibilityModifier",
+    "DesignForExtension",
+    "ImmutableEnumChecker"
+})
+public class SlsVersionComparisonBenchmark {
 
-    public enum VersionString {
+    public enum Version {
         RELEASE("0.16.0"),
         SNAPSHOT("0.16.0-8-g116b425"),
         RC("0.16.0-rc1"),
         RC_SNAPSHOT("0.16.0-rc1-8-g116b425"),
-        DIRTY("0.16.0-8-g116b425.dirty"),
-        DIRTY_RC("0.16.0-rc1-8-g116b425.dirty"),
         ;
 
-        private final String string;
+        private final OrderableSlsVersion version1;
+        // Used to avoid comparing the object's identities when comparing the same version
+        private final OrderableSlsVersion version2;
 
-        VersionString(String string) {
-            this.string = string;
+        Version(String string) {
+            this.version1 = OrderableSlsVersion.valueOf(string);
+            this.version2 = OrderableSlsVersion.valueOf(string);
         }
     }
 
     @Param
-    VersionString versionString;
+    Version version1;
+
+    @Param
+    Version version2;
 
     @Benchmark
-    public Optional<OrderableSlsVersion> safeValueOf() {
-        return OrderableSlsVersion.safeValueOf(versionString.string);
+    public int compare() {
+        return version1.version1.compareTo(version2.version2);
     }
 
     public static void main(String[] _args) throws Exception {
         Options opt = new OptionsBuilder()
-                .include(SlsVersionBenchmark.class.getSimpleName())
+                .include(SlsVersionComparisonBenchmark.class.getSimpleName())
                 .addProfiler(GCProfiler.class)
                 .forks(1)
                 .threads(4)
