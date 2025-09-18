@@ -6,7 +6,7 @@ com.google.guava:guava = 33.5.0-jre
 com.uber.nullaway:nullaway = 0.12.10
 
 # Test dependencies
-org.assertj:assertj-core = 3.27.4
+org.assertj:assertj-core = 3.27.5
 org.junit.platform:* = 1.13.4
 org.openjdk.jmh:* = 1.37
 org.apache.logging.log4j:log4j-slf4j-impl = 2.24.0
