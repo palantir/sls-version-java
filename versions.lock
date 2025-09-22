@@ -60,7 +60,7 @@ org.apache.logging.log4j:log4j-slf4j-impl:2.24.0 (1 constraints: 3a053f3b)
 
 org.apiguardian:apiguardian-api:1.1.2 (9 constraints: 1981f01e)
 
-org.assertj:assertj-core:3.27.5 (1 constraints: 4305533b)
+org.assertj:assertj-core:3.27.6 (1 constraints: 4405543b)
 
 org.jspecify:jspecify:1.0.0 (1 constraints: 130ae0b4)
 
