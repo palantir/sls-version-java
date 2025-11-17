@@ -42,10 +42,10 @@ import org.openjdk.jmh.runner.options.TimeValue;
 @Fork(1)
 @Threads(4)
 @SuppressWarnings({
-    "checkstyle:hideutilityclassconstructor",
-    "VisibilityModifier",
     "DesignForExtension",
-    "ImmutableEnumChecker"
+    "ImmutableEnumChecker",
+    "VisibilityModifier",
+    "checkstyle:hideutilityclassconstructor"
 })
 public class SlsVersionComparisonBenchmark {
 
