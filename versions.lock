@@ -4,17 +4,17 @@ com.fasterxml.jackson.core:jackson-annotations:2.20 (2 constraints: fd163324)
 
 com.google.code.findbugs:jsr305:3.0.2 (1 constraints: 0705fc35)
 
-com.google.errorprone:error_prone_annotations:2.41.0 (5 constraints: a7493495)
+com.google.errorprone:error_prone_annotations:2.41.0 (5 constraints: db48a599)
 
-com.palantir.safe-logging:logger:3.9.0 (1 constraints: 0e051536)
+com.palantir.safe-logging:logger:3.10.0 (1 constraints: 3605353b)
 
-com.palantir.safe-logging:logger-slf4j:3.9.0 (1 constraints: 070e6e42)
+com.palantir.safe-logging:logger-slf4j:3.10.0 (1 constraints: 2f0e8750)
 
-com.palantir.safe-logging:logger-spi:3.9.0 (2 constraints: 1d1e0c7c)
+com.palantir.safe-logging:logger-spi:3.10.0 (2 constraints: 6d1ed4af)
 
-com.palantir.safe-logging:preconditions:3.9.0 (1 constraints: 0e051536)
+com.palantir.safe-logging:preconditions:3.10.0 (1 constraints: 3605353b)
 
-com.palantir.safe-logging:safe-logging:3.9.0 (4 constraints: 9a33d562)
+com.palantir.safe-logging:safe-logging:3.10.0 (4 constraints: 3a3454fd)
 
 org.immutables:serial:2.12.1 (1 constraints: 3805363b)
 
