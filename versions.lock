@@ -1,6 +1,6 @@
 # Run ./gradlew writeVersionsLocks to regenerate this file. Blank lines are to minimize merge conflicts.
 
-com.fasterxml.jackson.core:jackson-annotations:2.20 (2 constraints: fd163324)
+com.fasterxml.jackson.core:jackson-annotations:2.21 (2 constraints: ff166824)
 
 com.google.code.findbugs:jsr305:3.0.2 (1 constraints: 0705fc35)
 
@@ -28,9 +28,9 @@ org.slf4j:slf4j-api:1.7.36 (2 constraints: 2321cfd3)
 
 [Test dependencies]
 
-com.fasterxml.jackson.core:jackson-core:2.20.1 (1 constraints: 85123121)
+com.fasterxml.jackson.core:jackson-core:2.21.0 (1 constraints: 85123321)
 
-com.fasterxml.jackson.core:jackson-databind:2.20.1 (1 constraints: 3705343b)
+com.fasterxml.jackson.core:jackson-databind:2.21.0 (1 constraints: 3705363b)
 
 com.google.guava:failureaccess:1.0.3 (1 constraints: 160ae3b4)
 
