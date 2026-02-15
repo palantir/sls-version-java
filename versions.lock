@@ -64,19 +64,19 @@ org.assertj:assertj-core:3.27.7 (1 constraints: 4505553b)
 
 org.jspecify:jspecify:1.0.0 (7 constraints: 5370d26f)
 
-org.junit.jupiter:junit-jupiter:6.0.2 (1 constraints: 49070b70)
+org.junit.jupiter:junit-jupiter:6.0.3 (1 constraints: 4a070d70)
 
-org.junit.jupiter:junit-jupiter-api:6.0.2 (3 constraints: 612f63d9)
+org.junit.jupiter:junit-jupiter-api:6.0.3 (3 constraints: 642ff3d9)
 
-org.junit.jupiter:junit-jupiter-engine:6.0.2 (1 constraints: 050ecc3b)
+org.junit.jupiter:junit-jupiter-engine:6.0.3 (1 constraints: 060ecd3b)
 
-org.junit.jupiter:junit-jupiter-params:6.0.2 (1 constraints: 050ecc3b)
+org.junit.jupiter:junit-jupiter-params:6.0.3 (1 constraints: 060ecd3b)
 
-org.junit.platform:junit-platform-commons:6.0.2 (4 constraints: 1534b9ac)
+org.junit.platform:junit-platform-commons:6.0.3 (4 constraints: 1734ecac)
 
-org.junit.platform:junit-platform-engine:6.0.2 (3 constraints: 2c2d14ac)
+org.junit.platform:junit-platform-engine:6.0.3 (3 constraints: 2e2d49ac)
 
-org.junit.platform:junit-platform-launcher:6.0.2 (1 constraints: 0a050b36)
+org.junit.platform:junit-platform-launcher:6.0.3 (1 constraints: 0b050c36)
 
 org.openjdk.jmh:jmh-core:1.37 (4 constraints: 3a3692d7)
 
