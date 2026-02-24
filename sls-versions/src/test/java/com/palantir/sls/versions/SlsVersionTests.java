@@ -90,6 +90,7 @@ public class SlsVersionTests {
     @ParameterizedTest
     @MethodSource("serializable_arguments")
     public void serializable(int version, SlsVersion input, SlsVersion expected) throws Exception {
+        @SuppressWarnings("for-rollout:FormatStringShouldUsePlaceholders")
         Path path =
                 SERIALIZABLE_CASES_PATH.resolve(String.format("v" + version)).resolve(input.getValue() + ".ser");
 
