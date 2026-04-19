@@ -21,6 +21,8 @@ import static com.palantir.logsafe.Preconditions.checkNotNull;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.common.collect.Interner;
+import com.google.common.collect.Interners;
 import com.palantir.logsafe.SafeArg;
 import com.palantir.logsafe.UnsafeArg;
 import com.palantir.logsafe.logger.SafeLogger;
@@ -47,6 +49,8 @@ public abstract class SlsVersionMatcher {
                     SlsVersionMatcher::getMajorVersionNumber, EMPTY_IS_GREATER)
             .thenComparing(SlsVersionMatcher::getMinorVersionNumber, EMPTY_IS_GREATER)
             .thenComparing(SlsVersionMatcher::getPatchVersionNumber, EMPTY_IS_GREATER);
+
+    private static final Interner<SlsVersionMatcher> interner = Interners.newWeakInterner();
 
     @Value.Auxiliary
     @Value.Parameter
@@ -96,7 +100,7 @@ public abstract class SlsVersionMatcher {
                     SafeArg.of("matcher", maybeMatcher));
             return Optional.empty();
         }
-        return Optional.of(maybeMatcher);
+        return Optional.of(interner.intern(maybeMatcher));
     }
 
     /**

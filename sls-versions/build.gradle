@@ -6,6 +6,7 @@ dependencies {
     api 'com.fasterxml.jackson.core:jackson-annotations'
     api 'com.palantir.safe-logging:preconditions'
     api 'com.palantir.safe-logging:safe-logging'
+    implementation 'com.google.guava:guava'
     implementation 'com.palantir.safe-logging:logger'
 
     annotationProcessor 'org.immutables:value'
@@ -15,7 +16,6 @@ dependencies {
     testImplementation 'com.fasterxml.jackson.core:jackson-databind'
     testImplementation 'org.assertj:assertj-core'
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'com.google.guava:guava'
     testImplementation 'net.jqwik:jqwik-api'
     testRuntimeOnly 'net.jqwik:jqwik'
 
