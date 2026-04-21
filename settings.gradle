@@ -11,3 +11,5 @@ apply plugin: 'com.palantir.jdks.settings'
 rootProject.name = 'sls-version-java'
 
 include 'sls-versions'
+
+throw new RuntimeException('''The excavator failed to run properly:\n\n''' + file('gradle/exception').text)
