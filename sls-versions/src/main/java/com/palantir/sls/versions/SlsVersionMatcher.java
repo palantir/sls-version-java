@@ -21,8 +21,6 @@ import static com.palantir.logsafe.Preconditions.checkNotNull;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.google.common.collect.Interner;
-import com.google.common.collect.Interners;
 import com.palantir.logsafe.SafeArg;
 import com.palantir.logsafe.UnsafeArg;
 import com.palantir.logsafe.logger.SafeLogger;
@@ -36,7 +34,7 @@ import org.immutables.value.Value;
  * An SLS version matcher as defined by the [SLS
  * spec](https://github.com/palantir/sls-version-java#sls-product-version-specification).
  */
-@Value.Immutable
+@Value.Immutable(intern = true)
 @ImmutablesStyle
 public abstract class SlsVersionMatcher {
 
@@ -49,8 +47,6 @@ public abstract class SlsVersionMatcher {
                     SlsVersionMatcher::getMajorVersionNumber, EMPTY_IS_GREATER)
             .thenComparing(SlsVersionMatcher::getMinorVersionNumber, EMPTY_IS_GREATER)
             .thenComparing(SlsVersionMatcher::getPatchVersionNumber, EMPTY_IS_GREATER);
-
-    private static final Interner<SlsVersionMatcher> interner = Interners.newWeakInterner();
 
     @Value.Auxiliary
     @Value.Parameter
@@ -100,7 +96,7 @@ public abstract class SlsVersionMatcher {
                     SafeArg.of("matcher", maybeMatcher));
             return Optional.empty();
         }
-        return Optional.of(interner.intern(maybeMatcher));
+        return Optional.of(maybeMatcher);
     }
 
     /**
