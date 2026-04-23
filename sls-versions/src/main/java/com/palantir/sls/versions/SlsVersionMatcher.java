@@ -16,19 +16,20 @@
 
 package com.palantir.sls.versions;
 
-import static com.palantir.logsafe.Preconditions.checkArgument;
-import static com.palantir.logsafe.Preconditions.checkNotNull;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.palantir.logsafe.SafeArg;
 import com.palantir.logsafe.UnsafeArg;
 import com.palantir.logsafe.logger.SafeLogger;
 import com.palantir.logsafe.logger.SafeLoggerFactory;
+import org.immutables.value.Value;
+
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.OptionalInt;
-import org.immutables.value.Value;
+
+import static com.palantir.logsafe.Preconditions.checkArgument;
+import static com.palantir.logsafe.Preconditions.checkNotNull;
 
 /**
  * An SLS version matcher as defined by the [SLS
