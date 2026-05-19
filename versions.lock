@@ -72,11 +72,11 @@ org.junit.jupiter:junit-jupiter-engine:6.0.3 (1 constraints: 060ecd3b)
 
 org.junit.jupiter:junit-jupiter-params:6.0.3 (1 constraints: 060ecd3b)
 
-org.junit.platform:junit-platform-commons:6.0.3 (4 constraints: 1734ecac)
+org.junit.platform:junit-platform-commons:6.1.0 (4 constraints: 1534ecac)
 
-org.junit.platform:junit-platform-engine:6.0.3 (3 constraints: 2e2d49ac)
+org.junit.platform:junit-platform-engine:6.1.0 (3 constraints: 2c2d49ac)
 
-org.junit.platform:junit-platform-launcher:6.0.3 (1 constraints: 0b050c36)
+org.junit.platform:junit-platform-launcher:6.1.0 (1 constraints: 09050c36)
 
 org.openjdk.jmh:jmh-core:1.37 (4 constraints: 3a3692d7)
 
