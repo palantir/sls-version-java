@@ -17,21 +17,20 @@
 package com.palantir.sls.versions;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.quicktheories.QuickTheory.qt;
+import static org.quicktheories.generators.Generate.constant;
+import static org.quicktheories.generators.Generate.oneOf;
+import static org.quicktheories.generators.Generate.pick;
+import static org.quicktheories.generators.SourceDSL.integers;
+import static org.quicktheories.generators.SourceDSL.lists;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import net.jqwik.api.Arbitraries;
-import net.jqwik.api.Arbitrary;
-import net.jqwik.api.ForAll;
-import net.jqwik.api.Property;
-import net.jqwik.api.Provide;
-import net.jqwik.api.constraints.Chars;
-import net.jqwik.api.constraints.NumericChars;
+import java.util.Arrays;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.quicktheories.core.Gen;
 
 /**
- * This test uses the <a href="https://jqwik.net/">jqwik library</a>
+ * This test uses the <a href="https://github.com/quicktheories/QuickTheories">QuickTheories library</a>
  * to generate a whole bunch of random test cases, and validate that the {@link SlsVersionMatcherParser} behaves
  * identically to the reference {@link RegexSlsVersionMatcherParser}.
  *
@@ -41,35 +40,41 @@ import net.jqwik.api.constraints.NumericChars;
  */
 public final class SlsVersionMatcherParserTest {
 
-    @Property(seed = "3226259347315412165", tries = 2000)
-    public void valid_parsing(
-            @ForAll("validComponent") String major,
-            @ForAll("validComponent") String minor,
-            @ForAll("validComponent") String patch) {
-        String string = major + '.' + minor + '.' + patch;
-        assertThat(SlsVersionMatcherParser.safeValueOf(string))
-                .describedAs(string)
-                .isEqualTo(RegexSlsVersionMatcherParser.safeValueOf(string));
+    private static Gen<String> validComponent() {
+        return oneOf(constant("x"), integers().allPositive().map(i -> Integer.toString(i)));
     }
 
-    @Provide
-    public Arbitrary<String> validComponent() {
-        Arbitrary<String> justX = Arbitraries.just("x");
-        Arbitrary<String> integerArbitrary =
-                Arbitraries.integers().greaterOrEqual(0).map(a -> Integer.toString(a));
-        return Arbitraries.oneOf(justX, integerArbitrary);
+    @Test
+    public void valid_parsing() {
+        qt().withExamples(2000)
+                .forAll(validComponent(), validComponent(), validComponent())
+                .checkAssert((major, minor, patch) -> {
+                    String string = major + "." + minor + "." + patch;
+                    assertThat(SlsVersionMatcherParser.safeValueOf(string))
+                            .describedAs(string)
+                            .isEqualTo(RegexSlsVersionMatcherParser.safeValueOf(string));
+                });
     }
 
-    @Target({ElementType.ANNOTATION_TYPE, ElementType.PARAMETER})
-    @Retention(RetentionPolicy.RUNTIME)
-    @NumericChars
-    @Chars({'x', '.'})
-    public @interface Nonsense {}
+    private static final List<Character> NONSENSE_CHARS =
+            Arrays.asList('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'x', '.');
 
-    @Property(seed = "3226259347315412165", tries = 2000)
-    public void nonsense_parsing(@ForAll @Nonsense String nonsense) {
-        assertThat(SlsVersionMatcherParser.safeValueOf(nonsense))
-                .describedAs(nonsense)
-                .isEqualTo(RegexSlsVersionMatcherParser.safeValueOf(nonsense));
+    @Test
+    public void nonsense_parsing() {
+        Gen<String> nonsense = lists().of(pick(NONSENSE_CHARS))
+                .ofSizeBetween(0, 10)
+                .map(chars -> {
+                    StringBuilder sb = new StringBuilder(chars.size());
+                    for (char ch : chars) {
+                        sb.append(ch);
+                    }
+                    return sb.toString();
+                });
+
+        qt().withExamples(2000).forAll(nonsense).checkAssert(str -> {
+            assertThat(SlsVersionMatcherParser.safeValueOf(str))
+                    .describedAs(str)
+                    .isEqualTo(RegexSlsVersionMatcherParser.safeValueOf(str));
+        });
     }
 }
