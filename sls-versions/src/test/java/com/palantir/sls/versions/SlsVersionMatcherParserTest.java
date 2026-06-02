@@ -19,7 +19,7 @@ package com.palantir.sls.versions;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.quicktheories.QuickTheory.qt;
 import static org.quicktheories.generators.Generate.constant;
-import static org.quicktheories.generators.Generate.oneOf;
+import static org.quicktheories.generators.Generate.frequency;
 import static org.quicktheories.generators.Generate.pick;
 import static org.quicktheories.generators.SourceDSL.integers;
 import static org.quicktheories.generators.SourceDSL.lists;
@@ -27,6 +27,7 @@ import static org.quicktheories.generators.SourceDSL.lists;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.quicktheories.api.Pair;
 import org.quicktheories.core.Gen;
 
 /**
@@ -41,7 +42,8 @@ import org.quicktheories.core.Gen;
 public final class SlsVersionMatcherParserTest {
 
     private static Gen<String> validComponent() {
-        return oneOf(constant("x"), integers().allPositive().map(i -> Integer.toString(i)));
+        return frequency(
+                Pair.of(99, integers().allPositive().map(i -> Integer.toString(i))), Pair.of(1, constant("x")));
     }
 
     @Test
@@ -65,9 +67,7 @@ public final class SlsVersionMatcherParserTest {
                 .ofSizeBetween(0, 10)
                 .map(chars -> {
                     StringBuilder sb = new StringBuilder(chars.size());
-                    for (char ch : chars) {
-                        sb.append(ch);
-                    }
+                    chars.forEach(sb::append);
                     return sb.toString();
                 });
 
