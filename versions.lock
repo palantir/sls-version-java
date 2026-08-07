@@ -6,15 +6,15 @@ com.google.code.findbugs:jsr305:3.0.2 (1 constraints: 0705fc35)
 
 com.google.errorprone:error_prone_annotations:2.47.0 (5 constraints: e148f59d)
 
-com.palantir.safe-logging:logger:3.17.0 (1 constraints: 3d054a3b)
+com.palantir.safe-logging:logger:3.18.0 (1 constraints: 3e054d3b)
 
-com.palantir.safe-logging:logger-slf4j:3.17.0 (1 constraints: 360e9c50)
+com.palantir.safe-logging:logger-slf4j:3.18.0 (1 constraints: 370e9f50)
 
-com.palantir.safe-logging:logger-spi:3.17.0 (2 constraints: 7b1e4eb1)
+com.palantir.safe-logging:logger-spi:3.18.0 (2 constraints: 7d1e84b1)
 
-com.palantir.safe-logging:preconditions:3.17.0 (1 constraints: 3d054a3b)
+com.palantir.safe-logging:preconditions:3.18.0 (1 constraints: 3e054d3b)
 
-com.palantir.safe-logging:safe-logging:3.17.0 (4 constraints: 56346605)
+com.palantir.safe-logging:safe-logging:3.18.0 (4 constraints: 5a348b06)
 
 org.immutables:serial:2.12.2 (1 constraints: 3905373b)
 
