@@ -4,7 +4,7 @@ com.fasterxml.jackson.core:jackson-annotations:2.22 (2 constraints: 01179d24)
 
 com.google.code.findbugs:jsr305:3.0.2 (1 constraints: 0705fc35)
 
-com.google.errorprone:error_prone_annotations:2.47.0 (5 constraints: e148f59d)
+com.google.errorprone:error_prone_annotations:2.50.0 (5 constraints: db48a699)
 
 com.palantir.safe-logging:logger:3.18.0 (1 constraints: 3e054d3b)
 
@@ -34,7 +34,7 @@ com.fasterxml.jackson.core:jackson-databind:2.22.1 (1 constraints: 39053a3b)
 
 com.google.guava:failureaccess:1.0.3 (1 constraints: 160ae3b4)
 
-com.google.guava:guava:33.6.0-jre (1 constraints: ac068753)
+com.google.guava:guava:33.7.0-jre (1 constraints: ad068e53)
 
 com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava (1 constraints: bd17c918)
 
@@ -56,7 +56,7 @@ org.apiguardian:apiguardian-api:1.1.2 (6 constraints: 5366ce6e)
 
 org.assertj:assertj-core:3.27.7 (1 constraints: 4505553b)
 
-org.jspecify:jspecify:1.0.0 (7 constraints: 5370d26f)
+org.jspecify:jspecify:1.0.1 (7 constraints: 5470f370)
 
 org.junit.jupiter:junit-jupiter:6.1.3 (1 constraints: 4b071170)
 
