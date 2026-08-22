@@ -4,7 +4,7 @@ org.immutables:* = 2.12.2
 com.palantir.safe-logging:* = 3.18.0
 com.google.code.findbugs:jsr305 = 3.0.2
 com.google.guava:guava = 33.7.1-jre
-com.uber.nullaway:nullaway = 0.13.8
+com.uber.nullaway:nullaway = 0.14.0
 
 # Test dependencies
 org.apache.logging.log4j:log4j-slf4j-impl = 2.25.3
