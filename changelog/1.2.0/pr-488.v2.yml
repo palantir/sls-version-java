@@ -1,5 +1,0 @@
-type: improvement
-improvement:
-  description: Avoid unnecessary substring invocations while parsing sls versions
-  links:
-  - https://github.com/palantir/sls-version-java/pull/488

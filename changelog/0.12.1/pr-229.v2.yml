@@ -1,5 +1,0 @@
-type: improvement
-improvement:
-  description: SlsVersions are Serializable
-  links:
-  - https://github.com/palantir/sls-version-java/pull/229
