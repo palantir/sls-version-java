@@ -42,7 +42,7 @@ import org.openjdk.jmh.runner.options.TimeValue;
 @Measurement(iterations = 3, time = 3, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
 @Threads(4)
-@SuppressWarnings({"checkstyle:hideutilityclassconstructor", "VisibilityModifier", "DesignForExtension"})
+@SuppressWarnings({"DesignForExtension", "VisibilityModifier", "checkstyle:hideutilityclassconstructor"})
 public class SlsVersionBenchmark {
 
     public enum VersionString {
