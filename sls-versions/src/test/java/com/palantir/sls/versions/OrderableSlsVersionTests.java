@@ -102,7 +102,6 @@ public class OrderableSlsVersionTests {
         }
     }
 
-    @SuppressWarnings("for-rollout:deprecation")
     @Test
     public void testParsesStructureCorrectly() {
         assertThat(OrderableSlsVersion.valueOf("1.2.3"))
