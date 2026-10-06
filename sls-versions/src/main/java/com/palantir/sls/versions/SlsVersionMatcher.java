@@ -34,7 +34,7 @@ import org.immutables.value.Value;
  * An SLS version matcher as defined by the [SLS
  * spec](https://github.com/palantir/sls-version-java#sls-product-version-specification).
  */
-@Value.Immutable
+@Value.Immutable(intern = true)
 @ImmutablesStyle
 public abstract class SlsVersionMatcher {
 

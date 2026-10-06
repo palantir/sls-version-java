@@ -28,5 +28,6 @@ import org.immutables.value.Value;
         visibility = Value.Style.ImplementationVisibility.PACKAGE,
         overshadowImplementation = true,
         jdkOnly = true,
+        weakInterning = true,
         get = {"get*", "is*"})
 public @interface ImmutablesStyle {}
